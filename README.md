@@ -1,2 +1,3 @@
 # Shift
-Cs 307 Project
+CS 307 Project
+Group 18

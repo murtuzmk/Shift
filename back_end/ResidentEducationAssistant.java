@@ -42,7 +42,8 @@ public class ResidentEducationAssistant extends ResidentAssistant{
 
     @Override
     public String toString() {
-        return "ResidentEducationAssistant{" +
+        return super.toString() + "\n" +
+                "ResidentEducationAssistant{" +
                 "raAccounts=" + raAccounts +
                 ", masterSchedule=" + masterSchedule +
                 '}';

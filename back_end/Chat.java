@@ -1,21 +1,63 @@
+import java.util.Arrays;
+
 public class Chat {
 
     private int id = -1;
     private Person[] members = null;
     private boolean groupChat = false;
     private Message messages = null;
-    private Chat chatPrev = null;
-    private Chat chatNext = null;
+    private Chat prev = null;
+    private Chat next = null;
 
     public Chat() {}
 
-    public Chat(int id, Person[] members, boolean groupChat, Message messages, Chat chatPrev, Chat chatNext) {
+    public Chat(int id, Person[] members, boolean groupChat, Message messages, Chat prev, Chat next) {
         this.id = id;
         this.members = members;
         this.groupChat = groupChat;
         this.messages = messages;
-        this.chatPrev = chatPrev;
-        this.chatNext = chatNext;
+        this.prev = prev;
+        this.next = next;
+    }
+
+    public void sendMessage(Message inputMessage) {
+        if (messages == null) {
+            messages = inputMessage;
+            return;
+        }
+        Message lastMessage = messages;
+        while (lastMessage != null) {
+            lastMessage = lastMessage.getNext();
+        };
+        lastMessage.setNext(inputMessage);
+        inputMessage.setPrev(lastMessage);
+    }
+
+    public void deleteMessage(int id) {
+        if (messages == null) {
+            return;
+        }
+        Message currentMessage = messages;
+        while (currentMessage != null) {
+            if (currentMessage.getId() == id) {
+                break;
+            }
+            currentMessage = currentMessage.getNext();
+        }
+
+        if (currentMessage == null) {
+            return;
+        }
+
+        Message prevMessage = currentMessage.getPrev();
+        Message nextMessage = currentMessage.getNext();
+
+        if (prevMessage != null) {
+            prevMessage.setNext(nextMessage);
+        }
+        if (nextMessage != null) {
+            nextMessage.setPrev(prevMessage);
+        }
     }
 
     public int getId() {
@@ -50,31 +92,31 @@ public class Chat {
         this.messages = messages;
     }
 
-    public Chat getChatPrev() {
-        return chatPrev;
+    public Chat getPrev() {
+        return prev;
     }
 
-    public void setChatPrev(Chat chatPrev) {
-        this.chatPrev = chatPrev;
+    public void setPrev(Chat prev) {
+        this.prev = prev;
     }
 
-    public Chat getChatNext() {
-        return chatNext;
+    public Chat getNext() {
+        return next;
     }
 
-    public void setChatNext(Chat chatNext) {
-        this.chatNext = chatNext;
+    public void setNext(Chat next) {
+        this.next = next;
     }
 
-    @java.lang.Override
-    public java.lang.String toString() {
+    @Override
+    public String toString() {
         return "Chat{" +
                 "id=" + id +
-                ", members=" + java.util.Arrays.toString(members) +
+                ", members=" + Arrays.toString(members) +
                 ", groupChat=" + groupChat +
                 ", messages=" + messages +
-                ", chatPrev=" + chatPrev +
-                ", chatNext=" + chatNext +
+                ", prev=" + prev +
+                ", next=" + next +
                 '}';
     }
 }

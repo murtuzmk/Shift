@@ -34,7 +34,8 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
 
     @Override
     public String toString() {
-        return "ResidentEducationCoordinator{" +
+        return super.toString() + "\n" +
+                "ResidentEducationCoordinator{" +
                 "reaAccounts=" + reaAccounts +
                 '}';
     }

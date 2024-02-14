@@ -63,6 +63,25 @@ public class Person {
         this.enabled = enabled;
     }
 
+    public void enableAccount() {
+        enabled = true;
+    }
+
+    public void disableAccount() {
+        enabled = false;
+    }
+
+    public void deleteAccount() {
+        name = null;
+        email = null;
+        password = null;
+        puid = null;
+        gender = null;
+        role = null;
+        hall = null;
+        enabled = false;
+    }
+
     public String getName() {
         return name;
     }

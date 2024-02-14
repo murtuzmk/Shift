@@ -11,7 +11,7 @@ public class Shift {
     private TimeBlock timestamp = null;
     private DutyLevel dutyLevel = null;
 
-    public Shift () {}
+    public Shift() {}
     public Shift(String title, String description, TimeBlock timestamp, DutyLevel dutyLevel) {
         this.title = title;
         this.description = description;

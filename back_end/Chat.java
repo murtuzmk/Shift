@@ -9,7 +9,8 @@ public class Chat {
     private Chat prev = null;
     private Chat next = null;
 
-    public Chat() {}
+    public Chat() {
+    }
 
     public Chat(int id, Person[] members, boolean groupChat, Message messages, Chat prev, Chat next) {
         this.id = id;
@@ -21,42 +22,111 @@ public class Chat {
     }
 
     public void sendMessage(Message inputMessage) {
+
+        /* Check if list is empty */
         if (messages == null) {
             messages = inputMessage;
+            inputMessage.setPrev(inputMessage);
+            inputMessage.setNext(inputMessage);
             return;
         }
-        Message lastMessage = messages;
-        while (lastMessage != null) {
-            lastMessage = lastMessage.getNext();
-        };
-        lastMessage.setNext(inputMessage);
-        inputMessage.setPrev(lastMessage);
+
+        /* Append message to end of list */
+        Message prevMessage = messages.getPrev();
+        Message nextMessage = messages;
+
+        inputMessage.setPrev(prevMessage);
+        inputMessage.setNext(nextMessage);
+        prevMessage.setNext(inputMessage);
+        nextMessage.setPrev(inputMessage);
     }
 
     public void deleteMessage(int id) {
+
+        /* Check if list is empty */
         if (messages == null) {
             return;
         }
+
+        /* Message to be deleted is the only existing message */
+        if ((messages == messages.getNext()) && (messages.getId() == id)) {
+            messages = null;
+            return;
+        }
+
+        /* Search for message in chat based on id */
         Message currentMessage = messages;
-        while (currentMessage != null) {
+        Message firstMessage = messages;
+
+        do {
+
+            /* Message is found */
             if (currentMessage.getId() == id) {
                 break;
             }
-            currentMessage = currentMessage.getNext();
-        }
 
-        if (currentMessage == null) {
+            /* Next message */
+            currentMessage = currentMessage.getNext();
+
+        } while (currentMessage != firstMessage);
+
+        /* Message not found */
+        if (currentMessage == firstMessage) {
             return;
         }
+
+        /* Message found */
 
         Message prevMessage = currentMessage.getPrev();
         Message nextMessage = currentMessage.getNext();
 
-        if (prevMessage != null) {
-            prevMessage.setNext(nextMessage);
+        prevMessage.setNext(nextMessage);
+        nextMessage.setPrev(prevMessage);
+    }
+
+    public void pinMessage(int id, boolean pin) {
+        Message currentMessage = messages;
+        Message firstMessage = messages;
+
+        do {
+
+            /* Message is found */
+            if (currentMessage.getId() == id) {
+                currentMessage.setPinned(pin);
+                return;
+            }
+
+            /* Next message */
+            currentMessage = currentMessage.getNext();
+
+        } while (currentMessage != firstMessage);
+    }
+
+    public String printMessageHistory() {
+        StringBuilder buffer = new StringBuilder();
+        Message currentMessage = messages;
+        Message firstMessage = messages;
+
+        do {
+
+            /* Append Message to String */
+            buffer.append(currentMessage.getContent());
+            buffer.append('\n');
+
+            /* Next message */
+            currentMessage = currentMessage.getNext();
+
+        } while (currentMessage != firstMessage);
+
+        return buffer.toString();
+    }
+
+    public void deleteChat() {
+        if (prev != null) {
+            prev.setNext(next);
         }
-        if (nextMessage != null) {
-            nextMessage.setPrev(prevMessage);
+        if (next != null) {
+            next.setPrev(prev);
         }
     }
 

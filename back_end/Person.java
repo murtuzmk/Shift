@@ -41,7 +41,7 @@ public class Person {
     private String name = null;
     private String email = null;
     private String password = null;
-    private int[10] puid = null;
+    private int[] puid = null;
     private Gender gender = null;
     private Role role = null;
     private Hall hall = null;
@@ -108,5 +108,15 @@ public class Person {
         this.hall = hall;
     }
 
-
+    @java.lang.Override
+    public java.lang.String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", gender=" + gender +
+                ", role=" + role +
+                ", hall=" + hall +
+                '}';
+    }
 }

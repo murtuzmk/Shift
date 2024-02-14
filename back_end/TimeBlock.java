@@ -25,11 +25,11 @@ public class TimeBlock {
         DECEMBER
     }
 
-    private long startTime = null;
-    private long endTime = null;
+    private long startTime = -1;
+    private long endTime = -1;
     private Day day = null;
     private Month month = null;
-    private int year = null;
+    private int year = -1;
 
     public TimeBlock() {}
 

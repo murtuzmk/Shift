@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Person {
 
     public enum Gender {
@@ -45,19 +47,20 @@ public class Person {
     private Gender gender = null;
     private Role role = null;
     private Hall hall = null;
-    private enabled = false;
+    private boolean enabled = false;
 
     /* Default Constructor */
     public Person() {}
 
-    /* Constructor to  */
-    public Person(String name, String email, String password, Gender gender, Role role, Hall hall) {
+    public Person(String name, String email, String password, int[] puid, Gender gender, Role role, Hall hall, boolean enabled) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.puid = puid;
         this.gender = gender;
         this.role = role;
         this.hall = hall;
+        this.enabled = enabled;
     }
 
     public String getName() {
@@ -84,6 +87,14 @@ public class Person {
         this.password = password;
     }
 
+    public int[] getPuid() {
+        return puid;
+    }
+
+    public void setPuid(int[] puid) {
+        this.puid = puid;
+    }
+
     public Gender getGender() {
         return gender;
     }
@@ -108,15 +119,25 @@ public class Person {
         this.hall = hall;
     }
 
-    @java.lang.Override
-    public java.lang.String toString() {
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
+    public String toString() {
         return "Person{" +
                 "name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", puid=" + Arrays.toString(puid) +
                 ", gender=" + gender +
                 ", role=" + role +
                 ", hall=" + hall +
+                ", enabled=" + enabled +
                 '}';
     }
 }

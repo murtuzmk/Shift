@@ -1,6 +1,6 @@
 public class Chat {
 
-    private int id = null;
+    private int id = 0;
     private Person[] members = null;
     private boolean groupChat = false;
     private Message messages = null;

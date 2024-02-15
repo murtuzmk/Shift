@@ -45,7 +45,7 @@ public class Person {
     private Gender gender = null;
     private Role role = null;
     private Hall hall = null;
-    private enabled = false;
+    private boolean enabled = false;
 
     /* Default Constructor */
     public Person() {}

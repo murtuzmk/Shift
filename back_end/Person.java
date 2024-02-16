@@ -48,6 +48,7 @@ public class Person {
     private Role role = null;
     private Hall hall = null;
     private boolean enabled = false;
+    private int timezone = 0;
 
     /* Default Constructor */
     public Person() {}
@@ -146,6 +147,14 @@ public class Person {
         this.enabled = enabled;
     }
 
+    public int getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(int timezone) {
+        this.timezone = timezone;
+    }
+
     @Override
     public String toString() {
         return "Person{" +
@@ -157,6 +166,7 @@ public class Person {
                 ", role=" + role +
                 ", hall=" + hall +
                 ", enabled=" + enabled +
+                ((timezone < 0) ? String.format(", timezone= %03d", timezone) : String.format(", timezone= +%02d", timezone)) +
                 '}';
     }
 }

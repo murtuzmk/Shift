@@ -1,45 +1,26 @@
+import java.time.Clock;
+
 public class TimeBlock {
-
-    public enum Day {
-        MONDAY,
-        TUESDAY,
-        WEDNESDAY,
-        THURSDAY,
-        FRIDAY,
-        SATURDAY,
-        SUNDAY
-    }
-
-    public enum Month {
-        JANUARY,
-        FEBRUARY,
-        MARCH,
-        APRIL,
-        MAY,
-        JUNE,
-        JULY,
-        AUGUST,
-        SEPTEMBER,
-        OCTOBER,
-        NOVEMBER,
-        DECEMBER
-    }
 
     private long startTime = -1;
     private long endTime = -1;
-    private Day day = null;
-    private Month month = null;
+    private int date = -1;
+    private int month = -1;
     private int year = -1;
 
     public TimeBlock() {}
 
-    public TimeBlock(long startTime, long endTime, Day day, Month month, int year) {
+    public TimeBlock(long startTime, long endTime, int date, int month, int year) {
         this.startTime = startTime;
         this.endTime = endTime;
-        this.day = day;
+        this.date = date;
         this.month = month;
         this.year = year;
     }
+
+
+    Clock time = Clock.systemUTC();
+
 
     public long getStartTime() {
         return startTime;
@@ -57,19 +38,19 @@ public class TimeBlock {
         this.endTime = endTime;
     }
 
-    public Day getDay() {
-        return day;
+    public int getDay() {
+        return date;
     }
 
-    public void setDay(Day day) {
-        this.day = day;
+    public void setDay(int date) {
+        this.date = date;
     }
 
-    public Month getMonth() {
+    public int getMonth() {
         return month;
     }
 
-    public void setMonth(Month month) {
+    public void setMonth(int month) {
         this.month = month;
     }
 
@@ -86,7 +67,7 @@ public class TimeBlock {
         return "TimeBlock{" +
                 "startTime=" + startTime +
                 ", endTime=" + endTime +
-                ", day=" + day +
+                ", date=" + date +
                 ", month=" + month +
                 ", year=" + year +
                 '}';

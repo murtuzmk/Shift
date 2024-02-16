@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Person {
 
     public enum Gender {
@@ -45,19 +47,40 @@ public class Person {
     private Gender gender = null;
     private Role role = null;
     private Hall hall = null;
-    private enabled = false;
+    private boolean enabled = false;
+    private int timezone = 0;
 
     /* Default Constructor */
     public Person() {}
 
-    /* Constructor to  */
-    public Person(String name, String email, String password, Gender gender, Role role, Hall hall) {
+    public Person(String name, String email, String password, int[] puid, Gender gender, Role role, Hall hall, boolean enabled) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.puid = puid;
         this.gender = gender;
         this.role = role;
         this.hall = hall;
+        this.enabled = enabled;
+    }
+
+    public void enableAccount() {
+        enabled = true;
+    }
+
+    public void disableAccount() {
+        enabled = false;
+    }
+
+    public void deleteAccount() {
+        name = null;
+        email = null;
+        password = null;
+        puid = null;
+        gender = null;
+        role = null;
+        hall = null;
+        enabled = false;
     }
 
     public String getName() {
@@ -84,6 +107,14 @@ public class Person {
         this.password = password;
     }
 
+    public int[] getPuid() {
+        return puid;
+    }
+
+    public void setPuid(int[] puid) {
+        this.puid = puid;
+    }
+
     public Gender getGender() {
         return gender;
     }
@@ -108,15 +139,34 @@ public class Person {
         this.hall = hall;
     }
 
-    @java.lang.Override
-    public java.lang.String toString() {
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public int getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(int timezone) {
+        this.timezone = timezone;
+    }
+
+    @Override
+    public String toString() {
         return "Person{" +
                 "name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", puid=" + Arrays.toString(puid) +
                 ", gender=" + gender +
                 ", role=" + role +
                 ", hall=" + hall +
+                ", enabled=" + enabled +
+                ((timezone < 0) ? String.format(", timezone= %03d", timezone) : String.format(", timezone= +%02d", timezone)) +
                 '}';
     }
 }

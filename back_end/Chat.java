@@ -1,7 +1,6 @@
 import java.util.Arrays;
 
 public class Chat {
-
     private int id = -1;
     private Person[] members = null;
     private boolean groupChat = false;

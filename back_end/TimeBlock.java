@@ -4,7 +4,6 @@ import java.time.Clock;
 import java.util.Date;
 
 public class TimeBlock {
-
     private int hour = -1;
     private int minute = -1;
     private int day = -1;
@@ -12,7 +11,6 @@ public class TimeBlock {
     private int year = -1;
     private int timezone = 0;
     private long secondsEpoch = -1;
-
     public TimeBlock() {}
 
     public TimeBlock(int hour, int minute, int month, int day, int year, int timezone) {

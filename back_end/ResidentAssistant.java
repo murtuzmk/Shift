@@ -31,6 +31,66 @@ public class ResidentAssistant extends Person{
         chats = null;
     }
 
+    public void addChat(Chat inputChat) {
+
+        /* Check if list is empty */
+        if (chats == null) {
+            chats = inputChat;
+            inputChat.setPrev(inputChat);
+            inputChat.setNext(inputChat);
+            return;
+        }
+
+        /* Append chat to end of list */
+        Chat prevChat = chats.getPrev();
+        Chat nextChat = chats;
+
+        inputChat.setPrev(prevChat);
+        inputChat.setNext(nextChat);
+        prevChat.setNext(inputChat);
+        nextChat.setPrev(inputChat);
+    }
+
+    public void deleteChat(int id) {
+
+        /* Check if list is empty */
+        if (chats == null) {
+            return;
+        }
+
+        /* Check if chat is the only one */
+        if ((chats == chats.getNext()) && (chats.getId() == id)) {
+            chats = null;
+            return;
+        }
+
+        /* Search for chat in chat based on id */
+        Chat currentChat = chats;
+        Chat firstChat = chats;
+
+        do {
+
+            /* Chat is found */
+            if (currentChat.getId() == id) {
+                break;
+            }
+
+            /* Next Chat */
+            currentChat = currentChat.getNext();
+
+        } while (currentChat != firstChat);
+
+        /* Chat not found */
+        if (currentChat == firstChat) {
+            return;
+        }
+
+        /* Chat found */
+        Chat prevChat = currentChat.getPrev();
+        Chat nextChat = currentChat.getNext();
+        prevChat.setNext(nextChat);
+        nextChat.setPrev(prevChat);
+    }
 
 
     public String getFloor() {

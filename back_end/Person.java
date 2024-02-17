@@ -43,7 +43,7 @@ public class Person {
     private String name = null;
     private String email = null;
     private String password = null;
-    private int[] puid = null;
+    private String id = null;
     private Gender gender = null;
     private Role role = null;
     private Hall hall = null;
@@ -53,15 +53,26 @@ public class Person {
     /* Default Constructor */
     public Person() {}
 
-    public Person(String name, String email, String password, int[] puid, Gender gender, Role role, Hall hall, boolean enabled) {
+    public Person(String name, String email, String password, String id, Gender gender, Role role, Hall hall, boolean enabled) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.puid = puid;
+        this.id = id;
         this.gender = gender;
         this.role = role;
         this.hall = hall;
         this.enabled = enabled;
+    }
+
+    public void deleteAccount() {
+        name = null;
+        email = null;
+        password = null;
+        id = null;
+        gender = null;
+        role = null;
+        hall = null;
+        enabled = false;
     }
 
     public void enableAccount() {
@@ -69,17 +80,6 @@ public class Person {
     }
 
     public void disableAccount() {
-        enabled = false;
-    }
-
-    public void deleteAccount() {
-        name = null;
-        email = null;
-        password = null;
-        puid = null;
-        gender = null;
-        role = null;
-        hall = null;
         enabled = false;
     }
 
@@ -107,12 +107,12 @@ public class Person {
         this.password = password;
     }
 
-    public int[] getPuid() {
-        return puid;
+    public String getId() {
+        return id;
     }
 
-    public void setPuid(int[] puid) {
-        this.puid = puid;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Gender getGender() {
@@ -161,7 +161,7 @@ public class Person {
                 "name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", puid=" + Arrays.toString(puid) +
+                ", id=" + id +
                 ", gender=" + gender +
                 ", role=" + role +
                 ", hall=" + hall +

@@ -18,10 +18,25 @@ public class ResidentEducationAssistant extends ResidentAssistant{
         this.masterSchedule = masterSchedule;
     }
 
-    public ResidentEducationAssistant(String name, String email, String password, int[] puid, Gender gender, Role role, Hall hall, boolean enabled, String floor, boolean clockIn, Schedule schedule, Chat chats, ArrayList<ResidentAssistant> raAccounts, Scheduler masterSchedule) {
-        super(name, email, password, puid, gender, role, hall, enabled, floor, clockIn, schedule, chats);
+    public ResidentEducationAssistant(String name, String email, String password, String id, Gender gender, Role role, Hall hall, boolean enabled, String floor, boolean clockIn, Schedule schedule, Chat chats, ArrayList<ResidentAssistant> raAccounts, Scheduler masterSchedule) {
+        super(name, email, password, id, gender, role, hall, enabled, floor, clockIn, schedule, chats);
         this.raAccounts = raAccounts;
         this.masterSchedule = masterSchedule;
+    }
+
+    @Override
+    public void deleteAccount() {
+        super.deleteAccount();
+        raAccounts.clear();
+        raAccounts = null;
+        masterSchedule = null;
+    }
+
+    public void addRaAccount(ResidentAssistant ra) {
+        raAccounts.add(ra);
+    }
+    public void deleteRaAccount(ResidentAssistant ra) {
+        raAccounts.remove(ra);
     }
 
     public ArrayList<ResidentAssistant> getRaAccounts() {

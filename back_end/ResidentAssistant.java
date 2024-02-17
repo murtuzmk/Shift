@@ -14,8 +14,8 @@ public class ResidentAssistant extends Person{
         this.chats = chats;
     }
 
-    public ResidentAssistant(String name, String email, String password, int[] puid, Gender gender, Role role, Hall hall, boolean enabled, String floor, boolean clockedIn, Schedule schedule, Chat chats) {
-        super(name, email, password, puid, gender, role, hall, enabled);
+    public ResidentAssistant(String name, String email, String password, String id, Gender gender, Role role, Hall hall, boolean enabled, String floor, boolean clockedIn, Schedule schedule, Chat chats) {
+        super(name, email, password, id, gender, role, hall, enabled);
         this.floor = floor;
         this.clockedIn = clockedIn;
         this.schedule = schedule;
@@ -30,6 +30,8 @@ public class ResidentAssistant extends Person{
         schedule = null;
         chats = null;
     }
+
+
 
     public String getFloor() {
         return floor;

@@ -23,7 +23,7 @@ public class TimeBlock {
         this.year = year;
         this.timezone = timezone;
 
-        /* Represent time as seconds since Java epoch in UTC ( 1970 January 01 00:00:00 UTC ) */
+        /* Represent time as milliseconds since Java epoch in UTC ( 1970 January 01 00:00:00 UTC ) */
         String objDate = this.toString();
         SimpleDateFormat formattedDate = new SimpleDateFormat("HH:mm X MM/dd/yyyy");
         Date date = null;
@@ -33,12 +33,35 @@ public class TimeBlock {
             System.out.println("Problem with date parsing");
             throw new RuntimeException(e);
         }
-        secondsEpoch = date.getTime();
+        secondsEpoch = date.getTime() / 1000;
     }
 
     public boolean isExpired(int days, int hours, int minutes) {
-        long seconds = (Clock.systemDefaultZone().millis() - secondsEpoch) / 1000;
+        long seconds = (Clock.systemDefaultZone().millis() / 1000) - secondsEpoch;
         return (seconds >= (86400L * days) + (3600L * hours) + (60L * minutes));
+    }
+
+    public String dayOfWeek() {
+        long days = secondsEpoch / 86400;
+        int dayOfWeek =  (int) (days % 7);
+        switch (dayOfWeek) {
+            case 0:
+                return "Thursday";
+            case 1:
+                return "Friday";
+            case 2:
+                return "Saturday";
+            case 3:
+                return "Sunday";
+            case 4:
+                return "Monday";
+            case 5:
+                return "Tuesday";
+            case 6:
+                return "Wednesday";
+
+        };
+        return "Error";
     }
 
     public int getHour() {
@@ -63,10 +86,6 @@ public class TimeBlock {
 
     public int getTimezone() {
         return timezone;
-    }
-
-    public void setTimezone(int timezone) {
-        this.timezone = timezone;
     }
 
     @Override

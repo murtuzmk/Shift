@@ -4,7 +4,6 @@ public class Chat {
 
     private int id = -1;
     private Person[] members = null;
-    private boolean groupChat = false;
     private Message messages = null;
     private Chat prev = null;
     private Chat next = null;
@@ -12,10 +11,9 @@ public class Chat {
     public Chat() {
     }
 
-    public Chat(int id, Person[] members, boolean groupChat, Message messages, Chat prev, Chat next) {
+    public Chat(int id, Person[] members, Message messages, Chat prev, Chat next) {
         this.id = id;
         this.members = members;
-        this.groupChat = groupChat;
         this.messages = messages;
         this.prev = prev;
         this.next = next;
@@ -146,14 +144,6 @@ public class Chat {
         this.members = members;
     }
 
-    public boolean isGroupChat() {
-        return groupChat;
-    }
-
-    public void setGroupChat(boolean groupChat) {
-        this.groupChat = groupChat;
-    }
-
     public Message getMessages() {
         return messages;
     }
@@ -183,7 +173,6 @@ public class Chat {
         return "Chat{" +
                 "id=" + id +
                 ", members=" + Arrays.toString(members) +
-                ", groupChat=" + groupChat +
                 ", messages=" + messages +
                 ", prev=" + prev +
                 ", next=" + next +

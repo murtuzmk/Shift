@@ -1,7 +1,11 @@
 import java.util.ArrayList;
 public class ResidentEducationCoordinator extends ResidentEducationAssistant {
 
+    /* ------------------------ VARIABLES ------------------------ */
+
     private ArrayList<ResidentEducationAssistant> reaAccounts = null;
+
+    /* ------------------------ CONSTRUCTORS ------------------------ */
 
     public ResidentEducationCoordinator() {}
 
@@ -24,6 +28,8 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
         this.reaAccounts = reaAccounts;
     }
 
+    /* ------------------------ FUNCTIONS ------------------------ */
+
     @Override
     public void deleteAccount() {
         super.deleteAccount();
@@ -38,6 +44,8 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
         reaAccounts.remove(rea);
     }
 
+    /*------------------------ GETTERS & SETTERS ------------------------*/
+
     public ArrayList<ResidentEducationAssistant> getReaAccounts() {
         return reaAccounts;
     }
@@ -45,6 +53,8 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
     public void setReaAccounts(ArrayList<ResidentEducationAssistant> reaAccounts) {
         this.reaAccounts = reaAccounts;
     }
+
+    /*------------------------ TOSTRING ------------------------*/
 
     @Override
     public String toString() {

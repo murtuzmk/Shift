@@ -1,9 +1,13 @@
 public class ResidentAssistant extends Person{
 
+    /* ------------------------ VARIABLES ------------------------ */
+
     private String floor = null;
     private boolean clockedIn = false;
     private Schedule schedule = null;
     private Chat chats = null;
+
+    /* ------------------------ CONSTRUCTORS ------------------------ */
 
     public ResidentAssistant() {}
 
@@ -21,6 +25,8 @@ public class ResidentAssistant extends Person{
         this.schedule = schedule;
         this.chats = chats;
     }
+
+    /* ------------------------ FUNCTIONS ------------------------ */
 
     @Override
     public void deleteAccount() {
@@ -92,6 +98,7 @@ public class ResidentAssistant extends Person{
         nextChat.setPrev(prevChat);
     }
 
+    /*------------------------ GETTERS & SETTERS ------------------------*/
 
     public String getFloor() {
         return floor;
@@ -124,6 +131,8 @@ public class ResidentAssistant extends Person{
     public void setChats(Chat chats) {
         this.chats = chats;
     }
+
+    /*------------------------ TOSTRING ------------------------*/
 
     @Override
     public String toString() {

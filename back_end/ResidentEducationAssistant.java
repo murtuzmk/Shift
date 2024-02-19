@@ -2,8 +2,12 @@ import java.util.ArrayList;
 
 public class ResidentEducationAssistant extends ResidentAssistant{
 
+    /* ------------------------ VARIABLES ------------------------ */
+
     private ArrayList<ResidentAssistant> raAccounts = null;
     private Scheduler masterSchedule = null;
+
+    /* ------------------------ CONSTRUCTORS ------------------------ */
 
     public ResidentEducationAssistant() {}
 
@@ -24,6 +28,8 @@ public class ResidentEducationAssistant extends ResidentAssistant{
         this.masterSchedule = masterSchedule;
     }
 
+    /* ------------------------ FUNCTIONS ------------------------ */
+
     @Override
     public void deleteAccount() {
         super.deleteAccount();
@@ -38,6 +44,8 @@ public class ResidentEducationAssistant extends ResidentAssistant{
     public void deleteRaAccount(ResidentAssistant ra) {
         raAccounts.remove(ra);
     }
+
+    /*------------------------ GETTERS & SETTERS ------------------------*/
 
     public ArrayList<ResidentAssistant> getRaAccounts() {
         return raAccounts;
@@ -54,6 +62,8 @@ public class ResidentEducationAssistant extends ResidentAssistant{
     public void setMasterSchedule(Scheduler masterSchedule) {
         this.masterSchedule = masterSchedule;
     }
+
+    /*------------------------ TOSTRING ------------------------*/
 
     @Override
     public String toString() {

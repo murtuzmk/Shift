@@ -2,11 +2,15 @@ import java.util.Arrays;
 
 public class Chat {
 
+    /* ------------------------ VARIABLES ------------------------ */
+
     private int id = -1;
     private Person[] members = null;
     private Message messages = null;
     private Chat prev = null;
     private Chat next = null;
+
+    /* ------------------------ CONSTRUCTORS ------------------------ */
 
     public Chat() {
     }
@@ -18,6 +22,8 @@ public class Chat {
         this.prev = prev;
         this.next = next;
     }
+
+    /* ------------------------ FUNCTIONS ------------------------ */
 
     public void sendMessage(Message inputMessage) {
 
@@ -128,6 +134,8 @@ public class Chat {
         }
     }
 
+    /*------------------------ GETTERS & SETTERS ------------------------*/
+
     public int getId() {
         return id;
     }
@@ -167,6 +175,8 @@ public class Chat {
     public void setNext(Chat next) {
         this.next = next;
     }
+
+    /*------------------------ TOSTRING ------------------------*/
 
     @Override
     public String toString() {

@@ -2,6 +2,9 @@ import java.util.Arrays;
 
 public class Person {
 
+    /* ------------------------ ENUMS ------------------------ */
+
+
     public enum Gender {
         MALE,
         FEMALE,
@@ -40,6 +43,8 @@ public class Person {
         WILEY
     }
 
+    /* ------------------------ VARIABLES ------------------------ */
+
     private String name = null;
     private String email = null;
     private String password = null;
@@ -50,7 +55,8 @@ public class Person {
     private boolean enabled = false;
     private int timezone = 0;
 
-    /* Default Constructor */
+    /* ------------------------ CONSTRUCTORS ------------------------ */
+
     public Person() {}
 
     public Person(String name, String email, String password, String id, Gender gender, Role role, Hall hall, boolean enabled) {
@@ -63,6 +69,8 @@ public class Person {
         this.hall = hall;
         this.enabled = enabled;
     }
+
+    /* ------------------------ FUNCTIONS ------------------------ */
 
     public void deleteAccount() {
         name = null;
@@ -82,6 +90,8 @@ public class Person {
     public void disableAccount() {
         enabled = false;
     }
+
+    /*------------------------ GETTERS & SETTERS ------------------------*/
 
     public String getName() {
         return name;
@@ -154,6 +164,8 @@ public class Person {
     public void setTimezone(int timezone) {
         this.timezone = timezone;
     }
+
+    /*------------------------ TOSTRING ------------------------*/
 
     @Override
     public String toString() {

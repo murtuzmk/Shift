@@ -5,13 +5,21 @@ import java.util.Date;
 
 public class TimeBlock {
 
+    /* ------------------------ VARIABLES ------------------------ */
+
     private int hour = -1;
     private int minute = -1;
     private int day = -1;
     private int month = -1;
     private int year = -1;
+
+    /* Keeps track of hours away from UTC as an integer */
     private int timezone = 0;
+
+    /* Represent TimeBlock as milliseconds since epoch in UTC ( 1970 January 01 00:00:00 UTC ) */
     private long secondsEpoch = -1;
+
+    /* ------------------------ CONSTRUCTORS ------------------------ */
 
     public TimeBlock() {}
 
@@ -23,7 +31,7 @@ public class TimeBlock {
         this.year = year;
         this.timezone = timezone;
 
-        /* Represent time as milliseconds since Java epoch in UTC ( 1970 January 01 00:00:00 UTC ) */
+        /* Convert time to milliseconds since epoch */
         String objDate = this.toString();
         SimpleDateFormat formattedDate = new SimpleDateFormat("HH:mm X MM/dd/yyyy");
         Date date = null;
@@ -36,10 +44,29 @@ public class TimeBlock {
         secondsEpoch = date.getTime() / 1000;
     }
 
+    /* ------------------------ FUNCTIONS ------------------------ */
+
+    /*
+     * Calculates whether a TimeBlock is past a certain expiration
+     * period, i.e. the TimeBlock is a certain number of days, hours,
+     * or minutes older than the current time.
+     *
+     * @param days: number of days until this TimeBlock expires
+     * @param hours: number of hours until this TimeBlock expires
+     * @param minutes: number of minutes until this TimeBlock expires
+     * @return boolean: is the TimeBlock older than inputted range
+     */
     public boolean isExpired(int days, int hours, int minutes) {
         long seconds = (Clock.systemDefaultZone().millis() / 1000) - secondsEpoch;
         return (seconds >= (86400L * days) + (3600L * hours) + (60L * minutes));
     }
+
+    /*
+     * Interprets the date representation of TimeBlock and
+     * converts into its day in the week.
+     *
+     * return String: day of week
+     */
 
     public String dayOfWeek() {
         long days = secondsEpoch / 86400;
@@ -64,6 +91,8 @@ public class TimeBlock {
         return "Error";
     }
 
+    /*------------------------ GETTERS & SETTERS ------------------------*/
+
     public int getHour() {
         return hour;
     }
@@ -87,6 +116,8 @@ public class TimeBlock {
     public int getTimezone() {
         return timezone;
     }
+
+    /*------------------------ TOSTRING ------------------------*/
 
     @Override
     public String toString() {

@@ -65,7 +65,7 @@ public class TimeBlock {
      * Interprets the date representation of TimeBlock and
      * converts into its day in the week.
      *
-     * return String: day of week
+     * @return String: day of week
      */
 
     public String dayOfWeek() {

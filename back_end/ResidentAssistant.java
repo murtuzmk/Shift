@@ -28,6 +28,10 @@ public class ResidentAssistant extends Person{
 
     /* ------------------------ FUNCTIONS ------------------------ */
 
+    /*
+     * Deletes the contents of all variables related to this class
+     * and superclass and sets them to null.
+     */
     @Override
     public void deleteAccount() {
         super.deleteAccount();
@@ -37,6 +41,12 @@ public class ResidentAssistant extends Person{
         chats = null;
     }
 
+    /*
+     * Adds a chat the chats of the current resident assistant.
+     * It will append it to the end of the doubly linked list of chats.
+     *
+     * @param inputChat: The chat to add to the list
+     */
     public void addChat(Chat inputChat) {
 
         /* Check if list is empty */
@@ -57,6 +67,13 @@ public class ResidentAssistant extends Person{
         nextChat.setPrev(inputChat);
     }
 
+    /*
+     * Removes chat from chats list of the current resident assistant.
+     * It will not do anything if the given id does not exist
+     * within the list.
+     *
+     * @param id: The id of chat to remove from the list
+     */
     public void deleteChat(int id) {
 
         /* Check if list is empty */

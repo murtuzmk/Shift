@@ -30,6 +30,10 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
 
     /* ------------------------ FUNCTIONS ------------------------ */
 
+    /*
+     * Deletes the contents of all variables related to this class
+     * and superclasses and sets them to null.
+     */
     @Override
     public void deleteAccount() {
         super.deleteAccount();
@@ -37,11 +41,28 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
         reaAccounts = null;
     }
 
+    /*
+     * Adds a resident education assistant to "reaAccounts".
+     *
+     * @param rea: Resident education assistant to be added
+     */
     public void addReaAccount(ResidentEducationAssistant rea) {
+        if (reaAccounts == null) {
+            reaAccounts = new ArrayList<>();
+        }
         reaAccounts.add(rea);
     }
+
+    /*
+     * Deletes resident education assistant from "reaAccounts",
+     * if it exists within the ArrayList.
+     *
+     * @param rea: Resident education assistant to be removed
+     */
     public void deleteReaAccount(ResidentEducationAssistant rea) {
-        reaAccounts.remove(rea);
+        if (reaAccounts != null) {
+            reaAccounts.remove(rea);
+        }
     }
 
     /*------------------------ GETTERS & SETTERS ------------------------*/

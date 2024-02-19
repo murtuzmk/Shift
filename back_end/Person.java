@@ -72,6 +72,10 @@ public class Person {
 
     /* ------------------------ FUNCTIONS ------------------------ */
 
+    /*
+     * Deletes the contents of all variables related to this class
+     * and superclasses and sets them to null.
+     */
     public void deleteAccount() {
         name = null;
         email = null;
@@ -83,10 +87,16 @@ public class Person {
         enabled = false;
     }
 
+    /*
+     * Enables account of current person.
+     */
     public void enableAccount() {
         enabled = true;
     }
 
+    /*
+     * Disables account of current person.
+     */
     public void disableAccount() {
         enabled = false;
     }

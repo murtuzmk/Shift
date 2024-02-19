@@ -30,6 +30,10 @@ public class ResidentEducationAssistant extends ResidentAssistant{
 
     /* ------------------------ FUNCTIONS ------------------------ */
 
+    /*
+     * Deletes the contents of all variables related to this class
+     * and superclasses and sets them to null.
+     */
     @Override
     public void deleteAccount() {
         super.deleteAccount();
@@ -38,11 +42,28 @@ public class ResidentEducationAssistant extends ResidentAssistant{
         masterSchedule = null;
     }
 
+    /*
+     * Adds a resident assistant to "raAccounts".
+     *
+     * @param ra: Resident assistant to be added
+     */
     public void addRaAccount(ResidentAssistant ra) {
+        if (raAccounts == null) {
+            raAccounts = new ArrayList<>();
+        }
         raAccounts.add(ra);
     }
+
+    /*
+     * Deletes resident assistant from "reaAccounts", if it
+     * exists within the ArrayList.
+     *
+     * @param ra: Resident assistant to be removed
+     */
     public void deleteRaAccount(ResidentAssistant ra) {
-        raAccounts.remove(ra);
+        if (raAccounts != null) {
+            raAccounts.remove(ra);
+        }
     }
 
     /*------------------------ GETTERS & SETTERS ------------------------*/

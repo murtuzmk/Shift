@@ -1,16 +1,22 @@
 public class Shift {
 
+    /* ------------------------ ENUMS ------------------------ */
+
     public enum DutyLevel {
         PRIMARY,
         SECONDARY,
         TERTIARY
     }
 
+    /* ------------------------ VARIABLES ------------------------ */
+
     private String title = null;
     private String description = null;
     private TimeBlock start = null;
     private TimeBlock end = null;
     private DutyLevel dutyLevel = null;
+
+    /* ------------------------ CONSTRUCTORS ------------------------ */
 
     public Shift() {}
 
@@ -21,6 +27,10 @@ public class Shift {
         this.end = end;
         this.dutyLevel = dutyLevel;
     }
+
+    /* ------------------------ FUNCTIONS ------------------------ */
+
+    /*------------------------ GETTERS & SETTERS ------------------------*/
 
     public String getTitle() {
         return title;
@@ -61,6 +71,8 @@ public class Shift {
     public void setDutyLevel(DutyLevel dutyLevel) {
         this.dutyLevel = dutyLevel;
     }
+
+    /*------------------------ TOSTRING ------------------------*/
 
     @Override
     public String toString() {

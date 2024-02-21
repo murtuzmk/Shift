@@ -29,15 +29,16 @@ public class Person {
         /* Co-Ed */
         EARHART,
         FIRST_STREET_TOWERS,
-        FRIEDA_PARKER_HALL,
-        WINIFRED_PARKER_HALL,
-        HARRISON_HALL,
-        HAWKINGS_HALL,
-        HILLENBRAND_HALL,
+        FRIEDA_PARKER,
+        WINIFRED_PARKER,
+        HARRISON,
+        HAWKINS,
+        HILLENBRAND,
         HONORS_COLLEGE,
-        OWEN_HALL,
-        SHREVE_HALL,
-        WILEY
+        OWEN,
+        SHREVE,
+        WILEY,
+        URBA //official acronym for apartments at Purdue
     }
 
     private String name = null;

@@ -10,6 +10,7 @@ import Landing from "./pages/Landing.tsx";
 import App from "./App.tsx";
 import { Dashboard } from "./pages/Dashboard.tsx";
 import { Settings } from "./pages/Settings.tsx";
+import { ShiftCalendar } from "./pages/ShiftCalendar.tsx";
 import { Auth0Provider } from "@auth0/auth0-react";
 
 const router = createBrowserRouter([
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
       },
       { path: "dashboard", element: <Dashboard /> },
       { path: "settings", element: <Settings /> },
+      { path: "calendar", element: <ShiftCalendar /> },
     ],
   },
 ]);

@@ -19,14 +19,13 @@ const events = [
 
 const MyCalendar = () => {
   return (
-    <div style={{ height: '500px' }}>
-      <Calendar
-        localizer={localizer}
-        events={events}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ margin: '50px' }}
-      />
+    <div className="bg-gray-400 h-100 w-100 flex justify-center items-center text-2xl">
+        <Calendar
+          localizer={localizer}
+          events={events}
+          startAccessor="start"
+          endAccessor="end"
+        />
     </div>
   );
 };

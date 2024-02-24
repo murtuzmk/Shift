@@ -19,7 +19,7 @@ const events = [
 
 const MyCalendar = () => {
   return (
-    <div className="bg-gray-400 h-full flex justify-center items-center text-2xl">
+    <div className="bg-gray-400 h-full justify-center items-center">
         <Calendar
           localizer={localizer}
           events={events}

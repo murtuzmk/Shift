@@ -3,25 +3,22 @@ import java.util.List;
 
 public class Schedule {
 
-    private List<Shift> events;
+    /* ------------------------ VARIABLES ------------------------ */
+
+    private ArrayList<Shift> events;
+
+    /* ------------------------ CONSTRUCTORS ------------------------ */
 
     public Schedule () {
         this.events = new ArrayList<>();
     }
 
-    public Schedule(List<Shift> events) {
+    public Schedule(ArrayList<Shift> events) {
         this.events = events;
     }
 
-    public List<Shift> getEvents() {
-        return events;
-    }
-
-
-    public void setEvents(List<Shift> events) {
-        this.events = events;
-    }
-
+    /* ------------------------ FUNCTIONS ------------------------ */
+  
     public void addEvent(Shift newEvent) {
         events.add(newEvent);
     }
@@ -29,6 +26,19 @@ public class Schedule {
     public void deleteEvent(Shift eventToDelete) {
         events.remove(eventToDelete);
     }
+
+    /*------------------------ GETTERS & SETTERS ------------------------*/
+
+    public List<Shift> getEvents() {
+        return events;
+    }
+
+
+    public void setEvents(ArrayList<Shift> events) {
+        this.events = events;
+    }
+
+    /*------------------------ TOSTRING ------------------------*/
 
     @java.lang.Override
     public java.lang.String toString() {

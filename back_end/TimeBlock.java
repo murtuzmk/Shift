@@ -6,7 +6,7 @@ import java.util.Date;
 public class TimeBlock {
 
     /* ------------------------ VARIABLES ------------------------ */
-
+  
     private int hour = -1;
     private int minute = -1;
     private int day = -1;

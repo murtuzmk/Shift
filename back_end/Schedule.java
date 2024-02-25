@@ -1,25 +1,39 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Schedule {
 
-    private Shift[] events = null;
+    private List<Shift> events;
 
-    public Schedule () {}
+    public Schedule () {
+        this.events = new ArrayList<>();
+    }
 
-    public Schedule(Shift[] events) {
+    public Schedule(List<Shift> events) {
         this.events = events;
     }
 
-    public Shift[] getEvents() {
+    public List<Shift> getEvents() {
         return events;
     }
 
-    public void setEvents(Shift[] events) {
+
+    public void setEvents(List<Shift> events) {
         this.events = events;
+    }
+
+    public void addEvent(Shift newEvent) {
+        events.add(newEvent);
+    }
+
+    public void deleteEvent(Shift eventToDelete) {
+        events.remove(eventToDelete);
     }
 
     @java.lang.Override
     public java.lang.String toString() {
         return "Schedule{" +
-                "events=" + java.util.Arrays.toString(events) +
+                "events=" + events +
                 '}';
     }
 }

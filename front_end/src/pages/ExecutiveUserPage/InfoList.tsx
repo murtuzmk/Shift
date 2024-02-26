@@ -1,9 +1,10 @@
-function ListGroup() {
+import { useUser } from "../../hooks/useUser";
+function InfoList() {
+  const { user } = useUser();
   <img src="" alt="" />;
   /* Import this specific info from backend later*/
   const items = [
     "RA @ Cary Quadrangle",
-    "Name: Samson",
     "Username: EriSamson",
     "Password: **********",
   ];
@@ -21,4 +22,4 @@ function ListGroup() {
   );
 }
 
-export default ListGroup;
+export default InfoList;

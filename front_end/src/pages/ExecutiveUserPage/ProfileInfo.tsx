@@ -1,6 +1,6 @@
 import Message from "./Message";
 import ProfilePicture from "./ProfilePic";
-import "./ProfileInfo.css";
+import "./style/ProfileInfo.css";
 
 function ProfileInfo() {
   return (

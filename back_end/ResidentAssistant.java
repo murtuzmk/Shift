@@ -1,3 +1,8 @@
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
 public class ResidentAssistant extends Person{
 
     /* ------------------------ VARIABLES ------------------------ */
@@ -27,6 +32,59 @@ public class ResidentAssistant extends Person{
     }
 
     /* ------------------------ FUNCTIONS ------------------------ */
+
+    /* TODO: FINISH FUNCTION
+    public boolean loadAccountFile(Role role, String id) {
+        String fileName = role + "_" + id + ".txt";
+        File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
+        if (!userInformation.exists()) {
+            return false;
+        }
+        try {
+            Scanner reader = new Scanner(userInformation);
+            String person = reader.nextLine();
+            String ra = reader.nextLine();
+
+            String[] personAttributes = person.split("[=,]");
+            String[] raAttributes = ra.split("=");
+
+            for (String str : personAttributes) {
+                System.out.println(str);
+            }
+
+            for (String str : raAttributes) {
+                System.out.println(str);
+            }
+
+            reader.close();
+        } catch (Exception e) {
+            System.out.println("Error in RA Account Loading");
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+     */
+
+    public void saveAccountFile() {
+        String fileName = this.getRole() + "_" + this.getId() + ".txt";
+        File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
+        try {
+            PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
+            pw.println(this.toString() + "\n");
+            pw.close();
+        } catch (Exception e) {
+            System.out.println("Error in RA Account Saving");
+            e.printStackTrace();
+        }
+    }
+
+    public boolean deleteAccountFile() {
+        String fileName = this.getRole() + "_" + this.getId() + ".txt";
+        File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
+        return userInformation.delete();
+    }
 
     /*
      * Deletes the contents of all variables related to this class

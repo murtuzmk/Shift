@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 public class ResidentEducationCoordinator extends ResidentEducationAssistant {
 
@@ -29,6 +32,26 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
     }
 
     /* ------------------------ FUNCTIONS ------------------------ */
+
+    public void saveAccountFile() {
+        String fileName = this.getRole() + "_" + this.getId() + ".txt";
+        File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
+        try {
+            PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
+            pw.println(this.toString() + "\n");
+            pw.close();
+        } catch (Exception e) {
+            System.out.println("Error in RA Account Saving");
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean deleteAccountFile() {
+        String fileName = this.getRole() + "_" + this.getId() + ".txt";
+        File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
+        return userInformation.delete();
+    }
 
     /*
      * Deletes the contents of all variables related to this class

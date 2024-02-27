@@ -15,11 +15,12 @@ interface EventDialogProps {
   isOpen: boolean;
   onSubmit: (event: Event) => void;
   onCancel: () => void;
+  onDelete: () => void;
   start: Date;
   end: Date;
 }
 
-const EventDialog = ({ isOpen, onSubmit, onCancel, start, end }: EventDialogProps) => {
+const EventDialog = ({ isOpen, onSubmit, onCancel, onDelete, start, end }: EventDialogProps) => {
   const [title, setTitle] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -40,6 +41,7 @@ const EventDialog = ({ isOpen, onSubmit, onCancel, start, end }: EventDialogProp
         </label>
         <button onClick={onCancel}>Cancel</button>
         <button type="submit">Create Event</button>
+        <button type="button" onClick={onDelete}>Delete Event</button>
       </form>
     </Modal>
   );
@@ -64,6 +66,29 @@ const MyCalendar = () => {
     setDialogOpen(false);
   };
 
+  const handleSelectEvent = (event: Event) => {
+    setSelectedEvent(event);
+    setDialogOpen(true);
+  };
+
+  const handleUpdateEvent = (updatedEvent: Event) => {
+    setEvents(prevEvents =>
+      prevEvents.map(event =>
+        event.start === updatedEvent.start && event.end === updatedEvent.end
+          ? updatedEvent
+          : event
+      )
+    );
+    setDialogOpen(false);
+  };
+
+  const handleDeleteEvent = () => {
+    if (selectedEvent) {
+      setEvents(prevEvents => prevEvents.filter(event => event !== selectedEvent));
+      setDialogOpen(false);
+    }
+  };
+
   return (
     <div style = {{ width: '800px', height: '400px' }}>
       <Calendar
@@ -73,13 +98,15 @@ const MyCalendar = () => {
         endAccessor="end"
         titleAccessor="title"
         onSelectSlot={handleSelect}
+        onSelectEvent={handleSelectEvent}
         selectable = {true}
       />
       {selectedEvent && (
         <EventDialog
           isOpen={isDialogOpen}
-          onSubmit={handleCreateEvent}
+          onSubmit={selectedEvent.title ? handleUpdateEvent : handleCreateEvent}
           onCancel={handleCancel}
+          onDelete={handleDeleteEvent} 
           start={selectedEvent.start}
           end={selectedEvent.end}
         />

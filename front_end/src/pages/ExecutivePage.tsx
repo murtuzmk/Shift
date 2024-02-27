@@ -1,7 +1,5 @@
 import { SetStateAction, useState } from "react";
-import InfoList from "./ExecutiveUserPage/InfoList";
 import Message from "./ExecutiveUserPage/Message";
-import ProfileInfo from "./ExecutiveUserPage/ProfileInfo";
 import TextField from "./ExecutiveUserPage/TextField";
 import Dropdown from "./ExecutiveUserPage/DropDown";
 import Notepad from "./ExecutiveUserPage/NotePad";

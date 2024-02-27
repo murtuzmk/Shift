@@ -1,5 +1,7 @@
 public class Message {
 
+    /* ------------------------ VARIABLES ------------------------ */
+
     private int id = -1;
     private Person sender = null;
     private String content = null;
@@ -7,6 +9,8 @@ public class Message {
     private boolean pinned = false;
     private Message prev = null;
     private Message next = null;
+
+    /* ------------------------ CONSTRUCTORS ------------------------ */
 
     public Message() {}
 
@@ -19,6 +23,10 @@ public class Message {
         this.prev = prev;
         this.next = next;
     }
+
+    /* ------------------------ FUNCTIONS ------------------------ */
+
+    /*------------------------ GETTERS & SETTERS ------------------------*/
 
     public int getId() {
         return id;
@@ -75,6 +83,8 @@ public class Message {
     public void setNext(Message next) {
         this.next = next;
     }
+
+    /*------------------------ TOSTRING ------------------------*/
 
     @Override
     public String toString() {

@@ -40,7 +40,6 @@ public class ResidentAssistant extends Person{
 
     public boolean loadAccountFile(String userId) {
         String fileName = this.getRole() + "_" + userId + ".txt";
-        System.out.println(fileName);
         File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
         if (!userInformation.exists()) {
             return false;
@@ -67,14 +66,9 @@ public class ResidentAssistant extends Person{
             // Set RA attributes
             floor = raAttributes[0];
             clockedIn = Boolean.parseBoolean(raAttributes[1]);
+            schedule = new Schedule();
+            schedule.loadScheduleFile(raSchedule);
 
-            // schedule.loadSchedule(raSchedule)
-
-            for (String str : raAttributes) {
-                System.out.println(str);
-            }
-
-            System.out.println(raSchedule);
 
             for (String str : chatIds) {
                 System.out.println(str);

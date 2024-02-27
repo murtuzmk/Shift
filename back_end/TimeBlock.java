@@ -46,6 +46,10 @@ public class TimeBlock {
 
     /* ------------------------ FUNCTIONS ------------------------ */
 
+    public String storageString() {
+        return hour  + "|" + minute + "|" + timezone + "|" + day + "|" + month + "|" + year;
+    }
+
     /*
      * Calculates whether a TimeBlock is past a certain expiration
      * period, i.e. the TimeBlock is a certain number of days, hours,

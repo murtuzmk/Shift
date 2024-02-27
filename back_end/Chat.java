@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Chat {
@@ -5,22 +6,18 @@ public class Chat {
     /* ------------------------ VARIABLES ------------------------ */
 
     private int id = -1;
-    private Person[] members = null;
+    private ArrayList<Person> members = null;
     private Message messages = null;
-    private Chat prev = null;
-    private Chat next = null;
 
     /* ------------------------ CONSTRUCTORS ------------------------ */
 
     public Chat() {
     }
 
-    public Chat(int id, Person[] members, Message messages, Chat prev, Chat next) {
+    public Chat(int id, ArrayList<Person> members, Message messages) {
         this.id = id;
         this.members = members;
         this.messages = messages;
-        this.prev = prev;
-        this.next = next;
     }
 
     /* ------------------------ FUNCTIONS ------------------------ */
@@ -153,18 +150,6 @@ public class Chat {
         return buffer.toString();
     }
 
-    /*
-     * Removes current chat from the list of chats it exists in.
-     */
-    public void deleteChat() {
-        if (prev != null) {
-            prev.setNext(next);
-        }
-        if (next != null) {
-            next.setPrev(prev);
-        }
-    }
-
     /*------------------------ GETTERS & SETTERS ------------------------*/
 
     public int getId() {
@@ -175,11 +160,11 @@ public class Chat {
         this.id = id;
     }
 
-    public Person[] getMembers() {
+    public ArrayList<Person> getMembers() {
         return members;
     }
 
-    public void setMembers(Person[] members) {
+    public void setMembers(ArrayList<Person> members) {
         this.members = members;
     }
 
@@ -191,32 +176,14 @@ public class Chat {
         this.messages = messages;
     }
 
-    public Chat getPrev() {
-        return prev;
-    }
-
-    public void setPrev(Chat prev) {
-        this.prev = prev;
-    }
-
-    public Chat getNext() {
-        return next;
-    }
-
-    public void setNext(Chat next) {
-        this.next = next;
-    }
-
     /*------------------------ TOSTRING ------------------------*/
 
     @Override
     public String toString() {
         return "Chat{" +
                 "id=" + id +
-                ", members=" + Arrays.toString(members) +
+                ", members=" + members +
                 ", messages=" + messages +
-                ", prev=" + prev +
-                ", next=" + next +
                 '}';
     }
 }

@@ -6,9 +6,9 @@ function Message() {
 
   // JSX: JavaScript XML
   return (
-    <div className="text-center -mt-4">
+    <div className="text-center">
       <h2 className="text-2xl font-bold">Executive Page</h2>
-      <h3 className="text-xl font-bold">Welcome, {user?.name}!</h3>
+      <h3 className="text-lg italic font-semibold">Welcome, {user?.name}!</h3>
     </div>
   );
 }

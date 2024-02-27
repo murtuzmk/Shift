@@ -3,49 +3,48 @@ import Message from "./ExecutiveUserPage/Message";
 import TextField from "./ExecutiveUserPage/TextField";
 import Dropdown from "./ExecutiveUserPage/DropDown";
 import Notepad from "./ExecutiveUserPage/NotePad";
+
 function ExecutivePage() {
   const [inputValue, setInputValue] = useState("");
+
   const handleInputChange = (event: {
     target: { value: SetStateAction<string> };
   }) => {
     setInputValue(event.target.value);
   };
-  const handleButtonClick = () => {
-    console.log("Current input value:", inputValue);
-    // Perform any action on button click, e.g., submit the input value
-  };
+
   const dropdownOptions = [
-    { label: "RA 1" },
-    { label: "RA 2" },
-    { label: "RA 3" },
+    { label: "RA 1", value: "RA1" }, // Ensure each option has a value property
+    { label: "RA 2", value: "RA2" },
+    { label: "RA 3", value: "RA3" },
   ];
 
-  const handleDropdownChange = (option: { label: any }) => {
-    console.log("Selected:", option.label);
+  const handleDropdownChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    console.log("Selected:", event.target.value);
     // Perform actions based on the selected option
   };
+
   return (
-    <div className="mt-4">
-      <Message />
-      <div className="flex flex-col space-y-2">
-        {" "}
-        {/* flex-col- vertical alignment , space-y-2 for spacing */}
-        <div className="flex items-center space-x-2">
-          {" "}
-          {/* This div for horizontal alignment of text field and button */}
-          <TextField label="Min Hours: " onChange={handleInputChange} />
-          <button
-            onClick={handleButtonClick}
-            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-3 rounded" // Updated classes for grey button
-          >
-            Submit
-          </button>
-        </div>
-        <Dropdown options={dropdownOptions} onSelect={handleDropdownChange} />{" "}
-        {/* Dropdown aligned with the above elements */}
+    <>
+      <div className="mt-[-600px]">
+        <Message />
       </div>
-      {/* Note pad implement here*/}
-    </div>
+      <div className="fixed top-1/3 left-1/4 transform -translate-y-1/2 w-100">
+        <TextField label="Min Hours: " onChange={handleInputChange} />
+      </div>
+      <div className="fixed top-1/2 left-1/4 flex items-center">
+        <label className="mr-2">Your RAs:</label>
+        <Dropdown options={dropdownOptions} onSelect={handleDropdownChange} />
+      </div>
+      <div className="fixed top-[calc(50%-150px)] right-10">
+        {" "}
+        {/* Adjusted top positioning */}
+        <Notepad />
+      </div>
+    </>
   );
 }
+
 export default ExecutivePage;

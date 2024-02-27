@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ResidentAssistant extends Person{
@@ -10,32 +11,36 @@ public class ResidentAssistant extends Person{
     private String floor = null;
     private boolean clockedIn = false;
     private Schedule schedule = null;
-    private Chat chats = null;
+    private ArrayList<Chat> chats = null;
 
     /* ------------------------ CONSTRUCTORS ------------------------ */
 
-    public ResidentAssistant() {}
-
-    public ResidentAssistant(String floor, boolean clockedIn, Schedule schedule, Chat chats) {
-        this.floor = floor;
-        this.clockedIn = clockedIn;
-        this.schedule = schedule;
-        this.chats = chats;
+    public ResidentAssistant() {
+        this.setRole(Role.RA);
     }
 
-    public ResidentAssistant(String name, String email, String password, String id, Gender gender, Role role, Hall hall, boolean enabled, String floor, boolean clockedIn, Schedule schedule, Chat chats) {
-        super(name, email, password, id, gender, role, hall, enabled);
+    public ResidentAssistant(String floor, boolean clockedIn, Schedule schedule, ArrayList<Chat> chats) {
         this.floor = floor;
         this.clockedIn = clockedIn;
         this.schedule = schedule;
         this.chats = chats;
+        this.setRole(Role.RA);
+    }
+
+    public ResidentAssistant(String name, String email, String id, Gender gender, Hall hall, boolean enabled, String floor, boolean clockedIn, Schedule schedule, ArrayList<Chat> chats) {
+        super(name, email, id, gender, hall, enabled);
+        this.floor = floor;
+        this.clockedIn = clockedIn;
+        this.schedule = schedule;
+        this.chats = chats;
+        this.setRole(Role.RA);
     }
 
     /* ------------------------ FUNCTIONS ------------------------ */
 
-    /* TODO: FINISH FUNCTION
-    public boolean loadAccountFile(Role role, String id) {
-        String fileName = role + "_" + id + ".txt";
+    public boolean loadAccountFile(String userId) {
+        String fileName = this.getRole() + "_" + userId + ".txt";
+        System.out.println(fileName);
         File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
         if (!userInformation.exists()) {
             return false;
@@ -44,15 +49,34 @@ public class ResidentAssistant extends Person{
             Scanner reader = new Scanner(userInformation);
             String person = reader.nextLine();
             String ra = reader.nextLine();
+            String raSchedule = reader.nextLine();
+            String raChats = reader.nextLine();
 
-            String[] personAttributes = person.split("[=,]");
-            String[] raAttributes = ra.split("=");
+            String[] personAttributes = person.split("[|]");
+            String[] raAttributes = ra.split("[|]");
+            String[] chatIds = raChats.split("[|]");
 
-            for (String str : personAttributes) {
+            // Set Person attributes.
+            this.setName(personAttributes[0]);
+            this.setEmail(personAttributes[1]);
+            this.setId(userId);
+            this.setGender(Gender.valueOf(personAttributes[2]));
+            this.setHall(Hall.valueOf(personAttributes[3]));
+            this.setEnabled(Boolean.parseBoolean(personAttributes[4]));
+
+            // Set RA attributes
+            floor = raAttributes[0];
+            clockedIn = Boolean.parseBoolean(raAttributes[1]);
+
+            // schedule.loadSchedule(raSchedule)
+
+            for (String str : raAttributes) {
                 System.out.println(str);
             }
 
-            for (String str : raAttributes) {
+            System.out.println(raSchedule);
+
+            for (String str : chatIds) {
                 System.out.println(str);
             }
 
@@ -65,14 +89,30 @@ public class ResidentAssistant extends Person{
 
         return true;
     }
-     */
 
     public void saveAccountFile() {
         String fileName = this.getRole() + "_" + this.getId() + ".txt";
         File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
         try {
             PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
-            pw.println(this.toString() + "\n");
+
+            pw.println(getName() + "|" + getEmail() + "|" + getGender() + "|" + "|" + getHall() + "|" + isEnabled() + "|" + getTimezone());
+            pw.println(floor + "|" + clockedIn);
+            pw.println("Schedule_" + this.getId() + ".txt");
+
+            if (chats != null) {
+                for (int i = 0; i < chats.size(); i++) {
+                    if (i != 0) {
+                        pw.print("|");
+                    }
+                    pw.print(chats.get(i).getId());
+                }
+            }
+            else {
+                pw.println("null");
+            }
+
+
             pw.close();
         } catch (Exception e) {
             System.out.println("Error in RA Account Saving");
@@ -91,8 +131,8 @@ public class ResidentAssistant extends Person{
      * and superclass and sets them to null.
      */
     @Override
-    public void deleteAccount() {
-        super.deleteAccount();
+    public void deleteUserInformation() {
+        super.deleteUserInformation();
         floor = null;
         clockedIn = false;
         schedule = null;
@@ -105,24 +145,11 @@ public class ResidentAssistant extends Person{
      *
      * @param inputChat: The chat to add to the list
      */
-    public void addChat(Chat inputChat) {
-
-        /* Check if list is empty */
+    public void addChat(Chat chat) {
         if (chats == null) {
-            chats = inputChat;
-            inputChat.setPrev(inputChat);
-            inputChat.setNext(inputChat);
-            return;
+            chats = new ArrayList<>();
         }
-
-        /* Append chat to end of list */
-        Chat prevChat = chats.getPrev();
-        Chat nextChat = chats;
-
-        inputChat.setPrev(prevChat);
-        inputChat.setNext(nextChat);
-        prevChat.setNext(inputChat);
-        nextChat.setPrev(inputChat);
+        chats.add(chat);
     }
 
     /*
@@ -130,47 +157,12 @@ public class ResidentAssistant extends Person{
      * It will not do anything if the given id does not exist
      * within the list.
      *
-     * @param id: The id of chat to remove from the list
+     * @param Chat: The chat to remove from the list
      */
-    public void deleteChat(int id) {
-
-        /* Check if list is empty */
-        if (chats == null) {
-            return;
+    public void deleteChat(Chat chat) {
+        if (chats != null) {
+            chats.remove(chat);
         }
-
-        /* Check if chat is the only one */
-        if ((chats == chats.getNext()) && (chats.getId() == id)) {
-            chats = null;
-            return;
-        }
-
-        /* Search for chat in chat based on id */
-        Chat currentChat = chats;
-        Chat firstChat = chats;
-
-        do {
-
-            /* Chat is found */
-            if (currentChat.getId() == id) {
-                break;
-            }
-
-            /* Next Chat */
-            currentChat = currentChat.getNext();
-
-        } while (currentChat != firstChat);
-
-        /* Chat not found */
-        if (currentChat == firstChat) {
-            return;
-        }
-
-        /* Chat found */
-        Chat prevChat = currentChat.getPrev();
-        Chat nextChat = currentChat.getNext();
-        prevChat.setNext(nextChat);
-        nextChat.setPrev(prevChat);
     }
 
     /*------------------------ GETTERS & SETTERS ------------------------*/
@@ -199,11 +191,11 @@ public class ResidentAssistant extends Person{
         this.schedule = schedule;
     }
 
-    public Chat getChats() {
+    public ArrayList<Chat> getChats() {
         return chats;
     }
 
-    public void setChats(Chat chats) {
+    public void setChats(ArrayList<Chat> chats) {
         this.chats = chats;
     }
 

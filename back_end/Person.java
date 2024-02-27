@@ -48,7 +48,6 @@ public class Person {
 
     private String name = null;
     private String email = null;
-    private String password = null;
     private String id = null;
     private Gender gender = null;
     private Role role = null;
@@ -60,13 +59,11 @@ public class Person {
 
     public Person() {}
 
-    public Person(String name, String email, String password, String id, Gender gender, Role role, Hall hall, boolean enabled) {
+    public Person(String name, String email, String id, Gender gender, Hall hall, boolean enabled) {
         this.name = name;
         this.email = email;
-        this.password = password;
         this.id = id;
         this.gender = gender;
-        this.role = role;
         this.hall = hall;
         this.enabled = enabled;
     }
@@ -77,10 +74,9 @@ public class Person {
      * Deletes the contents of all variables related to this class
      * and superclasses and sets them to null.
      */
-    public void deleteAccount() {
+    public void deleteUserInformation() {
         name = null;
         email = null;
-        password = null;
         id = null;
         gender = null;
         role = null;
@@ -118,14 +114,6 @@ public class Person {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getId() {
@@ -183,7 +171,6 @@ public class Person {
         return "Person{" +
                 "name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
                 ", id=" + id +
                 ", gender=" + gender +
                 ", role=" + role +

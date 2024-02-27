@@ -29,7 +29,7 @@ public class Schedule {
 
     /*------------------------ GETTERS & SETTERS ------------------------*/
 
-    public List<Shift> getEvents() {
+    public ArrayList<Shift> getEvents() {
         return events;
     }
 

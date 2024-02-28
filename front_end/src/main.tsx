@@ -8,9 +8,10 @@ import {
 } from "react-router-dom";
 import Landing from "./pages/Landing.tsx";
 import App from "./App.tsx";
-import { Dashboard } from "./pages/Dashboard.tsx";
-import { Settings } from "./pages/Settings.tsx";
+
 import { Auth0Provider } from "@auth0/auth0-react";
+import Dashboard from "./pages/Dashboard.tsx";
+import Settings from "./pages/Settings.tsx";
 
 const router = createBrowserRouter([
   {

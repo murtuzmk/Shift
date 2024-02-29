@@ -5,6 +5,7 @@ import Modal from 'react-modal';
 import { v4 as uuidv4 } from 'uuid';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 const localizer = momentLocalizer(moment);
+import './calendar.css';
 interface Event {
   start: Date;
   end: Date;
@@ -56,6 +57,19 @@ const MyCalendar = () => {
   useEffect(() => {
     const savedEvents = localStorage.getItem('events');
     if (savedEvents) {
+      const parsedEvents: Event[] = JSON.parse(savedEvents);
+      const eventsWithDates: Event[] = parsedEvents.map(event => ({
+        ...event,
+        start: new Date(event.start),
+        end: new Date(event.end),
+      }));
+      setEvents(eventsWithDates);
+    }
+  }, []);
+
+  useEffect(() => {
+    const savedEvents = localStorage.getItem('events');
+    if (savedEvents) {
       setEvents(JSON.parse(savedEvents));
     }
   }, []);
@@ -63,6 +77,8 @@ const MyCalendar = () => {
   useEffect(() => {
     localStorage.setItem('events', JSON.stringify(events));
   }, [events]);
+
+  
 
   const handleSelect = ({ start, end}: { start: Date, end: Date }) => {
     setSelectedEvent({ start, end, title: '', id: ''});

@@ -1,4 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
+import { Button } from "@chakra-ui/react";
 
 /**
  * Landing page for Shift.
@@ -15,7 +16,13 @@ const Landing = () => {
       <h1 className="text-9xl font-bold">Welcome to Shift!</h1>
       <p className="text-4xl font-medium">The best app for RA scheduling!</p>
       <div className="flex justify-between mt-8 gap-8 ">
-        <button onClick={() => loginWithRedirect()}>Log In</button>
+        <Button
+          onClick={() => loginWithRedirect()}
+          size="lg"
+          colorScheme="blue"
+        >
+          Log in
+        </Button>
       </div>
     </main>
   );

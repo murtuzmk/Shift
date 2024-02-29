@@ -15,10 +15,12 @@ import Settings from "./pages/Settings.tsx";
 
 import ExecutivePage from "./pages/ExecutivePage.tsx";
 import { MyAvailability } from "./pages/MyAvailability.tsx";
+import ErrorPage from "./pages/ErrorPage.tsx";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Landing />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/app",

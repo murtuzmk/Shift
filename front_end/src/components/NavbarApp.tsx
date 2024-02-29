@@ -12,8 +12,15 @@ import {
 } from "@chakra-ui/react";
 import { HiBell, HiMiniBars3CenterLeft } from "react-icons/hi2";
 import { HiOutlineSearch } from "react-icons/hi";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const NavbarApp = () => {
+  const { user, isAuthenticated, isLoading, logout } = useAuth0();
+
+  if (isLoading) {
+    return <div>Loading ...</div>;
+  }
+
   return (
     <nav className="bg-gray-50 p-3 flex items-center justify-between border-b border-gray-300">
       <div className="flex space-x-16 items-center">
@@ -59,15 +66,39 @@ const NavbarApp = () => {
           role="group"
         />
         <Menu>
-          <MenuButton
-            as={Avatar}
-            name="Dan Abrahmov"
-            src="https://bit.ly/dan-abramov"
-            size="sm"
-            className="cursor-pointer"
-          />
+          {isAuthenticated && user ? (
+            <MenuButton
+              as={Avatar}
+              name={user.name}
+              src={user.picture}
+              size="sm"
+              className="cursor-pointer"
+            />
+          ) : (
+            <MenuButton
+              as={Avatar}
+              size="sm"
+              className="cursor-pointer"
+              bg="blue.500"
+            />
+          )}
+
           <MenuList>
-            <MenuItem className="hover:bg-gray-100" bg="none">
+            {isAuthenticated && user && (
+              <>
+                <h1 className="px-4 pt-2 font-bold">{user.name}</h1>
+                <h1 className="px-4 pt-1 pb-2 mb-2 font-medium">
+                  {user.email}
+                </h1>
+              </>
+            )}
+            <MenuItem
+              className="hover:bg-gray-100"
+              bg="none"
+              onClick={() =>
+                logout({ logoutParams: { returnTo: window.location.origin } })
+              }
+            >
               Sign out
             </MenuItem>
           </MenuList>

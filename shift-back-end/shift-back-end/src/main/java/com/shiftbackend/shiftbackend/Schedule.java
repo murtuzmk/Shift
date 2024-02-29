@@ -23,8 +23,9 @@ public class Schedule {
 
     /* ------------------------ FUNCTIONS ------------------------ */
 
-    public boolean loadScheduleFile(String fileName) {
-        File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
+    public boolean loadScheduleFile(String id) {
+        String fileName = "Schedule_" + id +  ".txt";
+        File userInformation = new File(System.getProperty("user.dir"), fileName);
         if (!userInformation.exists()) {
             return false;
         }
@@ -46,9 +47,10 @@ public class Schedule {
                 TimeBlock startTime = new TimeBlock(Integer.parseInt(start[0]), Integer.parseInt(start[1]), Integer.parseInt(start[4]), Integer.parseInt(start[3]), Integer.parseInt(start[5]), Integer.parseInt(start[2]));
                 TimeBlock endTime = new TimeBlock(Integer.parseInt(end[0]), Integer.parseInt(end[1]), Integer.parseInt(end[4]), Integer.parseInt(end[3]), Integer.parseInt(end[5]), Integer.parseInt(end[2]));
 
-                tempEvent.setTitle(eventAttributes[0]);
-                tempEvent.setDescription(eventAttributes[1]);
-                tempEvent.setDutyLevel(Shift.DutyLevel.valueOf(eventAttributes[2]));
+                tempEvent.setId(eventAttributes[0]);
+                tempEvent.setTitle(eventAttributes[1]);
+                tempEvent.setDescription(eventAttributes[2]);
+                tempEvent.setDutyLevel(Shift.DutyLevel.valueOf(eventAttributes[3]));
                 tempEvent.setStart(startTime);
                 tempEvent.setEnd(endTime);
 
@@ -58,7 +60,7 @@ public class Schedule {
 
             reader.close();
         } catch (Exception e) {
-            System.out.println("Error in RA Account Loading");
+            System.out.println("Error in Schedule Loading");
             e.printStackTrace();
             return false;
         }
@@ -66,14 +68,15 @@ public class Schedule {
         return true;
     }
 
-    public void saveScheduleFile(String fileName) {
-        File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
+    public void saveScheduleFile(String id) {
+        String fileName = "Schedule_" + id +  ".txt";
+        File userInformation = new File(System.getProperty("user.dir"), fileName);
         try {
             PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
 
             if (events != null) {
                 for (Shift event : events) {
-                    pw.println(event.getTitle() + "|" + event.getDescription() + "|" + event.getDutyLevel());
+                    pw.println(event.getId() + "|" + event.getTitle() + "|" + event.getDescription() + "|" + event.getDutyLevel());
                     pw.println(event.getStart().storageString());
                     pw.println(event.getEnd().storageString());
                 }
@@ -90,8 +93,9 @@ public class Schedule {
         }
     }
 
-    public boolean deleteAccountFile(String fileName) {
-        File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
+    public boolean deleteAccountFile(String id) {
+        String fileName = "Schedule_" + id +  ".txt";
+        File userInformation = new File(System.getProperty("user.dir"), fileName);
         return userInformation.delete();
     }
 
@@ -99,9 +103,57 @@ public class Schedule {
         events.add(newEvent);
     }
 
-    public void deleteEvent(Shift eventToDelete) {
+    public void deleteEvent(String eventId) {
+        for (int i = 0; i < events.size(); i++) {
+            if (eventId.equals(events.get(i).getId())) {
+                if (events.get(i).getDutyLevel() != null) {
+                    events.remove(i);
+                }
+            }
+        }
+    }
 
-        events.remove(eventToDelete);
+    public void deleteEventHour(int hour, int timezone) {
+        for (int i = 0; i < events.size(); i++) {
+            if (hour == events.get(i).getStart().getHour() && (timezone == events.get(i).getStart().getTimezone())) {
+                if (events.get(i).getDutyLevel() != null) {
+                    events.remove(i);
+                }
+            }
+        }
+    }
+
+    public void deleteEventDay(int day, int month, int timezone) {
+        for (int i = 0; i < events.size(); i++) {
+            if ((day == events.get(i).getStart().getDay()) && (month == events.get(i).getStart().getMonth()) && (timezone == events.get(i).getStart().getTimezone())) {
+                if (events.get(i).getDutyLevel() != null) {
+                    events.remove(i);
+                }
+            }
+        }
+    }
+
+    public void deleteEventWeek(int day, int month, int year, int timezone) {
+        TimeBlock weekStart = new TimeBlock(0, 0, month, day, year, timezone);
+        long weekEndSeconds = weekStart.getSecondsEpoch() + 604800;
+
+        for (int i = 0; i < events.size(); i++) {
+            if (weekEndSeconds > events.get(i).getStart().getSecondsEpoch()) {
+                if (events.get(i).getDutyLevel() != null) {
+                    events.remove(i);
+                }
+            }
+        }
+    }
+
+    public void deleteEventMonth(int month, int year, int timezone) {
+        for (int i = 0; i < events.size(); i++) {
+            if ((month == events.get(i).getStart().getMonth()) && (year == events.get(i).getStart().getYear()) && (timezone == events.get(i).getStart().getTimezone())) {
+                if (events.get(i).getDutyLevel() != null) {
+                    events.remove(i);
+                }
+            }
+        }
     }
 
     /*------------------------ GETTERS & SETTERS ------------------------*/

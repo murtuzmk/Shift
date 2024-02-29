@@ -14,29 +14,20 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
     /* ------------------------ CONSTRUCTORS ------------------------ */
 
     public ResidentEducationCoordinator() {
+        reaAccounts = new ArrayList<ResidentEducationAssistant>();
         this.setRole(Role.REC);
     }
 
-    public ResidentEducationCoordinator(ArrayList<ResidentEducationAssistant> reaAccounts) {
-        this.reaAccounts = reaAccounts;
+    public ResidentEducationCoordinator(String floor, boolean clockIn) {
+        super(floor, clockIn);
+        reaAccounts = new ArrayList<ResidentEducationAssistant>();
         this.setRole(Role.REC);
     }
 
-    public ResidentEducationCoordinator(ArrayList<ResidentAssistant> raAccounts, Scheduler masterSchedule, ArrayList<ResidentEducationAssistant> reaAccounts) {
-        super(raAccounts, masterSchedule);
-        this.reaAccounts = reaAccounts;
+    public ResidentEducationCoordinator(String name, String email, String id, Gender gender, Hall hall, boolean enabled, String floor, boolean clockIn) {
+        super(name, email, id, gender, hall, enabled, floor, clockIn);
+        reaAccounts = new ArrayList<ResidentEducationAssistant>();
         this.setRole(Role.REC);
-    }
-
-    public ResidentEducationCoordinator(String floor, boolean clockIn, Schedule schedule, ArrayList<Chat> chats, ArrayList<ResidentAssistant> raAccounts, Scheduler masterSchedule, ArrayList<ResidentEducationAssistant> reaAccounts) {
-        super(floor, clockIn, schedule, chats, raAccounts, masterSchedule);
-        this.reaAccounts = reaAccounts;
-        this.setRole(Role.REC);
-    }
-
-    public ResidentEducationCoordinator(String name, String email, String id, Gender gender, Hall hall, boolean enabled, String floor, boolean clockIn, Schedule schedule, ArrayList<Chat> chats, ArrayList<ResidentAssistant> raAccounts, Scheduler masterSchedule, ArrayList<ResidentEducationAssistant> reaAccounts) {
-        super(name, email, id, gender, hall, enabled, floor, clockIn, schedule, chats, raAccounts, masterSchedule);
-        this.reaAccounts = reaAccounts;
     }
 
     /* ------------------------ FUNCTIONS ------------------------ */
@@ -82,8 +73,7 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
     @Override
     public void deleteUserInformation() {
         super.deleteUserInformation();
-        reaAccounts.clear();
-        reaAccounts = null;
+        reaAccounts = new ArrayList<ResidentEducationAssistant>();
     }
 
     /*

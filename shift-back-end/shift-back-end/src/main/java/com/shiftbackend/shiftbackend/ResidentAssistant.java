@@ -43,7 +43,8 @@ public class ResidentAssistant extends Person{
 
     public boolean loadAccountFile(String userId) {
         String fileName = this.getRole() + "_" + userId + ".txt";
-        File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
+    
+        File userInformation = new File(System.getProperty("user.dir"), fileName);
         if (!userInformation.exists()) {
             return false;
         }
@@ -89,7 +90,7 @@ public class ResidentAssistant extends Person{
 
     public void saveAccountFile() {
         String fileName = this.getRole() + "_" + this.getId() + ".txt";
-        File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
+        File userInformation = new File(System.getProperty("user.dir"), fileName);
         try {
             PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
 
@@ -119,7 +120,7 @@ public class ResidentAssistant extends Person{
 
     public boolean deleteAccountFile() {
         String fileName = this.getRole() + "_" + this.getId() + ".txt";
-        File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
+        File userInformation = new File(System.getProperty("user.dir"), fileName);
         return userInformation.delete();
     }
 

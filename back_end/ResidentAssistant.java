@@ -1,9 +1,18 @@
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
 public class ResidentAssistant extends Person{
+
+    /* ------------------------ VARIABLES ------------------------ */
 
     private String floor = null;
     private boolean clockedIn = false;
     private Schedule schedule = null;
     private Chat chats = null;
+
+    /* ------------------------ CONSTRUCTORS ------------------------ */
 
     public ResidentAssistant() {}
 
@@ -14,14 +23,73 @@ public class ResidentAssistant extends Person{
         this.chats = chats;
     }
 
-    public ResidentAssistant(String name, String email, String password, int[] puid, Gender gender, Role role, Hall hall, boolean enabled, String floor, boolean clockedIn, Schedule schedule, Chat chats) {
-        super(name, email, password, puid, gender, role, hall, enabled);
+    public ResidentAssistant(String name, String email, String password, String id, Gender gender, Role role, Hall hall, boolean enabled, String floor, boolean clockedIn, Schedule schedule, Chat chats) {
+        super(name, email, password, id, gender, role, hall, enabled);
         this.floor = floor;
         this.clockedIn = clockedIn;
         this.schedule = schedule;
         this.chats = chats;
     }
 
+    /* ------------------------ FUNCTIONS ------------------------ */
+
+    /* TODO: FINISH FUNCTION
+    public boolean loadAccountFile(Role role, String id) {
+        String fileName = role + "_" + id + ".txt";
+        File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
+        if (!userInformation.exists()) {
+            return false;
+        }
+        try {
+            Scanner reader = new Scanner(userInformation);
+            String person = reader.nextLine();
+            String ra = reader.nextLine();
+
+            String[] personAttributes = person.split("[=,]");
+            String[] raAttributes = ra.split("=");
+
+            for (String str : personAttributes) {
+                System.out.println(str);
+            }
+
+            for (String str : raAttributes) {
+                System.out.println(str);
+            }
+
+            reader.close();
+        } catch (Exception e) {
+            System.out.println("Error in RA Account Loading");
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+     */
+
+    public void saveAccountFile() {
+        String fileName = this.getRole() + "_" + this.getId() + ".txt";
+        File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
+        try {
+            PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
+            pw.println(this.toString() + "\n");
+            pw.close();
+        } catch (Exception e) {
+            System.out.println("Error in RA Account Saving");
+            e.printStackTrace();
+        }
+    }
+
+    public boolean deleteAccountFile() {
+        String fileName = this.getRole() + "_" + this.getId() + ".txt";
+        File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
+        return userInformation.delete();
+    }
+
+    /*
+     * Deletes the contents of all variables related to this class
+     * and superclass and sets them to null.
+     */
     @Override
     public void deleteAccount() {
         super.deleteAccount();
@@ -30,6 +98,82 @@ public class ResidentAssistant extends Person{
         schedule = null;
         chats = null;
     }
+
+    /*
+     * Adds a chat the chats of the current resident assistant.
+     * It will append it to the end of the doubly linked list of chats.
+     *
+     * @param inputChat: The chat to add to the list
+     */
+    public void addChat(Chat inputChat) {
+
+        /* Check if list is empty */
+        if (chats == null) {
+            chats = inputChat;
+            inputChat.setPrev(inputChat);
+            inputChat.setNext(inputChat);
+            return;
+        }
+
+        /* Append chat to end of list */
+        Chat prevChat = chats.getPrev();
+        Chat nextChat = chats;
+
+        inputChat.setPrev(prevChat);
+        inputChat.setNext(nextChat);
+        prevChat.setNext(inputChat);
+        nextChat.setPrev(inputChat);
+    }
+
+    /*
+     * Removes chat from chats list of the current resident assistant.
+     * It will not do anything if the given id does not exist
+     * within the list.
+     *
+     * @param id: The id of chat to remove from the list
+     */
+    public void deleteChat(int id) {
+
+        /* Check if list is empty */
+        if (chats == null) {
+            return;
+        }
+
+        /* Check if chat is the only one */
+        if ((chats == chats.getNext()) && (chats.getId() == id)) {
+            chats = null;
+            return;
+        }
+
+        /* Search for chat in chat based on id */
+        Chat currentChat = chats;
+        Chat firstChat = chats;
+
+        do {
+
+            /* Chat is found */
+            if (currentChat.getId() == id) {
+                break;
+            }
+
+            /* Next Chat */
+            currentChat = currentChat.getNext();
+
+        } while (currentChat != firstChat);
+
+        /* Chat not found */
+        if (currentChat == firstChat) {
+            return;
+        }
+
+        /* Chat found */
+        Chat prevChat = currentChat.getPrev();
+        Chat nextChat = currentChat.getNext();
+        prevChat.setNext(nextChat);
+        nextChat.setPrev(prevChat);
+    }
+
+    /*------------------------ GETTERS & SETTERS ------------------------*/
 
     public String getFloor() {
         return floor;
@@ -62,6 +206,8 @@ public class ResidentAssistant extends Person{
     public void setChats(Chat chats) {
         this.chats = chats;
     }
+
+    /*------------------------ TOSTRING ------------------------*/
 
     @Override
     public String toString() {

@@ -23,8 +23,9 @@ public class Schedule {
 
     /* ------------------------ FUNCTIONS ------------------------ */
 
-    public boolean loadScheduleFile(String fileName) {
-        File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
+    public boolean loadScheduleFile(String id) {
+        String fileName = "Schedule_" + id +  ".txt";
+        File userInformation = new File(System.getProperty("user.dir"), fileName);
         if (!userInformation.exists()) {
             return false;
         }
@@ -58,7 +59,7 @@ public class Schedule {
 
             reader.close();
         } catch (Exception e) {
-            System.out.println("Error in RA Account Loading");
+            System.out.println("Error in Schedule Loading");
             e.printStackTrace();
             return false;
         }
@@ -66,8 +67,9 @@ public class Schedule {
         return true;
     }
 
-    public void saveScheduleFile(String fileName) {
-        File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
+    public void saveScheduleFile(String id) {
+        String fileName = "Schedule_" + id +  ".txt";
+        File userInformation = new File(System.getProperty("user.dir"), fileName);
         try {
             PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
 
@@ -90,8 +92,9 @@ public class Schedule {
         }
     }
 
-    public boolean deleteAccountFile(String fileName) {
-        File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
+    public boolean deleteAccountFile(String id) {
+        String fileName = "Schedule_" + id +  ".txt";
+        File userInformation = new File(System.getProperty("user.dir"), fileName);
         return userInformation.delete();
     }
 

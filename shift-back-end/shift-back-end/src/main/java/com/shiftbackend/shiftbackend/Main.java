@@ -17,12 +17,9 @@ public class Main {
         System.out.println(time.isExpired(0, 0, 0));
         */
 
-        ResidentAssistant ra = new ResidentAssistant("Alice", "dummy@gmail.com", "0123456789",
-                Person.Gender.FEMALE, Person.Hall.CARY, true, "1A", false, null, null);
-        ResidentEducationAssistant rea = new ResidentEducationAssistant("Bob", "dummy@gmail.com",  "1234567890",
-                Person.Gender.MALE, Person.Hall.CARY, true, "1A", false, null, null, null, null);
-        ResidentEducationAssistant rec = new ResidentEducationCoordinator("Cab", "dummy@gmail.com", "2345678901",
-                Person.Gender.NONBINARY, Person.Hall.CARY, true, "1A", false, null, null, null, null, null);
+        ResidentAssistant ra = new ResidentAssistant("Alice", "dummyAlice@gmail.com", "0123456789", Person.Gender.FEMALE, Person.Hall.CARY, true, "1A", false);
+        ResidentEducationAssistant rea = new ResidentEducationAssistant("Bob", "dummyBob@gmail.com",  "1234567890", Person.Gender.MALE, Person.Hall.WILEY, true, "1A", false);
+        ResidentEducationAssistant rec = new ResidentEducationCoordinator("Cab", "dummyCab@gmail.com", "2345678901", Person.Gender.NONBINARY, Person.Hall.OWEN, true, "1A", false);
 
         ResidentAssistant person = new ResidentAssistant();
         System.out.println( person.loadAccountFile("0123456789"));

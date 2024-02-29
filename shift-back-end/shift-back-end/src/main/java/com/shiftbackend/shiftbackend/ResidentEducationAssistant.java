@@ -16,26 +16,23 @@ public class ResidentEducationAssistant extends ResidentAssistant{
     /* ------------------------ CONSTRUCTORS ------------------------ */
 
     public ResidentEducationAssistant() {
+        raAccounts = new ArrayList<ResidentAssistant>();
+        masterSchedule = new Scheduler();
         this.setRole(Role.REA);
     }
 
-    public ResidentEducationAssistant(ArrayList<ResidentAssistant> raAccounts, Scheduler masterSchedule) {
-        this.raAccounts = raAccounts;
-        this.masterSchedule = masterSchedule;
+    public ResidentEducationAssistant(String floor, boolean clockIn) {
+        super(floor, clockIn);
+        raAccounts = new ArrayList<ResidentAssistant>();
+        masterSchedule = new Scheduler();
         this.setRole(Role.REA);
     }
 
-    public ResidentEducationAssistant(String floor, boolean clockIn, Schedule schedule, ArrayList<Chat> chats, ArrayList<ResidentAssistant> raAccounts, Scheduler masterSchedule) {
-        super(floor, clockIn, schedule, chats);
-        this.raAccounts = raAccounts;
-        this.masterSchedule = masterSchedule;
+    public ResidentEducationAssistant(String name, String email, String id, Gender gender, Hall hall, boolean enabled, String floor, boolean clockIn) {
+        super(name, email, id, gender, hall, enabled, floor, clockIn);
+        raAccounts = new ArrayList<ResidentAssistant>();
+        masterSchedule = new Scheduler();
         this.setRole(Role.REA);
-    }
-
-    public ResidentEducationAssistant(String name, String email, String id, Gender gender, Hall hall, boolean enabled, String floor, boolean clockIn, Schedule schedule, ArrayList<Chat> chats, ArrayList<ResidentAssistant> raAccounts, Scheduler masterSchedule) {
-        super(name, email, id, gender, hall, enabled, floor, clockIn, schedule, chats);
-        this.raAccounts = raAccounts;
-        this.masterSchedule = masterSchedule;
     }
 
     /* ------------------------ FUNCTIONS ------------------------ */

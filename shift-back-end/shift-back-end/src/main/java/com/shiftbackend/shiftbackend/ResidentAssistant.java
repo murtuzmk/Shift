@@ -20,22 +20,24 @@ public class ResidentAssistant extends Person{
 
     public ResidentAssistant() {
         this.setRole(Role.RA);
+        schedule = new Schedule();
+        chats = new ArrayList<Chat>();
     }
 
-    public ResidentAssistant(String floor, boolean clockedIn, Schedule schedule, ArrayList<Chat> chats) {
+    public ResidentAssistant(String floor, boolean clockedIn) {
         this.floor = floor;
         this.clockedIn = clockedIn;
-        this.schedule = schedule;
-        this.chats = chats;
+        schedule = new Schedule();
+        chats = new ArrayList<Chat>();
         this.setRole(Role.RA);
     }
 
-    public ResidentAssistant(String name, String email, String id, Gender gender, Hall hall, boolean enabled, String floor, boolean clockedIn, Schedule schedule, ArrayList<Chat> chats) {
+    public ResidentAssistant(String name, String email, String id, Gender gender, Hall hall, boolean enabled, String floor, boolean clockedIn) {
         super(name, email, id, gender, hall, enabled);
         this.floor = floor;
         this.clockedIn = clockedIn;
-        this.schedule = schedule;
-        this.chats = chats;
+        schedule = new Schedule();
+        chats = new ArrayList<Chat>();
         this.setRole(Role.RA);
     }
 
@@ -69,8 +71,12 @@ public class ResidentAssistant extends Person{
             // Set RA attributes
             floor = raAttributes[0];
             clockedIn = Boolean.parseBoolean(raAttributes[1]);
+
+            // Load Schedule
             schedule = new Schedule();
             schedule.loadScheduleFile(raSchedule);
+
+            // Load Chats
 
 
             for (String str : chatIds) {
@@ -95,7 +101,8 @@ public class ResidentAssistant extends Person{
 
             pw.println(getName() + "|" + getEmail() + "|" + getGender() + "|" + "|" + getHall() + "|" + isEnabled() + "|" + getTimezone());
             pw.println(floor + "|" + clockedIn);
-            pw.println("Schedule_" + this.getId() + ".txt");
+
+            schedule.saveScheduleFile(fileName);
 
             if (chats != null) {
                 for (int i = 0; i < chats.size(); i++) {

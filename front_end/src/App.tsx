@@ -1,26 +1,24 @@
-import { Outlet } from "react-router-dom";
-import { NavbarApp } from "./components/NavbarApp";
-import { Sidebar } from "./components/Sidebar";
 import { useAuth0 } from "@auth0/auth0-react";
 import { ChakraProvider } from "@chakra-ui/react";
+import { Outlet } from "react-router-dom";
+import NavbarApp from "./components/NavbarApp";
+import Sidebar from "./components/Sidebar";
 
 function App() {
-  const { user, isAuthenticated, isLoading } = useAuth0();
+  const { user, isLoading } = useAuth0();
   if (isLoading) {
     return <h1>Loading ...</h1>;
   }
-  return isAuthenticated ? (
+  return (
     <ChakraProvider>
-      <NavbarApp />
-      <main className="flex h-[calc(100%-67.79px)]">
-        <Sidebar />
-        <div className="flex flex-1 justify-center items-center font-semibold text-2xl bg-gray-300">
+      <div className="h-full flex flex-col">
+        <NavbarApp />
+        <div className="flex flex-1">
+          <Sidebar />
           <Outlet context={{ user }} />
         </div>
-      </main>
+      </div>
     </ChakraProvider>
-  ) : (
-    <h1>You need to be logged in to see your info</h1>
   );
 }
 

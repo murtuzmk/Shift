@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+
 public class ResidentEducationCoordinator extends ResidentEducationAssistant {
 
     /* ------------------------ VARIABLES ------------------------ */
@@ -10,38 +11,57 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
 
     /* ------------------------ CONSTRUCTORS ------------------------ */
 
-    public ResidentEducationCoordinator() {}
+    public ResidentEducationCoordinator() {
+        this.setRole(Role.REC);
+    }
 
     public ResidentEducationCoordinator(ArrayList<ResidentEducationAssistant> reaAccounts) {
         this.reaAccounts = reaAccounts;
+        this.setRole(Role.REC);
     }
 
     public ResidentEducationCoordinator(ArrayList<ResidentAssistant> raAccounts, Scheduler masterSchedule, ArrayList<ResidentEducationAssistant> reaAccounts) {
         super(raAccounts, masterSchedule);
         this.reaAccounts = reaAccounts;
+        this.setRole(Role.REC);
     }
 
-    public ResidentEducationCoordinator(String floor, boolean clockIn, Schedule schedule, Chat chats, ArrayList<ResidentAssistant> raAccounts, Scheduler masterSchedule, ArrayList<ResidentEducationAssistant> reaAccounts) {
+    public ResidentEducationCoordinator(String floor, boolean clockIn, Schedule schedule, ArrayList<Chat> chats, ArrayList<ResidentAssistant> raAccounts, Scheduler masterSchedule, ArrayList<ResidentEducationAssistant> reaAccounts) {
         super(floor, clockIn, schedule, chats, raAccounts, masterSchedule);
         this.reaAccounts = reaAccounts;
+        this.setRole(Role.REC);
     }
 
-    public ResidentEducationCoordinator(String name, String email, String password, String id, Gender gender, Role role, Hall hall, boolean enabled, String floor, boolean clockIn, Schedule schedule, Chat chats, ArrayList<ResidentAssistant> raAccounts, Scheduler masterSchedule, ArrayList<ResidentEducationAssistant> reaAccounts) {
-        super(name, email, password, id, gender, role, hall, enabled, floor, clockIn, schedule, chats, raAccounts, masterSchedule);
+    public ResidentEducationCoordinator(String name, String email, String id, Gender gender, Hall hall, boolean enabled, String floor, boolean clockIn, Schedule schedule, ArrayList<Chat> chats, ArrayList<ResidentAssistant> raAccounts, Scheduler masterSchedule, ArrayList<ResidentEducationAssistant> reaAccounts) {
+        super(name, email, id, gender, hall, enabled, floor, clockIn, schedule, chats, raAccounts, masterSchedule);
         this.reaAccounts = reaAccounts;
     }
 
     /* ------------------------ FUNCTIONS ------------------------ */
 
+    @Override
     public void saveAccountFile() {
+        super.saveAccountFile();
         String fileName = this.getRole() + "_" + this.getId() + ".txt";
         File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
         try {
-            PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
-            pw.println(this.toString() + "\n");
+            PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, true));
+
+            if (reaAccounts != null) {
+                for (int i = 0; i < reaAccounts.size(); i++) {
+                    if (i != 0) {
+                        pw.print("|");
+                    }
+                    pw.print(reaAccounts.get(i).getId());
+                }
+            } else {
+                pw.println("null");
+            }
+
+
             pw.close();
         } catch (Exception e) {
-            System.out.println("Error in RA Account Saving");
+            System.out.println("Error in REA Account Saving");
             e.printStackTrace();
         }
     }
@@ -58,8 +78,8 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
      * and superclasses and sets them to null.
      */
     @Override
-    public void deleteAccount() {
-        super.deleteAccount();
+    public void deleteUserInformation() {
+        super.deleteUserInformation();
         reaAccounts.clear();
         reaAccounts = null;
     }
@@ -77,12 +97,12 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
     }
 
     /*
-     * Deletes resident education assistant from "reaAccounts",
+     * Removes resident education assistant from "reaAccounts",
      * if it exists within the ArrayList.
      *
      * @param rea: Resident education assistant to be removed
      */
-    public void deleteReaAccount(ResidentEducationAssistant rea) {
+    public void removeReaAccount(ResidentEducationAssistant rea) {
         if (reaAccounts != null) {
             reaAccounts.remove(rea);
         }

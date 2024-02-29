@@ -14,21 +14,21 @@ public class Main {
         System.out.println(time.isExpired(0, 0, 0));
         */
 
-        ResidentAssistant ra = new ResidentAssistant("Alice", "dummy@gmail.com", "1234", "0123456789",
-                Person.Gender.FEMALE, Person.Role.RA, Person.Hall.CARY, true, "1A", false, null, null);
-        ResidentEducationAssistant rea = new ResidentEducationAssistant("Bob", "dummy@gmail.com", "1234", "1234567890",
-                Person.Gender.MALE, Person.Role.REA, Person.Hall.CARY, true, "1A", false, null, null, null, null);
-        ResidentEducationAssistant rec = new ResidentEducationCoordinator("Cab", "dummy@gmail.com", "1234", "2345678901",
-                Person.Gender.NONBINARY, Person.Role.REC, Person.Hall.CARY, true, "1A", false, null, null, null, null, null);
+        ResidentAssistant ra = new ResidentAssistant("Alice", "dummy@gmail.com", "0123456789",
+                Person.Gender.FEMALE, Person.Hall.CARY, true, "1A", false, null, null);
+        ResidentEducationAssistant rea = new ResidentEducationAssistant("Bob", "dummy@gmail.com",  "1234567890",
+                Person.Gender.MALE, Person.Hall.CARY, true, "1A", false, null, null, null, null);
+        ResidentEducationAssistant rec = new ResidentEducationCoordinator("Cab", "dummy@gmail.com", "2345678901",
+                Person.Gender.NONBINARY, Person.Hall.CARY, true, "1A", false, null, null, null, null, null);
 
-        //ResidentAssistant person = new ResidentAssistant();
-        //person.loadAccountFile(Person.Role.RA, "0123456789");
+        ResidentAssistant person = new ResidentAssistant();
+        System.out.println( person.loadAccountFile("0123456789"));
 
         ra.saveAccountFile();
-        ra.deleteAccountFile();
-        rea.saveAccountFile();
-        rea.deleteAccountFile();
-        rec.saveAccountFile();
-        rec.deleteAccountFile();
+        //ra.deleteAccountFile();
+        //rea.saveAccountFile();
+        //rea.deleteAccountFile();
+        //rec.saveAccountFile();
+        //rec.deleteAccountFile();
     }
 }

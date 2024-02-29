@@ -53,6 +53,17 @@ const MyCalendar = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
+  useEffect(() => {
+    const savedEvents = localStorage.getItem('events');
+    if (savedEvents) {
+      setEvents(JSON.parse(savedEvents));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('events', JSON.stringify(events));
+  }, [events]);
+
   const handleSelect = ({ start, end}: { start: Date, end: Date }) => {
     setSelectedEvent({ start, end, title: '', id: ''});
     setDialogOpen(true);

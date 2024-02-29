@@ -2,8 +2,10 @@ import { Button, Icon } from "@chakra-ui/react";
 import { FaGear } from "react-icons/fa6";
 import { HiCalendar, HiMiniInboxArrowDown } from "react-icons/hi2";
 import { MdSpaceDashboard } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
+  const navigate = useNavigate();
   return (
     <div className="bg-gray-50 w-64 border-r border-gray-300 flex flex-col gap-3">
       <div className="flex flex-col p-3 gap-3">
@@ -17,6 +19,7 @@ const Sidebar = () => {
           }
           className="!bg-gray-50 hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
           role="group"
+          onClick={() => navigate("dashboard")}
         >
           Dashboard
         </Button>
@@ -60,6 +63,7 @@ const Sidebar = () => {
           }
           className="!bg-gray-50 hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
           role="group"
+          onClick={() => navigate("settings")}
         >
           Settings
         </Button>

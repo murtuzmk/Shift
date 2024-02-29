@@ -5,7 +5,7 @@ import NavbarApp from "./components/NavbarApp";
 import Sidebar from "./components/Sidebar";
 
 function App() {
-  const { user, isAuthenticated, isLoading } = useAuth0();
+  const { user, isLoading } = useAuth0();
   if (isLoading) {
     return <h1>Loading ...</h1>;
   }

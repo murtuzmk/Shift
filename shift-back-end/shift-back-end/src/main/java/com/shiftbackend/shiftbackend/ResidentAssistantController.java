@@ -29,7 +29,7 @@ public class ResidentAssistantController {
 
     @PostMapping("/input")
     public ResponseEntity<String> setInput(@RequestBody Map<String, String> inputId) {
-        myId = inputId.get("input");
+        myId = inputId.get("inputId");
         return new ResponseEntity<String>(myId, HttpStatus.CREATED);
     }
 

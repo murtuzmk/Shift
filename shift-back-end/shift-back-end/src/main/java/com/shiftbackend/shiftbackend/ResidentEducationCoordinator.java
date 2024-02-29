@@ -73,8 +73,7 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
     @Override
     public void deleteUserInformation() {
         super.deleteUserInformation();
-        reaAccounts.clear();
-        reaAccounts = null;
+        reaAccounts = new ArrayList<ResidentEducationAssistant>();
     }
 
     /*

@@ -123,6 +123,10 @@ public class TimeBlock {
         return timezone;
     }
 
+    public long getSecondsEpoch() {
+        return timezone;
+    }
+
     /*------------------------ TOSTRING ------------------------*/
 
     @Override

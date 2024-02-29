@@ -12,6 +12,7 @@ public class Shift {
 
     /* ------------------------ VARIABLES ------------------------ */
 
+    private String id = null;
     private String title = null;
     private String description = null;
     private TimeBlock start = null;
@@ -22,7 +23,8 @@ public class Shift {
 
     public Shift() {}
 
-    public Shift(String title, String description, TimeBlock start, TimeBlock end, DutyLevel dutyLevel) {
+    public Shift(String id, String title, String description, TimeBlock start, TimeBlock end, DutyLevel dutyLevel) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.start = start;
@@ -33,6 +35,14 @@ public class Shift {
     /* ------------------------ FUNCTIONS ------------------------ */
 
     /*------------------------ GETTERS & SETTERS ------------------------*/
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;

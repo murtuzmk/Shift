@@ -12,7 +12,7 @@ import { Dashboard } from "./pages/Dashboard.tsx";
 import { Settings } from "./pages/Settings.tsx";
 import { Auth0Provider } from "@auth0/auth0-react";
 import ExecutivePage from "./pages/ExecutivePage.tsx";
-
+import { MyAvailability } from "./pages/MyAvailability.tsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -29,6 +29,7 @@ const router = createBrowserRouter([
       { path: "dashboard", element: <Dashboard /> },
       { path: "settings", element: <Settings /> },
       { path: "executivepage", element: <ExecutivePage /> },
+      { path: "availability", element: <MyAvailability /> },
     ],
   },
 ]);

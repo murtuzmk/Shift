@@ -12,7 +12,7 @@ export const Dashboard = () => {
           <img src={user.picture} alt={user.name} />
           <h2>Username: {user.name}</h2>
           <p>Email: {user.email}</p>
-          <MyCalendar/>
+          <MyCalendar />
         </div>
       ) : (
         <h1>Dashboard</h1>

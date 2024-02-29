@@ -1,88 +1,75 @@
 import { Button, Icon } from "@chakra-ui/react";
-import { MdDashboard } from "react-icons/md";
+import { FaGear } from "react-icons/fa6";
+import { HiCalendar, HiMiniInboxArrowDown } from "react-icons/hi2";
+import { MdSpaceDashboard } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
-export const Sidebar = () => {
+const Sidebar = () => {
   const navigate = useNavigate();
   return (
-    <aside className="bg-gray-50 border-b-2 border-gray-300 w-64 flex flex-col justify-between items-center font-semibold text-2xl">
-      <div className="p-5 w-full flex flex-col gap-4 font">
+    <div className="bg-gray-50 w-64 border-r border-gray-300 flex flex-col gap-3">
+      <div className="flex flex-col p-3 gap-3">
         <Button
-          justifyContent="flex-start"
-          px="0.75rem"
-          width="100%"
           leftIcon={
-            <Icon as={MdDashboard} h={5} w={5} className="fill-gray-600" />
+            <Icon
+              as={MdSpaceDashboard}
+              className="size-6 fill-gray-500 !w-5 !h-5 mr-2"
+              _groupHover={{ fill: "gray.600" }}
+            />
           }
-          colorScheme="gray"
-          fontSize="1rem"
-          fontWeight="500"
-          size="lg"
-          onClick={() => {
-            navigate("/app/dashboard");
-            // Perform any action on button click, e.g., submit the input value
-          }}
+          className="!bg-gray-50 hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
+          role="group"
+          onClick={() => navigate("dashboard")}
         >
           Dashboard
         </Button>
         <Button
-          justifyContent="flex-start"
-          px="0.75rem"
-          width="100%"
           leftIcon={
-            <Icon as={MdDashboard} h={5} w={5} className="fill-gray-600" />
+            <Icon
+              as={HiCalendar}
+              className="size-6 fill-gray-500 !w-5 !h-5 mr-2"
+              _groupHover={{ fill: "gray.600" }}
+            />
           }
-          colorScheme="gray"
-          fontSize="1rem"
-          fontWeight="500"
-          size="lg"
-          onClick={() => {
-            navigate("/app/availability");
-            // Perform any action on button click, e.g., submit the input value
-          }}
+          className="!bg-gray-50 hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
+          role="group"
         >
-          Availability
+          Schedule
         </Button>
         <Button
-          justifyContent="flex-start"
-          px="0.75rem"
-          width="100%"
           leftIcon={
-            <Icon as={MdDashboard} h={5} w={5} className="fill-gray-600" />
+            <Icon
+              as={HiMiniInboxArrowDown}
+              className="size-6 fill-gray-500 !w-5 !h-5 mr-2"
+              _groupHover={{ fill: "gray.600" }}
+            />
           }
-          colorScheme="gray"
-          fontSize="1rem"
-          fontWeight="500"
-          size="lg"
-          onClick={() => {
-            navigate("/app/executivepage");
-            // Perform any action on button click, e.g., submit the input value
-          }}
+          className="!bg-gray-50 hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
+          role="group"
         >
-          Executive
+          Messages
         </Button>
+      </div>
+      {/* Separator */}
+      <div className="border-b border-gray-300 mx-3"></div>
+      <div className="flex flex-col p-3 gap-3">
         <Button
-          justifyContent="flex-start"
-          px="0.75rem"
-          width="100%"
           leftIcon={
-            <Icon as={MdDashboard} h={5} w={5} className="fill-gray-600" />
+            <Icon
+              as={FaGear}
+              className="size-6 fill-gray-500 !w-5 !h-5 mr-2"
+              _groupHover={{ fill: "gray.600" }}
+            />
           }
-          colorScheme="gray"
-          fontSize="1rem"
-          fontWeight="500"
-          size="lg"
-          onClick={() => {
-            navigate("/app/settings");
-            // Perform any action on button click, e.g., submit the input value
-          }}
+          className="!bg-gray-50 hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
+          role="group"
+          onClick={() => navigate("settings")}
         >
           Settings
         </Button>
       </div>
-      <div>
-        <p>icons</p>
-      </div>
-    </aside>
+    </div>
   );
 };
+
+export default Sidebar;

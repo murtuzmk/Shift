@@ -24,11 +24,11 @@ public class Main {
         ResidentEducationAssistant rec = new ResidentEducationCoordinator("Cab", "dummy@gmail.com", "2345678901",
                 Person.Gender.NONBINARY, Person.Hall.CARY, true, "1A", false, null, null, null, null, null);
 
-        ResidentAssistant person = new ResidentAssistant();
-        System.out.println( person.loadAccountFile("0123456789"));
+        //ResidentAssistant person = new ResidentAssistant();
+        //System.out.println( person.loadAccountFile("0123456789"));
 
         ra.saveAccountFile();
-        //ra.deleteAccountFile();
+        ra.deleteAccountFile();
         //rea.saveAccountFile();
         //rea.deleteAccountFile();
         //rec.saveAccountFile();

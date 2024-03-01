@@ -14,7 +14,7 @@ public class ResidentAssistantController {
 
     @GetMapping
     public ResponseEntity<String> allRAs() {
-        return new ResponseEntity<String>("All RA's", HttpStatus.OK);
+        return new ResponseEntity<String>("Access RA Methods", HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -63,7 +63,7 @@ public class ResidentAssistantController {
         return new ResponseEntity<String>("Hall Edited", HttpStatus.CREATED);
     }
 
-    @PostMapping("/{id}/enable")
+    @GetMapping("/{id}/enable")
     public ResponseEntity<String> enableRA(@PathVariable String id) {
         ra.enableAccount();
         ra.saveAccountFile();
@@ -71,7 +71,7 @@ public class ResidentAssistantController {
         return new ResponseEntity<String>("Account Enabled", HttpStatus.CREATED);
     }
 
-    @PostMapping("/{id}/disable")
+    @GetMapping("/{id}/disable")
     public ResponseEntity<String> disableRA(@PathVariable String id) {
         ra.disableAccount();
         ra.saveAccountFile();
@@ -79,7 +79,7 @@ public class ResidentAssistantController {
         return new ResponseEntity<String>("Account Disabled", HttpStatus.CREATED);
     }
 
-    @PostMapping("/{id}/set-hall")
+    @PostMapping("/{id}/set-floor")
     public ResponseEntity<String> setFloorRA(@RequestBody Map<String, String> input) {
         ra.setFloor(input.get("floor"));
         ra.saveAccountFile();
@@ -120,37 +120,41 @@ public class ResidentAssistantController {
         return new ResponseEntity<String>(ra.getSchedule().getEvents(), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/get-shifts")
+    public ResponseEntity<String> getShiftsRA(@PathVariable String id) {
+        return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
+    }
 
     @GetMapping("/{id}/delete-event/{eventId}")
-    public ResponseEntity<String> deleteEventRA(@PathVariable String id, String eventId) {
+    public ResponseEntity<String> deleteEventRA(@PathVariable String id, @PathVariable String eventId) {
         ra.getSchedule().deleteEvent(eventId);
         ra.saveAccountFile();
         return new ResponseEntity<String>("Deleted: " + eventId, HttpStatus.OK);
     }
 
     @PostMapping("/{id}/edit-event/{eventId}/edit-title")
-    public ResponseEntity<String> editEventTitleRA(@PathVariable String id, String eventId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> editEventTitleRA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         ra.getSchedule().editEventTitle(eventId, input.get("title"));
         ra.saveAccountFile();
         return new ResponseEntity<String>("Edited Title: " + input.get("title"), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/edit-event/{eventId}/edit-description")
-    public ResponseEntity<String> editEventDescriptionRA(@PathVariable String id, String eventId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> editEventDescriptionRA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         ra.getSchedule().editEventTitle(eventId, input.get("description"));
         ra.saveAccountFile();
         return new ResponseEntity<String>("Edited Description: " + input.get("description"), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/edit-event/{eventId}/edit-duty-level")
-    public ResponseEntity<String> editEventDutyLevelRA(@PathVariable String id, String eventId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> editEventDutyLevelRA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         ra.getSchedule().editEventTitle(eventId, input.get("dutyLevel"));
         ra.saveAccountFile();
         return new ResponseEntity<String>("Edited Duty Level: " + input.get("dutyLevel"), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/add-event/{eventId}")
-    public ResponseEntity<String> addEventRA(@PathVariable String id, String eventId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> addEventRA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         String title = input.get("title");
         String description = input.get("description");
         TimeBlock startTime = new TimeBlock(Integer.parseInt(input.get("startHour")), Integer.parseInt(input.get("startMinute")),

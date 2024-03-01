@@ -132,6 +132,16 @@ public class Schedule {
     public void deleteEvent(String eventId) {
         for (int i = 0; i < events.size(); i++) {
             if (eventId.equals(events.get(i).getId())) {
+                if (events.get(i).getDutyLevel() == null) {
+                    events.remove(i);
+                }
+            }
+        }
+    }
+
+    public void deleteShift(String ShiftId) {
+        for (int i = 0; i < events.size(); i++) {
+            if (ShiftId.equals(events.get(i).getId())) {
                 if (events.get(i).getDutyLevel() != null) {
                     events.remove(i);
                 }
@@ -203,6 +213,30 @@ public class Schedule {
             buffer.append("End Time:" + event.getEnd().toString());
             buffer.append('\n');
             buffer.append('\n');
+        }
+
+        return buffer.toString();
+    }
+
+    public String getShifts() {
+        StringBuilder buffer = new StringBuilder();
+
+        for (Shift event : events) {
+            if (event.getDutyLevel() != null) {
+                buffer.append("Event Id:" + event.getId());
+                buffer.append('\n');
+                buffer.append("Title:" + event.getTitle());
+                buffer.append('\n');
+                buffer.append("Description:" + event.getDescription());
+                buffer.append('\n');
+                buffer.append("Duty Level:" + event.getDutyLevel());
+                buffer.append('\n');
+                buffer.append("Start Time:" + event.getStart().toString());
+                buffer.append('\n');
+                buffer.append("End Time:" + event.getEnd().toString());
+                buffer.append('\n');
+                buffer.append('\n');
+            }
         }
 
         return buffer.toString();

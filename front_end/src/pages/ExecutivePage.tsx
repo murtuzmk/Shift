@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import Message from "./ExecutiveUserPage/Message";
 import TextField from "./ExecutiveUserPage/TextField";
 import Dropdown from "./ExecutiveUserPage/DropDown";
@@ -6,11 +6,24 @@ import Notepad from "./ExecutiveUserPage/NotePad";
 
 function ExecutivePage() {
   const [inputValue, setInputValue] = useState("");
+  const [currentValue, setCurrentValue] = useState(() => {
+    const saved = localStorage.getItem("currentValue");
+    return saved !== null ? saved : "10";
+  });
+
+  useEffect(() => {
+    // Update localStorage whenever currentValue changes
+    localStorage.setItem("currentValue", currentValue);
+  }, [currentValue]); /* This only needs to be stored locally,"*/
 
   const handleInputChange = (event: {
     target: { value: SetStateAction<string> };
   }) => {
     setInputValue(event.target.value);
+  };
+  const handleSubmit = (newValue: any) => {
+    setCurrentValue(newValue); // Update the current value with the new input value
+    localStorage.setItem("currentValue", newValue);
   };
 
   const dropdownOptions = [
@@ -23,7 +36,6 @@ function ExecutivePage() {
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     console.log("Selected:", event.target.value);
-    // Perform actions based on the selected option
   };
 
   return (
@@ -32,7 +44,12 @@ function ExecutivePage() {
         <Message />
       </div>
       <div className="fixed top-1/3 left-1/4 transform -translate-y-1/2 w-100">
-        <TextField label="Min Hours: " onChange={handleInputChange} />
+        <TextField
+          label="Min Days: "
+          onChange={handleInputChange}
+          currentValue={currentValue} // Convert currentValue to a string
+          onSubmit={handleSubmit}
+        />
       </div>
       <div className="fixed top-1/2 left-1/4 flex items-center">
         <label className="mr-2">Your RAs:</label>
@@ -48,3 +65,6 @@ function ExecutivePage() {
 }
 
 export default ExecutivePage;
+function setCurrentValue(newValue: any) {
+  throw new Error("Function not implemented.");
+}

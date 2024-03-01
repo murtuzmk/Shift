@@ -65,10 +65,12 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
             this.setGender(Person.Gender.valueOf(personAttributes[2]));
             this.setHall(Person.Hall.valueOf(personAttributes[3]));
             this.setEnabled(Boolean.parseBoolean(personAttributes[4]));
+            this.setTimezone(Integer.parseInt(personAttributes[5]));
 
             // Set RA attributes
             this.setFloor(raAttributes[0]);
             this.setClockedIn(Boolean.parseBoolean(raAttributes[1]));
+            this.setReaId(raAttributes[2]);
 
             // Load Preferences
             for (String day : days) {
@@ -117,7 +119,7 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
             PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
 
             pw.println(this.getName() + "|" + this.getEmail() + "|" + this.getGender() + "|" + this.getHall() + "|" + this.isEnabled() + "|" + this.getTimezone());
-            pw.println(this.getFloor() + "|" + this.isClockedIn());
+            pw.println(this.getFloor() + "|" + this.isClockedIn() + "|" + this.getTimezone());
 
             // Save RA Preferences
             for (int i = 0; i < getPreferences().size(); i++) {

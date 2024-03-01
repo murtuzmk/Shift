@@ -99,7 +99,7 @@ const NavbarApp = () => {
                 logout({ logoutParams: { returnTo: window.location.origin } })
               }
             >
-              Sign out
+              Delete Account
             </MenuItem>
           </MenuList>
         </Menu>

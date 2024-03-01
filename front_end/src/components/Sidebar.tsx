@@ -33,6 +33,7 @@ const Sidebar = () => {
           }
           className="!bg-gray-50 hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
           role="group"
+          onClick={() => navigate("availability")}
         >
           Schedule
         </Button>

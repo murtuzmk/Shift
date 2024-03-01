@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import ExecutivePage from "../pages/ExecutivePage";
 
 interface TileClassNameArgs {
   date: Date;
@@ -13,8 +14,9 @@ const AvailabilityCalendar: React.FC = () => {
   const [savedFreeDays, setSavedFreeDays] = useState<string[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [view, setView] = useState<"month">("month");
-
-  const minDaysRequired = 10; /* Replace with actual number later */
+  const minDaysRequired = parseInt(
+    localStorage.getItem("currentValue") || "10"
+  );
   const numDaysNeeded =
     minDaysRequired -
     freeDays.length; /* Replace with actual number later */ /* IMPLEMENT SOON *

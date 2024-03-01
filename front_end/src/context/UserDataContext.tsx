@@ -115,6 +115,51 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     return response[0].name;
   };
 
+  const createPassChangeTicket = async (userId: any) => {
+    const data = await fetch(
+      `https://dev-e7jyddja3xm6p30e.us.auth0.com/api/v2/tickets/password-change`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Accept: "application/json",
+          authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          result_url: "http://localhost:5173",
+          ttl_sec: 86400,
+          mark_email_as_verified: true,
+          includeEmailInRedirect: false,
+        }),
+      }
+    );
+    const response = await data.json();
+    return response.ticket + "type=invite";
+  };
+
+  const createNewUser = async (userEmail: any, userPassword: any) => {
+    const data = await fetch(
+      `https://dev-e7jyddja3xm6p30e.us.auth0.com/api/v2/users`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Accept: "application/json",
+          authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          email: userEmail,
+          password: userPassword,
+          name: userEmail,
+          connection: "Username-Password-Authentication",
+        }),
+      }
+    );
+    const response = await data.json();
+    return [response.user_id, response.email];
+  };
+
   return (
     <UserDataContext.Provider
       value={{
@@ -124,6 +169,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         setOnboarding,
         getOnboarding,
         getUserRole,
+        createPassChangeTicket,
+        createNewUser,
       }}
     >
       {children}

@@ -74,7 +74,7 @@ function App() {
                 It seems you are a new user. We would like to collect some data
                 from you. You can't change this later (for now).
                 <Formik
-                  initialValues={{ name: user.name }}
+                  initialValues={{ name: user.name, role: "ra" }}
                   onSubmit={(values, actions) => {
                     handleOnboardingSubmit(values, actions);
                   }}

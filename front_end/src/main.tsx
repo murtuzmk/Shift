@@ -17,6 +17,7 @@ import ExecutivePage from "./pages/ExecutivePage.tsx";
 import { MyAvailability } from "./pages/MyAvailability.tsx";
 import ErrorPage from "./pages/ErrorPage.tsx";
 import { UserProvider } from "./context/UserDataContext.tsx";
+import CreateRAAccount from "./components/CreateRAAccount.tsx";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,7 @@ const router = createBrowserRouter([
       { path: "settings", element: <Settings /> },
       { path: "executivepage", element: <ExecutivePage /> },
       { path: "availability", element: <MyAvailability /> },
+      { path: "create-ra-account", element: <CreateRAAccount /> },
     ],
   },
 ]);

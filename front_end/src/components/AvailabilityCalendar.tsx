@@ -12,10 +12,15 @@ const AvailabilityCalendar: React.FC = () => {
   const [freeDays, setFreeDays] = useState<string[]>([]);
   const [savedFreeDays, setSavedFreeDays] = useState<string[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [view, setView] = useState<"month">("month");
+
+  const minDaysRequired = 10; /* Replace with actual number later */
+  const numDaysNeeded =
+    minDaysRequired -
+    freeDays.length; /* Replace with actual number later */ /* IMPLEMENT SOON *
 
   /* Selecting the Days on Calendar */
   const onChange = (date: Date, event: React.MouseEvent<HTMLButtonElement>) => {
-    // Ensure date handling includes TypeScript types
     const dateStr: string = date.toISOString().split("T")[0]; // Format the date to YYYY-MM-DD
     const index: number = freeDays.findIndex((d) => d === dateStr);
     if (index >= 0) {
@@ -25,7 +30,9 @@ const AvailabilityCalendar: React.FC = () => {
       // Otherwise, add the date to the array
       setFreeDays([...freeDays, dateStr]);
     }
+    setView("month"); // Always will be on monthly view
   };
+
   const onActiveStartDateChange = ({
     activeStartDate,
   }: {
@@ -53,9 +60,11 @@ const AvailabilityCalendar: React.FC = () => {
       .split("T")[0];
 
     setFreeDays(
+      /* When the month switches this will reload the events for the month*/
       freeDays.filter((day) => day < startOfMonth || day > endOfMonth)
     );
   };
+
   useEffect(() => {
     const loadedFreeDays = localStorage.getItem("savedFreeDays");
     if (loadedFreeDays) {
@@ -66,10 +75,22 @@ const AvailabilityCalendar: React.FC = () => {
 
   /* Clicking the Submit Schedule Button */
   const onSubmit = () => {
-    // Send the freeDays array to the backend
+    /* Warning if they don't have the minimum number of days working */
+    if (freeDays.length < minDaysRequired) {
+      const userConfirmation = window.confirm(
+        "You do not meet the minimum requirement, are you sure you want to submit"
+      );
+      /* Exit if they hit cancel */
+      if (!userConfirmation) {
+        return;
+      }
+    }
+
+    /* Send the freeDays array to the local storage */
     localStorage.setItem("savedFreeDays", JSON.stringify(freeDays));
     setSavedFreeDays(freeDays);
     console.log(freeDays);
+    window.alert("Availability Successfully Sent Out");
   };
 
   const tileClassName = ({ date, view }: TileClassNameArgs): string | null => {
@@ -100,21 +121,30 @@ const AvailabilityCalendar: React.FC = () => {
         view="month"
         tileClassName={tileClassName}
       />
-      <div className="flex space-x-10">
-        <button
-          onClick={clearCurrentMonthSelections}
-          className="w-32 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-xs"
-        >
-          Clear
-        </button>
-        <button
-          onClick={onSubmit}
-          className="w-32 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-xs"
-        >
-          Submit Schedule
-        </button>
+      <div className="flex w-full justify-center px-4 relative">
+        <div className="flex space-x-10">
+          <button
+            onClick={clearCurrentMonthSelections}
+            className="w-32 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-xs"
+          >
+            Clear
+          </button>
+          <button
+            onClick={onSubmit}
+            className="w-32 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-xs"
+          >
+            Submit Schedule
+          </button>
+        </div>
+        {/* Conditional message positioned to the right */}
+        {numDaysNeeded > 0 && (
+          <div className="absolute right-0 pr-4">
+            <span className="text-red-500 italic">
+              Need {numDaysNeeded} more days
+            </span>
+          </div>
+        )}
       </div>
-
       <style>{`
       .react-calendar {
         width: 80%; /* Adjust this value to make the calendar wider */

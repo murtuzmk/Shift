@@ -80,6 +80,8 @@ public class ResidentEducationAssistant extends ResidentAssistant{
                     raAccounts.add(raId);
                 }
             }
+
+            // Load Master Schedule
             
 
             reader.close();
@@ -104,16 +106,7 @@ public class ResidentEducationAssistant extends ResidentAssistant{
 
             getSchedule().saveScheduleFile(this.getId());
 
-            /* 
-            if (chats != null) {
-                for (int i = 0; i < chats.size(); i++) {
-                    if (i != 0) {
-                        pw.print("|");
-                    }
-                    pw.print(chats.get(i).getId());
-                }
-            }
-            */
+            // Save Chats
 
             for (int i = 0; i < raAccounts.size(); i++) {
                 if (i != 0) {
@@ -121,8 +114,9 @@ public class ResidentEducationAssistant extends ResidentAssistant{
                 }
                 pw.print(raAccounts.get(i));
             }
-
             pw.println();
+
+            // Save Master Schedule
 
 
             pw.close();
@@ -170,6 +164,10 @@ public class ResidentEducationAssistant extends ResidentAssistant{
     }
 
     /*------------------------ GETTERS & SETTERS ------------------------*/
+
+    public ArrayList<String> getRaAccounts() {
+        return raAccounts;
+    }
 
     public Scheduler getMasterSchedule() {
         return masterSchedule;

@@ -24,8 +24,8 @@ public class Main {
         //ResidentAssistant personRA = new ResidentAssistant();
         //System.out.println(personRA.loadAccountFile("0123456789"));
 
-        ResidentEducationAssistant personREA = new ResidentEducationAssistant();
-        System.out.println(personREA.loadAccountFile("1234567890"));
+        //ResidentEducationAssistant personREA = new ResidentEducationAssistant();
+        //System.out.println(personREA.loadAccountFile("1234567890"));
 
         //ra.getSchedule().addEvent(new Shift("Event1", "TestA", "asdfasdf", new TimeBlock(0, 0, 2, 29, 2024, 0), new TimeBlock(0, 0, 3, 10, 2024, 0), Shift.DutyLevel.PRIMARY));
         //personRA.getSchedule().deleteEvent("Event1");
@@ -33,9 +33,9 @@ public class Main {
         //ra.saveAccountFile();
         //ra.deleteAccountFile();
 
-        personREA.addRaAccount("456");
-        personREA.removeRaAccount("123");
-        personREA.saveAccountFile();
+        //personREA.addRaAccount("456");
+        //personREA.removeRaAccount("123");
+        //personREA.saveAccountFile();
         //rea.saveAccountFile();
         //rea.deleteAccountFile();
         //rec.saveAccountFile();

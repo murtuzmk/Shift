@@ -195,4 +195,17 @@ public class ResidentAssistant extends Person{
                 ", clockedIn=" + clockedIn +
                 '}';
     }
+
+    public String userString() {
+        return  "name: " + this.getName() + "\n" + 
+                "email: " + this.getEmail() + "\n" + 
+                "id: " + this.getId() + "\n" + 
+                "gender: " + this.getGender() + "\n" + 
+                "role: " + this.getRole() + "\n" + 
+                "hall: " + this.getHall() + "\n" + 
+                "enabled: " + this.isEnabled() + "\n" + 
+                "timezone: " + this.getTimezone() + "\n" + 
+                "floor: " + this.getFloor() + "\n" + 
+                "clockedIn: " + this.isClockedIn() + "\n";
+    }
 }

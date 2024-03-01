@@ -158,8 +158,26 @@ public class Schedule {
 
     /*------------------------ GETTERS & SETTERS ------------------------*/
 
-    public ArrayList<Shift> getEvents() {
-        return events;
+    public String getEvents() {
+        StringBuilder buffer = new StringBuilder();
+
+        for (Shift event : events) {
+            buffer.append("Event Id:" + event.getId());
+            buffer.append('\n');
+            buffer.append("Title:" + event.getTitle());
+            buffer.append('\n');
+            buffer.append("Description:" + event.getDescription());
+            buffer.append('\n');
+            buffer.append("Duty Level:" + event.getDutyLevel());
+            buffer.append('\n');
+            buffer.append("Start Time:" + event.getStart().toString());
+            buffer.append('\n');
+            buffer.append("End Time:" + event.getEnd().toString());
+            buffer.append('\n');
+            buffer.append('\n');
+        }
+
+        return buffer.toString();
     }
 
 

@@ -45,7 +45,7 @@ function ExecutivePage() {
       </div>
       <div className="fixed top-1/3 left-1/4 transform -translate-y-1/2 w-100">
         <TextField
-          label="Min Hours: "
+          label="Min Days: "
           onChange={handleInputChange}
           currentValue={currentValue} // Convert currentValue to a string
           onSubmit={handleSubmit}

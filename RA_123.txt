@@ -1,3 +1,0 @@
-Alex|Alice@gmail.com|MALE|CARY|true|0
-1A|false|null
-

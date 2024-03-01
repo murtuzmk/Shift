@@ -14,6 +14,7 @@ public class ResidentAssistant extends Person{
     private String floor = null;
     private boolean clockedIn = false;
     private Schedule schedule = null;
+    private ArrayList<String> preferences = null;
     private ArrayList<String> chatIds = null;
 
     /* ------------------------ CONSTRUCTORS ------------------------ */
@@ -21,6 +22,7 @@ public class ResidentAssistant extends Person{
     public ResidentAssistant() {
         this.setRole(Role.RA);
         schedule = new Schedule();
+        preferences = new ArrayList<String>();
         chatIds = new ArrayList<String>();
     }
 
@@ -28,6 +30,7 @@ public class ResidentAssistant extends Person{
         this.floor = floor;
         this.clockedIn = clockedIn;
         schedule = new Schedule();
+        preferences = new ArrayList<String>();
         chatIds = new ArrayList<String>();
         this.setRole(Role.RA);
     }
@@ -37,6 +40,7 @@ public class ResidentAssistant extends Person{
         this.floor = floor;
         this.clockedIn = clockedIn;
         schedule = new Schedule();
+        preferences = new ArrayList<String>();
         chatIds = new ArrayList<String>();
         this.setRole(Role.RA);
     }
@@ -53,10 +57,12 @@ public class ResidentAssistant extends Person{
             Scanner reader = new Scanner(userInformation);
             String person = reader.nextLine();
             String ra = reader.nextLine();
+            String daysPreferred = reader.nextLine();
             //String raChats = reader.nextLine();
 
             String[] personAttributes = person.split("[|]");
             String[] raAttributes = ra.split("[|]");
+            String[] days = daysPreferred.split("[|]");
             //String[] chatIds = raChats.split("[|]");
 
             // Set Person attributes.
@@ -70,6 +76,13 @@ public class ResidentAssistant extends Person{
             // Set RA attributes
             floor = raAttributes[0];
             clockedIn = Boolean.parseBoolean(raAttributes[1]);
+
+            // Load Preferences
+            for (String day : days) {
+                if (!day.equals("")) {
+                    preferences.add(day);
+                }
+            }
 
             // Load Schedule
             schedule.loadScheduleFile(this.getId());
@@ -97,6 +110,14 @@ public class ResidentAssistant extends Person{
 
             pw.println(this.getName() + "|" + this.getEmail() + "|" + this.getGender() + "|" + this.getHall() + "|" + this.isEnabled() + "|" + this.getTimezone());
             pw.println(floor + "|" + clockedIn);
+
+            for (int i = 0; i < preferences.size(); i++) {
+                if (i != 0) {
+                    pw.print("|");
+                }
+                pw.print(preferences.get(i));
+            }
+            pw.println();
 
             schedule.saveScheduleFile(this.getId());
 
@@ -159,6 +180,14 @@ public class ResidentAssistant extends Person{
         chatIds.remove(chatId);
     }
 
+    public void addPreferences(String day) {
+        preferences.add(day);
+    }
+
+    public void clearPreferences() {
+        preferences = new ArrayList<String>();
+    }
+
     /*------------------------ GETTERS & SETTERS ------------------------*/
 
     public String getFloor() {
@@ -183,6 +212,10 @@ public class ResidentAssistant extends Person{
 
     public void setSchedule(Schedule schedule) {
         this.schedule = schedule;
+    }
+
+    public ArrayList<String> getPreferences() {
+        return preferences;
     }
 
     /*------------------------ TOSTRING ------------------------*/

@@ -12,33 +12,53 @@ public class ResidentEducationAssistant extends ResidentAssistant{
 
     /* ------------------------ CONSTRUCTORS ------------------------ */
 
-    public ResidentEducationAssistant() {}
+    public ResidentEducationAssistant() {
+        this.setRole(Role.REA);
+    }
 
     public ResidentEducationAssistant(ArrayList<ResidentAssistant> raAccounts, Scheduler masterSchedule) {
         this.raAccounts = raAccounts;
         this.masterSchedule = masterSchedule;
+        this.setRole(Role.REA);
     }
 
-    public ResidentEducationAssistant(String floor, boolean clockIn, Schedule schedule, Chat chats, ArrayList<ResidentAssistant> raAccounts, Scheduler masterSchedule) {
+    public ResidentEducationAssistant(String floor, boolean clockIn, Schedule schedule, ArrayList<Chat> chats, ArrayList<ResidentAssistant> raAccounts, Scheduler masterSchedule) {
         super(floor, clockIn, schedule, chats);
         this.raAccounts = raAccounts;
         this.masterSchedule = masterSchedule;
+        this.setRole(Role.REA);
     }
 
-    public ResidentEducationAssistant(String name, String email, String password, String id, Gender gender, Role role, Hall hall, boolean enabled, String floor, boolean clockIn, Schedule schedule, Chat chats, ArrayList<ResidentAssistant> raAccounts, Scheduler masterSchedule) {
-        super(name, email, password, id, gender, role, hall, enabled, floor, clockIn, schedule, chats);
+    public ResidentEducationAssistant(String name, String email, String id, Gender gender, Hall hall, boolean enabled, String floor, boolean clockIn, Schedule schedule, ArrayList<Chat> chats, ArrayList<ResidentAssistant> raAccounts, Scheduler masterSchedule) {
+        super(name, email, id, gender, hall, enabled, floor, clockIn, schedule, chats);
         this.raAccounts = raAccounts;
         this.masterSchedule = masterSchedule;
     }
 
     /* ------------------------ FUNCTIONS ------------------------ */
 
+    @Override
     public void saveAccountFile() {
+        super.saveAccountFile();
         String fileName = this.getRole() + "_" + this.getId() + ".txt";
         File userInformation = new File(System.getProperty("user.dir") + "/back_end", fileName);
         try {
-            PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
-            pw.println(this.toString() + "\n");
+            PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, true));
+
+            if (raAccounts != null) {
+                for (int i = 0; i < raAccounts.size(); i++) {
+                    if (i != 0) {
+                        pw.print("|");
+                    }
+                    pw.print(raAccounts.get(i).getId());
+                }
+            }
+            else {
+                pw.println("null");
+            }
+
+            pw.println("MasterSchedule_" + this.getId() + ".txt");
+
             pw.close();
         } catch (Exception e) {
             System.out.println("Error in REA Account Saving");
@@ -58,8 +78,8 @@ public class ResidentEducationAssistant extends ResidentAssistant{
      * and superclasses and sets them to null.
      */
     @Override
-    public void deleteAccount() {
-        super.deleteAccount();
+    public void deleteUserInformation() {
+        super.deleteUserInformation();
         raAccounts.clear();
         raAccounts = null;
         masterSchedule = null;
@@ -78,12 +98,12 @@ public class ResidentEducationAssistant extends ResidentAssistant{
     }
 
     /*
-     * Deletes resident assistant from "reaAccounts", if it
+     * Removes resident assistant from "reaAccounts", if it
      * exists within the ArrayList.
      *
      * @param ra: Resident assistant to be removed
      */
-    public void deleteRaAccount(ResidentAssistant ra) {
+    public void removeRaAccount(ResidentAssistant ra) {
         if (raAccounts != null) {
             raAccounts.remove(ra);
         }

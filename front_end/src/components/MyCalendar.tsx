@@ -103,7 +103,6 @@ const MyCalendar = () => {
 
   return (
     <>
-      <h1 className="text-xl font-extrabold">General Information</h1>
       <div className=" h-5/6">
         <Calendar
           localizer={localizer}

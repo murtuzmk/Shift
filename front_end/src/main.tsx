@@ -16,6 +16,8 @@ import Settings from "./pages/Settings.tsx";
 import ExecutivePage from "./pages/ExecutivePage.tsx";
 import { MyAvailability } from "./pages/MyAvailability.tsx";
 import ErrorPage from "./pages/ErrorPage.tsx";
+import { UserProvider } from "./context/UserDataContext.tsx";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -40,14 +42,16 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Auth0Provider
-      domain="dev-e7jyddja3xm6p30e.us.auth0.com"
-      clientId="pzBbZV1cdrBz76xNxuEUqVBS6KZ6Wgte"
-      authorizationParams={{
-        redirect_uri: "http://localhost:5173/app",
-      }}
-    >
-      <RouterProvider router={router} />
-    </Auth0Provider>
+    <UserProvider>
+      <Auth0Provider
+        domain="dev-e7jyddja3xm6p30e.us.auth0.com"
+        clientId="pzBbZV1cdrBz76xNxuEUqVBS6KZ6Wgte"
+        authorizationParams={{
+          redirect_uri: "http://localhost:5173/app",
+        }}
+      >
+        <RouterProvider router={router} />
+      </Auth0Provider>
+    </UserProvider>
   </React.StrictMode>
 );

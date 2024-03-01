@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Notepad = () => {
   const [text, setText] = useState("");
   const [isEditable, setIsEditable] = useState(true);
+
 
   const handleSave = () => {
     // Save the text here. This could involve sending it to a server,
@@ -15,6 +16,17 @@ const Notepad = () => {
     setIsEditable(true);
   };
 
+
+  /* EXAMPLE OF ACCESSING OUTPUT FROM URL
+  useEffect(()=>{
+    (async ()=>{
+      const data = await fetch("http://localhost:8080/ra/123")
+      const response = await data.json()
+      console.log(response)
+    })()
+  },[])
+  */
+ 
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-2xl mb-4">My Notepad</h1> {/* This is the title */}

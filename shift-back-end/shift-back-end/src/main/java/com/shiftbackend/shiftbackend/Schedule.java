@@ -103,6 +103,30 @@ public class Schedule {
         events.add(newEvent);
     }
 
+    public void editEventId(Shift event, String id) {
+        event.setId(id);
+    }
+
+    public void editEventTitle(Shift event, String title) {
+        event.setTitle(title);
+    }
+
+    public void editEventDescription(Shift event, String description) {
+        event.setDescription(description);
+    }
+
+    public void editEventDutyLevel(Shift event, String dutyLevel) {
+        event.setDutyLevel(dutyLevel);
+    }
+
+    public void editEventStart(Shift event, TimeBlock start) {
+        event.setStart(start);
+    }
+
+    public void editEventEnd(Shift event, TimeBlock end) {
+        event.setEnd(end);
+    }
+
     public void deleteEvent(String eventId) {
         for (int i = 0; i < events.size(); i++) {
             if (eventId.equals(events.get(i).getId())) {

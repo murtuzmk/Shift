@@ -66,10 +66,12 @@ public class ResidentEducationAssistant extends ResidentAssistant{
             this.setGender(Person.Gender.valueOf(personAttributes[2]));
             this.setHall(Person.Hall.valueOf(personAttributes[3]));
             this.setEnabled(Boolean.parseBoolean(personAttributes[4]));
+            this.setTimezone(Integer.parseInt(personAttributes[5]));
 
             // Set RA attributes
             this.setFloor(raAttributes[0]);
             this.setClockedIn(Boolean.parseBoolean(raAttributes[1]));
+            this.setReaId(raAttributes[2]);
 
             // Load Preferences
             for (String day : days) {
@@ -111,7 +113,7 @@ public class ResidentEducationAssistant extends ResidentAssistant{
             PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
 
             pw.println(this.getName() + "|" + this.getEmail() + "|" + this.getGender() + "|" + this.getHall() + "|" + this.isEnabled() + "|" + this.getTimezone());
-            pw.println(this.getFloor() + "|" + this.isClockedIn());
+            pw.println(this.getFloor() + "|" + this.isClockedIn() + "|" + this.getTimezone());
 
             for (int i = 0; i < getPreferences().size(); i++) {
                 if (i != 0) {
@@ -178,6 +180,28 @@ public class ResidentEducationAssistant extends ResidentAssistant{
      */
     public void removeRaAccount(String raId) {
         raAccounts.remove(raId);
+    }
+
+    public String getRAs() {
+        StringBuilder buffer = new StringBuilder();
+
+        for (String ra : raAccounts) {
+            buffer.append("RA Id:" + ra);
+            buffer.append('\n');
+        }
+
+        return buffer.toString();
+    }
+
+    public String getRaNames() {
+        StringBuilder buffer = new StringBuilder();
+
+        for (String ra : raAccounts) {
+            buffer.append("RA Id:" + ra);
+            buffer.append('\n');
+        }
+
+        return buffer.toString();
     }
 
     /*------------------------ GETTERS & SETTERS ------------------------*/

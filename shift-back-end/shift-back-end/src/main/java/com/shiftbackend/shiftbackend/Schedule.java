@@ -6,6 +6,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.shiftbackend.shiftbackend.Shift.DutyLevel;
+
 public class Schedule {
 
     /* ------------------------ VARIABLES ------------------------ */
@@ -103,6 +105,30 @@ public class Schedule {
         events.add(newEvent);
     }
 
+    public void editEventTitle(String eventId, String title) {
+        for (Shift event : events) {
+            if (eventId.equals(event.getId())) {
+                event.setTitle(title);
+            }
+        }
+    }
+
+    public void editEventDescription(String eventId, String description) {
+        for (Shift event : events) {
+            if (eventId.equals(event.getId())) {
+                event.setDescription(description);
+            }
+        }
+    }
+
+    public void editEventDutyLevel(String eventId, String dutyLevel) {
+        for (Shift event : events) {
+            if (eventId.equals(event.getId())) {
+                event.setDutyLevel(DutyLevel.valueOf(dutyLevel));
+            }
+        }
+    }
+
     public void deleteEvent(String eventId) {
         for (int i = 0; i < events.size(); i++) {
             if (eventId.equals(events.get(i).getId())) {
@@ -113,20 +139,22 @@ public class Schedule {
         }
     }
 
+    /*
     public void deleteEventHour(int hour, int timezone) {
         for (int i = 0; i < events.size(); i++) {
             if (hour == events.get(i).getStart().getHour() && (timezone == events.get(i).getStart().getTimezone())) {
-                if (events.get(i).getDutyLevel() != null) {
+                if (events.get(i).getDutyLevel() == null) {
                     events.remove(i);
                 }
             }
         }
     }
+    */
 
     public void deleteEventDay(int day, int month, int timezone) {
         for (int i = 0; i < events.size(); i++) {
             if ((day == events.get(i).getStart().getDay()) && (month == events.get(i).getStart().getMonth()) && (timezone == events.get(i).getStart().getTimezone())) {
-                if (events.get(i).getDutyLevel() != null) {
+                if (events.get(i).getDutyLevel() == null) {
                     events.remove(i);
                 }
             }
@@ -139,7 +167,7 @@ public class Schedule {
 
         for (int i = 0; i < events.size(); i++) {
             if (weekEndSeconds > events.get(i).getStart().getSecondsEpoch()) {
-                if (events.get(i).getDutyLevel() != null) {
+                if (events.get(i).getDutyLevel() == null) {
                     events.remove(i);
                 }
             }
@@ -149,7 +177,7 @@ public class Schedule {
     public void deleteEventMonth(int month, int year, int timezone) {
         for (int i = 0; i < events.size(); i++) {
             if ((month == events.get(i).getStart().getMonth()) && (year == events.get(i).getStart().getYear()) && (timezone == events.get(i).getStart().getTimezone())) {
-                if (events.get(i).getDutyLevel() != null) {
+                if (events.get(i).getDutyLevel() == null) {
                     events.remove(i);
                 }
             }

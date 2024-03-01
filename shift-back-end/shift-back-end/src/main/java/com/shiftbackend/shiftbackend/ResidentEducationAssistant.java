@@ -49,11 +49,13 @@ public class ResidentEducationAssistant extends ResidentAssistant{
             Scanner reader = new Scanner(userInformation);
             String person = reader.nextLine();
             String ra = reader.nextLine();
+            String daysPreferred = reader.nextLine();
             //String raChats = reader.nextLine();
             String rea = reader.nextLine();
 
             String[] personAttributes = person.split("[|]");
             String[] raAttributes = ra.split("[|]");
+            String[] days = daysPreferred.split("[|]");
             //String[] chatIds = raChats.split("[|]");
             String[] reaAttributes = rea.split("[|]");
 
@@ -69,6 +71,13 @@ public class ResidentEducationAssistant extends ResidentAssistant{
             this.setFloor(raAttributes[0]);
             this.setClockedIn(Boolean.parseBoolean(raAttributes[1]));
 
+            // Load Preferences
+            for (String day : days) {
+                if (!day.equals("")) {
+                    this.getPreferences().add(day);
+                }
+            }
+            
             // Load Schedule
             this.getSchedule().loadScheduleFile(this.getId());
 
@@ -103,6 +112,14 @@ public class ResidentEducationAssistant extends ResidentAssistant{
 
             pw.println(this.getName() + "|" + this.getEmail() + "|" + this.getGender() + "|" + this.getHall() + "|" + this.isEnabled() + "|" + this.getTimezone());
             pw.println(this.getFloor() + "|" + this.isClockedIn());
+
+            for (int i = 0; i < getPreferences().size(); i++) {
+                if (i != 0) {
+                    pw.print("|");
+                }
+                pw.print(getPreferences().get(i));
+            }
+            pw.println();
 
             getSchedule().saveScheduleFile(this.getId());
 

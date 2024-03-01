@@ -1,6 +1,20 @@
 import { Button, FormControl, FormLabel, Image, Input } from "@chakra-ui/react";
+import { useUser } from "../hooks/useUser";
+import { useContext, useEffect, useState } from "react";
+import UserDataContext from "../context/UserDataContext";
 
 const Settings = () => {
+  const { user } = useUser();
+  const { getUserRole }: any = useContext(UserDataContext);
+  const [userRole, setUserRole] = useState("Loading...");
+
+  useEffect(() => {
+    user &&
+      (async () => {
+        setUserRole(await getUserRole(user?.sub));
+      })();
+  }, [user]);
+
   return (
     <div className="flex-1">
       <h1 className="text-2xl font-bold px-4 pt-4 bg-gray-100">
@@ -10,13 +24,13 @@ const Settings = () => {
         <div className="bg-gray-50 rounded-lg col-span-3 row-span-1 p-6 flex gap-4 shadow-sm shadow-gray-300">
           <Image
             objectFit="cover"
-            src="https://bit.ly/dan-abramov"
-            alt="Dan Abramov"
+            src={user?.picture}
+            alt={user?.name}
             className="size-28 rounded-lg"
           />
           <div className="flex flex-col justify-center">
-            <h1 className="text-2xl font-extrabold">Dan Abramov</h1>
-            <p className="text-gray-500">Resident Assistant</p>
+            <h1 className="text-2xl font-extrabold">{user?.name}</h1>
+            <p className="text-gray-500">{userRole}</p>
           </div>
         </div>
         <div className="bg-gray-50 rounded-lg shadow-sm shadow-gray-300 col-span-5 row-span-3 p-6 flex flex-col justify-between gap-3">
@@ -26,15 +40,7 @@ const Settings = () => {
               <FormLabel>First Name</FormLabel>
               <Input
                 type="text"
-                placeholder="Dan"
-                className="text-gray-900 !text-sm !bg-gray-50 !border !border-gray-300 focus:!ring-4"
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Last Name</FormLabel>
-              <Input
-                type="text"
-                placeholder="Abramov"
+                placeholder={user?.name}
                 className="text-gray-900 !text-sm !bg-gray-50 !border !border-gray-300 focus:!ring-4"
               />
             </FormControl>

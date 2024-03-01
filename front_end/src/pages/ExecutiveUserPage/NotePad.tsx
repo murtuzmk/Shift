@@ -27,6 +27,7 @@ const Notepad = () => {
   },[])
   */
  
+  
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-2xl mb-4">My Notepad</h1> {/* This is the title */}

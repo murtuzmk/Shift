@@ -36,6 +36,15 @@ const Dashboard = () => {
         </div>
         <div className="bg-gray-50 rounded-lg border-dashed border-2 border-gray-300 col-span-5 row-span-4 p-6 flex flex-col gap-3">
           <h1 className="text-xl font-extrabold">General Information</h1>
+          
+          <div className="flex gap-2">
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Import
+            </button>
+            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+              Export
+            </button>
+          </div>
           <MyCalendar />
         </div>
         <div className="bg-gray-50 rounded-lg border-dashed border-2 border-gray-300 col-span-3 row-span-3">

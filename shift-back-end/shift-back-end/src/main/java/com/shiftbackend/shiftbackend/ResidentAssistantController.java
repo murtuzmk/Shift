@@ -151,7 +151,7 @@ public class ResidentAssistantController {
         ra.loadAccountFile(id);
         ra.getSchedule().deleteEventDay(Integer.parseInt(input.get("day")), Integer.parseInt(input.get("month")), Integer.parseInt(input.get("timezone")));
         ra.saveAccountFile();
-        return new ResponseEntity<String>("Deleted", HttpStatus.OK);
+        return new ResponseEntity<String>("Deleted Day", HttpStatus.OK);
     }
 
     @PostMapping("/{id}/delete-event-week")
@@ -159,7 +159,7 @@ public class ResidentAssistantController {
         ra.loadAccountFile(id);
         ra.getSchedule().deleteEventWeek(Integer.parseInt(input.get("day")), Integer.parseInt(input.get("month")), Integer.parseInt(input.get("year")), Integer.parseInt(input.get("timezone")));
         ra.saveAccountFile();
-        return new ResponseEntity<String>("Deleted", HttpStatus.OK);
+        return new ResponseEntity<String>("Deleted Week", HttpStatus.OK);
     }
 
     @PostMapping("/{id}/delete-event-month")
@@ -167,7 +167,7 @@ public class ResidentAssistantController {
         ra.loadAccountFile(id);
         ra.getSchedule().deleteEventMonth(Integer.parseInt(input.get("month")), Integer.parseInt(input.get("year")), Integer.parseInt(input.get("timezone")));
         ra.saveAccountFile();
-        return new ResponseEntity<String>("Deleted", HttpStatus.OK);
+        return new ResponseEntity<String>("Deleted Month", HttpStatus.OK);
     }
 
     @PostMapping("/{id}/edit-event/{eventId}/edit-title")

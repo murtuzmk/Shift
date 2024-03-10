@@ -175,6 +175,33 @@ public class ResidentEducationAssistantController {
         return new ResponseEntity<String>("Deleted: " + eventId, HttpStatus.OK);
     }
 
+    @PostMapping("/{id}/ra/{raId}/delete-event-day")
+    public ResponseEntity<String> deleteEventDayRAFromREA(@PathVariable String id, @PathVariable String raId, @RequestBody Map<String, String> input) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.getSchedule().deleteEventDay(Integer.parseInt(input.get("day")), Integer.parseInt(input.get("month")), Integer.parseInt(input.get("timezone")));
+        ra.saveAccountFile();
+        return new ResponseEntity<String>("Deleted Day", HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/ra/{raId}/delete-event-week")
+    public ResponseEntity<String> deleteEventWeekRAFromREA(@PathVariable String id, @PathVariable String raId, @RequestBody Map<String, String> input) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.getSchedule().deleteEventWeek(Integer.parseInt(input.get("day")), Integer.parseInt(input.get("month")), Integer.parseInt(input.get("year")), Integer.parseInt(input.get("timezone")));
+        ra.saveAccountFile();
+        return new ResponseEntity<String>("Deleted Week", HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/ra/{raId}/delete-event-month")
+    public ResponseEntity<String> deleteEventMonthRAFromREA(@PathVariable String id, @PathVariable String raId, @RequestBody Map<String, String> input) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.getSchedule().deleteEventMonth(Integer.parseInt(input.get("month")), Integer.parseInt(input.get("year")), Integer.parseInt(input.get("timezone")));
+        ra.saveAccountFile();
+        return new ResponseEntity<String>("Deleted Month", HttpStatus.OK);
+    }
+
     @PostMapping("/{id}/ra/{raId}/edit-event/{eventId}/edit-title")
     public ResponseEntity<String> editRAEventTitleREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         ResidentAssistant ra = new ResidentAssistant();
@@ -268,6 +295,56 @@ public class ResidentEducationAssistantController {
         rea.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, Shift.DutyLevel.valueOf(input.get("dutyLevel"))));
         rea.saveAccountFile();
         return new ResponseEntity<String>(rea.getSchedule().getEvents(), HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/create-event/{eventId}")
+    public ResponseEntity<String> createEventREA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+        rea.loadAccountFile(id);
+
+        String title = input.get("title");
+        String description = input.get("description");
+        TimeBlock startTime = new TimeBlock(Integer.parseInt(input.get("startHour")), Integer.parseInt(input.get("startMinute")),
+                                            Integer.parseInt(input.get("startMonth")), Integer.parseInt(input.get("startDay")),
+                                            Integer.parseInt(input.get("startYear")), Integer.parseInt(input.get("startTimezone")));
+        TimeBlock endTime = new TimeBlock(Integer.parseInt(input.get("endHour")), Integer.parseInt(input.get("endMinute")),
+                                          Integer.parseInt(input.get("endMonth")), Integer.parseInt(input.get("endDay")),
+                                          Integer.parseInt(input.get("endYear")), Integer.parseInt(input.get("endTimezone")));
+        rea.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, (input.get("dutyLevel").equals("null")) ? null :Shift.DutyLevel.valueOf(input.get("dutyLevel"))));
+        rea.saveAccountFile();
+        return new ResponseEntity<String>(rea.getSchedule().getEvents(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/delete-event/{eventId}")
+    public ResponseEntity<String> deleteEventREA(@PathVariable String id, @PathVariable String eventId) {
+        rea.loadAccountFile(id);
+
+        rea.getSchedule().deleteEvent(eventId);
+        rea.saveAccountFile();
+        return new ResponseEntity<String>("Deleted: " + eventId, HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/delete-event-day")
+    public ResponseEntity<String> deleteEventDayREA(@PathVariable String id, @RequestBody Map<String, String> input) {
+        rea.loadAccountFile(id);
+        rea.getSchedule().deleteEventDay(Integer.parseInt(input.get("day")), Integer.parseInt(input.get("month")), Integer.parseInt(input.get("timezone")));
+        rea.saveAccountFile();
+        return new ResponseEntity<String>("Deleted Day", HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/delete-event-week")
+    public ResponseEntity<String> deleteEventWeekREA(@PathVariable String id, @RequestBody Map<String, String> input) {
+        rea.loadAccountFile(id);
+        rea.getSchedule().deleteEventWeek(Integer.parseInt(input.get("day")), Integer.parseInt(input.get("month")), Integer.parseInt(input.get("year")), Integer.parseInt(input.get("timezone")));
+        rea.saveAccountFile();
+        return new ResponseEntity<String>("Deleted Week", HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/delete-event-month")
+    public ResponseEntity<String> deleteEventMonthREA(@PathVariable String id, @RequestBody Map<String, String> input) {
+        rea.loadAccountFile(id);
+        rea.getSchedule().deleteEventMonth(Integer.parseInt(input.get("month")), Integer.parseInt(input.get("year")), Integer.parseInt(input.get("timezone")));
+        rea.saveAccountFile();
+        return new ResponseEntity<String>("Deleted Month", HttpStatus.OK);
     }
 
 }

@@ -109,6 +109,7 @@ public class ResidentEducationAssistant extends ResidentAssistant{
         }
     }
 
+
     /*------------------------ GETTERS & SETTERS ------------------------*/
 
     public ArrayList<ResidentAssistant> getRaAccounts() {

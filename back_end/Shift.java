@@ -15,6 +15,7 @@ public class Shift {
     private TimeBlock start = null;
     private TimeBlock end = null;
     private DutyLevel dutyLevel = null;
+    private String user = null;
 
     /* ------------------------ CONSTRUCTORS ------------------------ */
 
@@ -28,6 +29,14 @@ public class Shift {
         this.dutyLevel = dutyLevel;
     }
 
+    public Shift (String title, String description, TimeBlock start, TimeBlock end, DutyLevel dutyLevel, String user) {
+        this.title = title;
+        this.description = description;
+        this.start = start;
+        this.end = end;
+        this.dutyLevel = dutyLevel;
+        this.user = user;
+    }
     /* ------------------------ FUNCTIONS ------------------------ */
 
     /*------------------------ GETTERS & SETTERS ------------------------*/
@@ -72,6 +81,14 @@ public class Shift {
         this.dutyLevel = dutyLevel;
     }
 
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
     /*------------------------ TOSTRING ------------------------*/
 
     @Override
@@ -82,6 +99,7 @@ public class Shift {
                 ", start=" + start +
                 ", end=" + end +
                 ", dutyLevel=" + dutyLevel +
+                ", user=" + user +
                 '}';
     }
 }

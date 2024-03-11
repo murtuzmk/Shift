@@ -7,64 +7,74 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/rea")
-public class ResidentEducationAssistantController {
-    ResidentEducationAssistant rea = new ResidentEducationAssistant();
+@RequestMapping("/rec")
+public class ResidentEducationCoordinatorController {
+    ResidentEducationCoordinator rec = new ResidentEducationCoordinator();
 
     @GetMapping("/{id}")
-    public ResponseEntity<String> loadREA(@PathVariable String id) {
-        rea.loadAccountFile(id);
-        return new ResponseEntity<String>(rea.userString(), HttpStatus.OK);
+    public ResponseEntity<String> loadREC(@PathVariable String id) {
+        rec.loadAccountFile(id);
+        return new ResponseEntity<String>(rec.userString(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/delete")
-    public ResponseEntity<String> deleteREA(@PathVariable String id) {
-        rea.loadAccountFile(id);
-        rea.deleteAccountFile();
-        rea.deleteUserInformation();
-        rea = new ResidentEducationAssistant();
+    public ResponseEntity<String> deleteREC(@PathVariable String id) {
+        rec.loadAccountFile(id);
+        rec.deleteAccountFile();
+        rec.deleteUserInformation();
+        rec = new ResidentEducationCoordinator();
         return new ResponseEntity<String>("Deleted User: " + id, HttpStatus.OK);
     }
 
     @PostMapping("/{id}/set-name")
-    public ResponseEntity<String> setNameREA(@PathVariable String id, @RequestBody Map<String, String> input) {
-        rea.loadAccountFile(id);
-        rea.setName(input.get("name"));
-        rea.saveAccountFile();
+    public ResponseEntity<String> setNameREC(@PathVariable String id, @RequestBody Map<String, String> input) {
+        rec.loadAccountFile(id);
+        rec.setName(input.get("name"));
+        rec.saveAccountFile();
 
         return new ResponseEntity<String>("Name Edited", HttpStatus.CREATED);
     }
 
     @PostMapping("/{id}/set-email")
-    public ResponseEntity<String> setEmailREA(@PathVariable String id, @RequestBody Map<String, String> input) {
-        rea.loadAccountFile(id);
-        rea.setEmail(input.get("email"));
-        rea.saveAccountFile();
+    public ResponseEntity<String> setEmailREC(@PathVariable String id, @RequestBody Map<String, String> input) {
+        rec.loadAccountFile(id);
+        rec.setEmail(input.get("email"));
+        rec.saveAccountFile();
 
         return new ResponseEntity<String>("Email Edited", HttpStatus.CREATED);
     }
 
     @PostMapping("/{id}/set-gender")
-    public ResponseEntity<String> setGenderREA(@PathVariable String id, @RequestBody Map<String, String> input) {
-        rea.loadAccountFile(id);
-        rea.setGender(Person.Gender.valueOf(input.get("gender")));
-        rea.saveAccountFile();
+    public ResponseEntity<String> setGenderREC(@PathVariable String id, @RequestBody Map<String, String> input) {
+        rec.loadAccountFile(id);
+        rec.setGender(Person.Gender.valueOf(input.get("gender")));
+        rec.saveAccountFile();
 
         return new ResponseEntity<String>("Gender Edited", HttpStatus.CREATED);
     }
 
     @PostMapping("/{id}/set-hall")
-    public ResponseEntity<String> setHallREA(@PathVariable String id, @RequestBody Map<String, String> input) {
-        rea.loadAccountFile(id);
-        rea.setHall(Person.Hall.valueOf(input.get("hall")));
-        rea.saveAccountFile();
+    public ResponseEntity<String> setHallREC(@PathVariable String id, @RequestBody Map<String, String> input) {
+        rec.loadAccountFile(id);
+        rec.setHall(Person.Hall.valueOf(input.get("hall")));
+        rec.saveAccountFile();
 
         return new ResponseEntity<String>("Hall Edited", HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}/enable")
-    public ResponseEntity<String> enableREA(@PathVariable String id) {
-        rea.loadAccountFile(id);
+    public ResponseEntity<String> enableREC(@PathVariable String id) {
+        rec.loadAccountFile(id);
+        rec.enableAccount();
+        rec.saveAccountFile();
+
+        return new ResponseEntity<String>("Account Enabled", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/enable-rea/{reaId}")
+    public ResponseEntity<String> enableREAFromREC(@PathVariable String id, @PathVariable String reaId) {
+        ResidentEducationAssistant rea = new ResidentEducationAssistant();
+        rea.loadAccountFile(reaId);
         rea.enableAccount();
         rea.saveAccountFile();
 
@@ -72,7 +82,7 @@ public class ResidentEducationAssistantController {
     }
 
     @GetMapping("/{id}/enable-ra/{raId}")
-    public ResponseEntity<String> enableRAFromREA(@PathVariable String id, @PathVariable String raId) {
+    public ResponseEntity<String> enableRAFromREC(@PathVariable String id, @PathVariable String raId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
         ra.enableAccount();
@@ -82,8 +92,18 @@ public class ResidentEducationAssistantController {
     }
 
     @GetMapping("/{id}/disable")
-    public ResponseEntity<String> disableREA(@PathVariable String id) {
-        rea.loadAccountFile(id);
+    public ResponseEntity<String> disableREC(@PathVariable String id) {
+        rec.loadAccountFile(id);
+        rec.disableAccount();
+        rec.saveAccountFile();
+
+        return new ResponseEntity<String>("Account Disabled", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/disable-rea/{reaId}")
+    public ResponseEntity<String> diableREAFromREA(@PathVariable String id, @PathVariable String reaId) {
+        ResidentEducationAssistant rea = new ResidentEducationAssistant();
+        rea.loadAccountFile(reaId);
         rea.disableAccount();
         rea.saveAccountFile();
 
@@ -91,9 +111,9 @@ public class ResidentEducationAssistantController {
     }
 
     @GetMapping("/{id}/disable-ra/{raId}")
-    public ResponseEntity<String> disableRAFromREA(@PathVariable String id, @PathVariable String raId) {
+    public ResponseEntity<String> diableRAFromREA(@PathVariable String id) {
         ResidentAssistant ra = new ResidentAssistant();
-        ra.loadAccountFile(raId);
+        ra.loadAccountFile(id);
         ra.disableAccount();
         ra.saveAccountFile();
 
@@ -101,56 +121,85 @@ public class ResidentEducationAssistantController {
     }
 
     @PostMapping("/{id}/set-floor")
-    public ResponseEntity<String> setFloorREA(@PathVariable String id, @RequestBody Map<String, String> input) {
-        rea.loadAccountFile(id);
-        rea.setFloor(input.get("floor"));
-        rea.saveAccountFile();
+    public ResponseEntity<String> setFloorREC(@PathVariable String id, @RequestBody Map<String, String> input) {
+        rec.loadAccountFile(id);
+        rec.setFloor(input.get("floor"));
+        rec.saveAccountFile();
 
         return new ResponseEntity<String>("Floor Edited", HttpStatus.CREATED);
     }
 
     @PostMapping("/{id}/set-all")
-    public ResponseEntity<String> setInputREA(@PathVariable String id, @RequestBody Map<String, String> input) {
-        rea.loadAccountFile(id);
-        rea.setName(input.get("name"));
-        rea.setEmail(input.get("email"));
-        rea.setId(input.get("inputId"));
-        rea.setGender(Person.Gender.valueOf(input.get("gender")));
-        rea.setHall(Person.Hall.valueOf(input.get("hall")));
-        rea.setEnabled(Boolean.parseBoolean(input.get("enabled")));
-        rea.setFloor(input.get("floor"));
-        rea.saveAccountFile();
+    public ResponseEntity<String> setInputREC(@PathVariable String id, @RequestBody Map<String, String> input) {
+        rec.loadAccountFile(id);
+        rec.setName(input.get("name"));
+        rec.setEmail(input.get("email"));
+        rec.setId(input.get("inputId"));
+        rec.setGender(Person.Gender.valueOf(input.get("gender")));
+        rec.setHall(Person.Hall.valueOf(input.get("hall")));
+        rec.setEnabled(Boolean.parseBoolean(input.get("enabled")));
+        rec.setFloor(input.get("floor"));
+        rec.saveAccountFile();
 
         return new ResponseEntity<String>("Basic Attributes Set", HttpStatus.CREATED);
     }
 
-
     @GetMapping("/{id}/add-ra/{raId}")
-    public ResponseEntity<String> addRAInREA(@PathVariable String id, @PathVariable String raId) {
-        rea.loadAccountFile(id);
+    public ResponseEntity<String> addRAInREC(@PathVariable String id, @PathVariable String raId) {
+        rec.loadAccountFile(id);
+        
         ResidentAssistant ra = new ResidentAssistant();
+
         ra.loadAccountFile(raId);
         ra.setId(raId);
         ra.setReaId(id);
         ra.saveAccountFile();
 
-        rea.addRaAccount(raId);
-        rea.saveAccountFile();
+        rec.addRaAccount(raId);
+        rec.saveAccountFile();
 
         return new ResponseEntity<String>("RA Added: " + raId, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}/remove-ra/{raId}")
-    public ResponseEntity<String> removeRAInREA(@PathVariable String id, @PathVariable String raId) {
-        rea.loadAccountFile(id);
-        rea.removeRaAccount(raId);
+
+    @GetMapping("/{id}/add-rea/{reaId}")
+    public ResponseEntity<String> addREAInREC(@PathVariable String id, @PathVariable String reaId) {
+        rec.loadAccountFile(id);
+        
+        ResidentEducationAssistant rea = new ResidentEducationAssistant();
+
+        rea.loadAccountFile(reaId);
+        rea.setId(reaId);
+        rea.setReaId(id);
         rea.saveAccountFile();
+
+        rec.addReaAccount(reaId);
+        rec.saveAccountFile();
+
+        return new ResponseEntity<String>("REA Added: " + reaId, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/remove-ra/{raId}")
+    public ResponseEntity<String> removeRAInREC(@PathVariable String id, @PathVariable String raId) {
+        rec.loadAccountFile(id);
+        rec.removeRaAccount(raId);
+        rec.saveAccountFile();
 
         return new ResponseEntity<String>("RA Removed: " + raId, HttpStatus.CREATED);
     }
 
+
+    @GetMapping("/{id}/remove-rea/{reaId}")
+    public ResponseEntity<String> removeREAInREC(@PathVariable String id, @PathVariable String reaId) {
+        rec.loadAccountFile(id);
+        rec.removeReaAccount(reaId);
+        rec.saveAccountFile();
+
+        return new ResponseEntity<String>("REA Removed: " + reaId, HttpStatus.CREATED);
+    }
+
     @GetMapping("/{id}/ra/{raId}/get-events")
-    public ResponseEntity<String> getRAEventsREA(@PathVariable String id, @PathVariable String raId) {
+    public ResponseEntity<String> getRAEventsREC(@PathVariable String id, @PathVariable String raId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
@@ -158,7 +207,7 @@ public class ResidentEducationAssistantController {
     }
 
     @GetMapping("/{id}/ra/{raId}/get-shifts")
-    public ResponseEntity<String> getRAShiftsREA(@PathVariable String id, @PathVariable String raId) {
+    public ResponseEntity<String> getRAShiftsREC(@PathVariable String id, @PathVariable String raId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
@@ -166,7 +215,7 @@ public class ResidentEducationAssistantController {
     }
 
     @GetMapping("/{id}/ra/{raId}/delete-event/{eventId}")
-    public ResponseEntity<String> deleteRAEventREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId) {
+    public ResponseEntity<String> deleteRAEventREC(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
@@ -176,7 +225,7 @@ public class ResidentEducationAssistantController {
     }
 
     @PostMapping("/{id}/ra/{raId}/delete-event-day")
-    public ResponseEntity<String> deleteEventDayRAFromREA(@PathVariable String id, @PathVariable String raId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> deleteEventDayRAFromREC(@PathVariable String id, @PathVariable String raId, @RequestBody Map<String, String> input) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
         ra.getSchedule().deleteEventDay(Integer.parseInt(input.get("day")), Integer.parseInt(input.get("month")), Integer.parseInt(input.get("timezone")));
@@ -185,7 +234,7 @@ public class ResidentEducationAssistantController {
     }
 
     @PostMapping("/{id}/ra/{raId}/delete-event-week")
-    public ResponseEntity<String> deleteEventWeekRAFromREA(@PathVariable String id, @PathVariable String raId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> deleteEventWeekRAFromREC(@PathVariable String id, @PathVariable String raId, @RequestBody Map<String, String> input) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
         ra.getSchedule().deleteEventWeek(Integer.parseInt(input.get("day")), Integer.parseInt(input.get("month")), Integer.parseInt(input.get("year")), Integer.parseInt(input.get("timezone")));
@@ -194,7 +243,7 @@ public class ResidentEducationAssistantController {
     }
 
     @PostMapping("/{id}/ra/{raId}/delete-event-month")
-    public ResponseEntity<String> deleteEventMonthRAFromREA(@PathVariable String id, @PathVariable String raId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> deleteEventMonthRAFromREC(@PathVariable String id, @PathVariable String raId, @RequestBody Map<String, String> input) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
         ra.getSchedule().deleteEventMonth(Integer.parseInt(input.get("month")), Integer.parseInt(input.get("year")), Integer.parseInt(input.get("timezone")));
@@ -203,7 +252,7 @@ public class ResidentEducationAssistantController {
     }
 
     @PostMapping("/{id}/ra/{raId}/edit-event/{eventId}/edit-title")
-    public ResponseEntity<String> editRAEventTitleREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> editRAEventTitleREC(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
@@ -213,7 +262,7 @@ public class ResidentEducationAssistantController {
     }
 
     @PostMapping("/{id}/ra/{raId}/edit-event/{eventId}/edit-description")
-    public ResponseEntity<String> editRAEventDescriptionREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> editRAEventDescriptionREC(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
@@ -223,7 +272,7 @@ public class ResidentEducationAssistantController {
     }
 
     @PostMapping("/{id}/ra/{raId}/edit-event/{eventId}/edit-duty-level")
-    public ResponseEntity<String> editRAEventDutyLevelREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> editRAEventDutyLevelREC(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
@@ -233,7 +282,7 @@ public class ResidentEducationAssistantController {
     }
 
     @PostMapping("/{id}/ra/{raId}/add-event/{eventId}")
-    public ResponseEntity<String> addRAEventREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> addRAEventREC(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
@@ -251,8 +300,8 @@ public class ResidentEducationAssistantController {
     }
 
     @PostMapping("/{id}/ra/{raId}/add-shift/{eventId}")
-    public ResponseEntity<String> addRAShiftREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId, @RequestBody Map<String, String> input) {
-        rea.loadAccountFile(id);
+    public ResponseEntity<String> addRAShiftREC(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+        rec.loadAccountFile(id);
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
@@ -280,8 +329,8 @@ public class ResidentEducationAssistantController {
     }
 
     @PostMapping("/{id}/create-shift/{eventId}")
-    public ResponseEntity<String> createRAShiftREA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
-        rea.loadAccountFile(id);
+    public ResponseEntity<String> createShiftREA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+        rec.loadAccountFile(id);
         String title = input.get("title");
         String description = input.get("description");
         TimeBlock startTime = new TimeBlock(Integer.parseInt(input.get("startHour")), Integer.parseInt(input.get("startMinute")),
@@ -292,14 +341,14 @@ public class ResidentEducationAssistantController {
                                           Integer.parseInt(input.get("endYear")), Integer.parseInt(input.get("endzone")));
 
                                           
-        rea.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, Shift.DutyLevel.valueOf(input.get("dutyLevel"))));
-        rea.saveAccountFile();
-        return new ResponseEntity<String>(rea.getSchedule().getEvents(), HttpStatus.OK);
+        rec.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, Shift.DutyLevel.valueOf(input.get("dutyLevel"))));
+        rec.saveAccountFile();
+        return new ResponseEntity<String>(rec.getSchedule().getEvents(), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/create-event/{eventId}")
     public ResponseEntity<String> createEventREA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
-        rea.loadAccountFile(id);
+        rec.loadAccountFile(id);
 
         String title = input.get("title");
         String description = input.get("description");
@@ -309,41 +358,41 @@ public class ResidentEducationAssistantController {
         TimeBlock endTime = new TimeBlock(Integer.parseInt(input.get("endHour")), Integer.parseInt(input.get("endMinute")),
                                           Integer.parseInt(input.get("endMonth")), Integer.parseInt(input.get("endDay")),
                                           Integer.parseInt(input.get("endYear")), Integer.parseInt(input.get("endTimezone")));
-        rea.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, (input.get("dutyLevel").equals("null")) ? null :Shift.DutyLevel.valueOf(input.get("dutyLevel"))));
-        rea.saveAccountFile();
-        return new ResponseEntity<String>(rea.getSchedule().getEvents(), HttpStatus.OK);
+        rec.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, (input.get("dutyLevel").equals("null")) ? null :Shift.DutyLevel.valueOf(input.get("dutyLevel"))));
+        rec.saveAccountFile();
+        return new ResponseEntity<String>(rec.getSchedule().getEvents(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/delete-event/{eventId}")
     public ResponseEntity<String> deleteEventREA(@PathVariable String id, @PathVariable String eventId) {
-        rea.loadAccountFile(id);
+        rec.loadAccountFile(id);
 
-        rea.getSchedule().deleteEvent(eventId);
-        rea.saveAccountFile();
+        rec.getSchedule().deleteEvent(eventId);
+        rec.saveAccountFile();
         return new ResponseEntity<String>("Deleted: " + eventId, HttpStatus.OK);
     }
 
     @PostMapping("/{id}/delete-event-day")
     public ResponseEntity<String> deleteEventDayREA(@PathVariable String id, @RequestBody Map<String, String> input) {
-        rea.loadAccountFile(id);
-        rea.getSchedule().deleteEventDay(Integer.parseInt(input.get("day")), Integer.parseInt(input.get("month")), Integer.parseInt(input.get("timezone")));
-        rea.saveAccountFile();
+        rec.loadAccountFile(id);
+        rec.getSchedule().deleteEventDay(Integer.parseInt(input.get("day")), Integer.parseInt(input.get("month")), Integer.parseInt(input.get("timezone")));
+        rec.saveAccountFile();
         return new ResponseEntity<String>("Deleted Day", HttpStatus.OK);
     }
 
     @PostMapping("/{id}/delete-event-week")
     public ResponseEntity<String> deleteEventWeekREA(@PathVariable String id, @RequestBody Map<String, String> input) {
-        rea.loadAccountFile(id);
-        rea.getSchedule().deleteEventWeek(Integer.parseInt(input.get("day")), Integer.parseInt(input.get("month")), Integer.parseInt(input.get("year")), Integer.parseInt(input.get("timezone")));
-        rea.saveAccountFile();
+        rec.loadAccountFile(id);
+        rec.getSchedule().deleteEventWeek(Integer.parseInt(input.get("day")), Integer.parseInt(input.get("month")), Integer.parseInt(input.get("year")), Integer.parseInt(input.get("timezone")));
+        rec.saveAccountFile();
         return new ResponseEntity<String>("Deleted Week", HttpStatus.OK);
     }
 
     @PostMapping("/{id}/delete-event-month")
     public ResponseEntity<String> deleteEventMonthREA(@PathVariable String id, @RequestBody Map<String, String> input) {
-        rea.loadAccountFile(id);
-        rea.getSchedule().deleteEventMonth(Integer.parseInt(input.get("month")), Integer.parseInt(input.get("year")), Integer.parseInt(input.get("timezone")));
-        rea.saveAccountFile();
+        rec.loadAccountFile(id);
+        rec.getSchedule().deleteEventMonth(Integer.parseInt(input.get("month")), Integer.parseInt(input.get("year")), Integer.parseInt(input.get("timezone")));
+        rec.saveAccountFile();
         return new ResponseEntity<String>("Deleted Month", HttpStatus.OK);
     }
 

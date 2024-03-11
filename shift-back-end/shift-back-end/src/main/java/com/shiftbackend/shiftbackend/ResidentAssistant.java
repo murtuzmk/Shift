@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class ResidentAssistant extends Person{
@@ -186,6 +187,14 @@ public class ResidentAssistant extends Person{
 
     public void addPreferences(String day) {
         preferences.add(day);
+    }
+
+    public void setPreferences(String[] days) {
+
+        preferences.clear();
+        for(String day : days) {
+            preferences.add(day);
+        }
     }
 
     public void clearPreferences() {

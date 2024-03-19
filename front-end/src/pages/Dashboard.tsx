@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import MyCalendar from "../components/MyCalendar";
+import MyCalendar from "../components/MyCalendar/MyCalendar";
 import { useUser } from "../hooks/useUser";
 import UserDataContext from "../context/UserDataContext";
 

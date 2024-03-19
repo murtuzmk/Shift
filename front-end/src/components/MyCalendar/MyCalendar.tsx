@@ -5,7 +5,7 @@ import Modal from "react-modal";
 import { v4 as uuidv4 } from "uuid";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 const localizer = momentLocalizer(moment);
-import "./calendar.css";
+import "./MyCalendar.css";
 interface Event {
   start: Date;
   end: Date;

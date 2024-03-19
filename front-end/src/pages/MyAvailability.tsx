@@ -1,5 +1,5 @@
 import AvailabilityCalendar from "../components/AvailabilityCalendar";
-import MyCalendar from "../components/MyCalendar";
+import MyCalendar from "../components/MyCalendar/MyCalendar";
 
 export const MyAvailability = () => {
   return (

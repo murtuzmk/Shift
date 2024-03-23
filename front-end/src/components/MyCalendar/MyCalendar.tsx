@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo} from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import Modal from "react-modal";
@@ -6,6 +6,11 @@ import { v4 as uuidv4 } from "uuid";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 const localizer = momentLocalizer(moment);
 import "./MyCalendar.css";
+
+interface MyCalendarProps {
+  importedEvents: Event[];
+}
+
 interface Event {
   start: Date;
   end: Date;
@@ -71,7 +76,7 @@ const EventDialog = ({
   );
 };
 
-const MyCalendar = () => {
+const MyCalendar = ({ importedEvents }: MyCalendarProps) => {
   const [events, setEvents] = useState<Event[]>([]);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -100,6 +105,10 @@ const MyCalendar = () => {
     localStorage.setItem("events", JSON.stringify(events));
   }, [events]);
 
+  const allEvents = useMemo(() => {
+    return [...events, ...importedEvents];
+  }, [events, importedEvents]);
+  
   const handleSelect = ({ start, end }: { start: Date; end: Date }) => {
     setSelectedEvent({ start, end, title: "", id: "" });
     setDialogOpen(true);
@@ -161,7 +170,7 @@ const MyCalendar = () => {
     <div style={{ width: "800px", height: "450px" }}>
       <Calendar
         localizer={localizer}
-        events={events}
+        events={allEvents}
         startAccessor="start"
         endAccessor="end"
         titleAccessor="title"

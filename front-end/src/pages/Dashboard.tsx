@@ -4,19 +4,59 @@ import { useUser } from "../hooks/useUser";
 import UserDataContext from "../context/UserDataContext";
 import * as ICAL from 'ical.js';
 
-const handleExport = () => {
-  // Create a new calendar
-  const calendar = new ICAL.Component(['vcalendar', [], []]);
-
-  // Add each event to the calendar
-  
-};
+interface Event {
+  start: Date;
+  end: Date;
+  title: string;
+  id: string;
+}
 
 const Dashboard = () => {
   const { user } = useUser();
   const { getUserRole }: any = useContext(UserDataContext);
   const [userRole, setUserRole] = useState("Loading...");
   const [importedEvents, setImportedEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
+
+  const handleExport = () => {
+    // Create a new calendar
+    const calendar = new ICAL.Component(['vcalendar', [], []]);
+  
+    // Add each event to the calendar
+    events.forEach((event: Event) => {
+      const vevent = new ICAL.Component('vevent');
+      const icalEvent = new ICAL.Event(vevent);
+      
+      // Set the event details
+      icalEvent.startDate = ICAL.Time.fromJSDate(event.start);
+      icalEvent.endDate = ICAL.Time.fromJSDate(event.end);
+      icalEvent.summary = event.title;
+      icalEvent.uid = event.id; // You may need to generate unique IDs if not available
+
+      // Add the event to the calendar
+      calendar.addSubcomponent(vevent);
+    });
+  
+    // Generate the .ics file content
+    const icsData = calendar.toString();
+  
+    // Create a Blob with the .ics file content
+    const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8;' });
+  
+    // Create a link element
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', 'calendar.ics');
+  
+    // Append the link to the body
+    document.body.appendChild(link);
+  
+    // Simulate a click on the link
+    link.click();
+  
+    // Remove the link from the body
+    document.body.removeChild(link);
+  };
 
   const handleFileImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -75,7 +115,7 @@ const Dashboard = () => {
         </div>
         <div className="bg-gray-50 rounded-lg border-dashed border-2 border-gray-300 col-span-5 row-span-4 p-6 flex flex-col gap-3">
           <h1 className="text-xl font-extrabold">General Information</h1>
-          <MyCalendar importedEvents={importedEvents} />
+            <MyCalendar importedEvents={importedEvents} onEventsChange={setEvents} />
           <div className="flex gap-2">
           <button 
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"

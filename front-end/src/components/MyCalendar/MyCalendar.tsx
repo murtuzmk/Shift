@@ -9,6 +9,7 @@ import "./MyCalendar.css";
 
 interface MyCalendarProps {
   importedEvents: Event[];
+  onEventsChange: (events: Event[]) => void;
 }
 
 interface Event {
@@ -76,7 +77,7 @@ const EventDialog = ({
   );
 };
 
-const MyCalendar = ({ importedEvents }: MyCalendarProps) => {
+const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
   const [events, setEvents] = useState<Event[]>([]);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -108,6 +109,10 @@ const MyCalendar = ({ importedEvents }: MyCalendarProps) => {
   const allEvents = useMemo(() => {
     return [...events, ...importedEvents];
   }, [events, importedEvents]);
+  
+  useEffect(() => {
+    onEventsChange(allEvents);
+  }, [allEvents]);
   
   const handleSelect = ({ start, end }: { start: Date; end: Date }) => {
     setSelectedEvent({ start, end, title: "", id: "" });

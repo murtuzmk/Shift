@@ -269,12 +269,30 @@ public class ResidentEducationAssistantController {
         return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/ra/{raId}/view-drop-requests/{eventId}")
+    public ResponseEntity<String> viewRAShiftDropsREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.saveAccountFile();
+        return new ResponseEntity<String>(ra.getShiftDropRequests(), HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/ra/{raId}/deny-drop/{eventId}")
+    public ResponseEntity<String> denyRADropREA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(id);
+        ra.deleteShiftDropRequest(eventId);
+        ra.saveAccountFile();
+        return new ResponseEntity<String>("Drop Denied for Event: " + eventId, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}/ra/{raId}/delete-shift/{eventId}")
     public ResponseEntity<String> deleteRAShiftREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
         ra.getSchedule().deleteShift(eventId);
+        ra.deleteShiftDropRequest(eventId);
         ra.saveAccountFile();
         return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }

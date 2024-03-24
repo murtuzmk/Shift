@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class ResidentAssistant extends Person{
@@ -17,6 +16,7 @@ public class ResidentAssistant extends Person{
     private Schedule schedule = null;
     private String reaId = null;
     private ArrayList<String> preferences = null;
+    private ArrayList<String> shiftDropRequests = null;
     private ArrayList<String> chatIds = null;
 
     /* ------------------------ CONSTRUCTORS ------------------------ */
@@ -25,6 +25,7 @@ public class ResidentAssistant extends Person{
         this.setRole(Role.RA);
         schedule = new Schedule();
         preferences = new ArrayList<String>();
+        shiftDropRequests = new ArrayList<String>();
         chatIds = new ArrayList<String>();
     }
 
@@ -33,6 +34,7 @@ public class ResidentAssistant extends Person{
         this.clockedIn = clockedIn;
         schedule = new Schedule();
         preferences = new ArrayList<String>();
+        shiftDropRequests = new ArrayList<String>();
         chatIds = new ArrayList<String>();
         this.setRole(Role.RA);
     }
@@ -43,6 +45,7 @@ public class ResidentAssistant extends Person{
         this.clockedIn = clockedIn;
         schedule = new Schedule();
         preferences = new ArrayList<String>();
+        shiftDropRequests = new ArrayList<String>();
         chatIds = new ArrayList<String>();
         this.setRole(Role.RA);
     }
@@ -61,11 +64,13 @@ public class ResidentAssistant extends Person{
             String ra = reader.nextLine();
             String daysPreferred = reader.nextLine();
             //String raChats = reader.nextLine();
+            String drops = reader.nextLine();
 
             String[] personAttributes = person.split("[|]");
             String[] raAttributes = ra.split("[|]");
             String[] days = daysPreferred.split("[|]");
             //String[] chatIds = raChats.split("[|]");
+            String[] shiftDrops = drops.split("[|]");
 
             // Set Person attributes.
             this.setName(personAttributes[0]);
@@ -94,6 +99,12 @@ public class ResidentAssistant extends Person{
 
             // Load Chats
 
+            // Load Drops
+            for (String request : shiftDrops) {
+                if (!request.equals("")) {
+                    shiftDropRequests.add(request);
+                }
+            }
 
             
 
@@ -136,6 +147,14 @@ public class ResidentAssistant extends Person{
                 }
             }
             */
+
+            for (int i = 0; i < shiftDropRequests.size(); i++) {
+                if (i != 0) {
+                    pw.print("|");
+                }
+                pw.print(shiftDropRequests.get(i));
+            }
+            pw.println();
 
 
             pw.close();
@@ -201,6 +220,14 @@ public class ResidentAssistant extends Person{
         preferences = new ArrayList<String>();
     }
 
+    public void addShiftDropRequest(String eventId) {
+        shiftDropRequests.add(eventId);
+    }
+
+    public void deleteShiftDropRequest(String eventId) {
+        shiftDropRequests.remove(eventId);
+    }
+
     /*------------------------ GETTERS & SETTERS ------------------------*/
 
     public String getReaId() {
@@ -237,6 +264,17 @@ public class ResidentAssistant extends Person{
 
     public ArrayList<String> getPreferences() {
         return preferences;
+    }
+
+    public String getShiftDropRequests() {
+        StringBuilder buffer = new StringBuilder();
+
+        for (String drop : shiftDropRequests) {
+            buffer.append("{\"Event Id\": \"" + drop);
+            buffer.append("\"\n");
+        }
+
+        return buffer.toString();
     }
 
     /*------------------------ TOSTRING ------------------------*/

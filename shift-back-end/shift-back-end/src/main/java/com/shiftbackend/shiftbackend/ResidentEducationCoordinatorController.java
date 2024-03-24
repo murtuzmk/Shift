@@ -318,8 +318,25 @@ public class ResidentEducationCoordinatorController {
         return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/ra/{raId}/view-drop-requests/{eventId}")
+    public ResponseEntity<String> viewRAShiftDropsREC(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.saveAccountFile();
+        return new ResponseEntity<String>(ra.getShiftDropRequests(), HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/ra/{raId}/deny-drop/{eventId}")
+    public ResponseEntity<String> denyRADropREC(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(id);
+        ra.deleteShiftDropRequest(eventId);
+        ra.saveAccountFile();
+        return new ResponseEntity<String>("Drop Denied for Event: " + eventId, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}/ra/{raId}/delete-shift/{eventId}")
-    public ResponseEntity<String> deleteRAShiftREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId) {
+    public ResponseEntity<String> deleteRAShiftREC(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
@@ -329,7 +346,7 @@ public class ResidentEducationCoordinatorController {
     }
 
     @PostMapping("/{id}/create-shift/{eventId}")
-    public ResponseEntity<String> createShiftREA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> createShiftREC(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         rec.loadAccountFile(id);
         String title = input.get("title");
         String description = input.get("description");
@@ -347,7 +364,7 @@ public class ResidentEducationCoordinatorController {
     }
 
     @PostMapping("/{id}/create-event/{eventId}")
-    public ResponseEntity<String> createEventREA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> createEventREC(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         rec.loadAccountFile(id);
 
         String title = input.get("title");
@@ -364,7 +381,7 @@ public class ResidentEducationCoordinatorController {
     }
 
     @GetMapping("/{id}/delete-event/{eventId}")
-    public ResponseEntity<String> deleteEventREA(@PathVariable String id, @PathVariable String eventId) {
+    public ResponseEntity<String> deleteEventREC(@PathVariable String id, @PathVariable String eventId) {
         rec.loadAccountFile(id);
 
         rec.getSchedule().deleteEvent(eventId);
@@ -373,7 +390,7 @@ public class ResidentEducationCoordinatorController {
     }
 
     @PostMapping("/{id}/delete-event-day")
-    public ResponseEntity<String> deleteEventDayREA(@PathVariable String id, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> deleteEventDayREC(@PathVariable String id, @RequestBody Map<String, String> input) {
         rec.loadAccountFile(id);
         rec.getSchedule().deleteEventDay(Integer.parseInt(input.get("day")), Integer.parseInt(input.get("month")), Integer.parseInt(input.get("timezone")));
         rec.saveAccountFile();
@@ -381,7 +398,7 @@ public class ResidentEducationCoordinatorController {
     }
 
     @PostMapping("/{id}/delete-event-week")
-    public ResponseEntity<String> deleteEventWeekREA(@PathVariable String id, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> deleteEventWeekREC(@PathVariable String id, @RequestBody Map<String, String> input) {
         rec.loadAccountFile(id);
         rec.getSchedule().deleteEventWeek(Integer.parseInt(input.get("day")), Integer.parseInt(input.get("month")), Integer.parseInt(input.get("year")), Integer.parseInt(input.get("timezone")));
         rec.saveAccountFile();
@@ -389,7 +406,7 @@ public class ResidentEducationCoordinatorController {
     }
 
     @PostMapping("/{id}/delete-event-month")
-    public ResponseEntity<String> deleteEventMonthREA(@PathVariable String id, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> deleteEventMonthREC(@PathVariable String id, @RequestBody Map<String, String> input) {
         rec.loadAccountFile(id);
         rec.getSchedule().deleteEventMonth(Integer.parseInt(input.get("month")), Integer.parseInt(input.get("year")), Integer.parseInt(input.get("timezone")));
         rec.saveAccountFile();

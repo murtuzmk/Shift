@@ -234,4 +234,20 @@ public class ResidentAssistantController {
         return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
 
+    @PostMapping("/{id}/request-drop/{eventId}")
+    public ResponseEntity<String> requestShiftDropRA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+        ra.loadAccountFile(id);
+        ra.addShiftDropRequest(eventId);
+        ra.saveAccountFile();
+        return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/request-drop-delete/{eventId}")
+    public ResponseEntity<String> requestShiftDropDeleteRA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+        ra.loadAccountFile(id);
+        ra.deleteShiftDropRequest(eventId);
+        ra.saveAccountFile();
+        return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
+    }
+
 }

@@ -62,6 +62,14 @@ public class ResidentEducationAssistantController {
         return new ResponseEntity<String>("Hall Edited", HttpStatus.CREATED);
     }
 
+    @GetMapping("/{id}/is-ra-clocked-in/{raId}")
+    public ResponseEntity<String> isRAClockedInREA(@PathVariable String id, @PathVariable String raId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.saveAccountFile();
+        return new ResponseEntity<String>("" + ra.isClockedIn(), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}/enable")
     public ResponseEntity<String> enableREA(@PathVariable String id) {
         rea.loadAccountFile(id);
@@ -147,6 +155,42 @@ public class ResidentEducationAssistantController {
         rea.saveAccountFile();
 
         return new ResponseEntity<String>("RA Removed: " + raId, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/ra-primary/{raId}")
+    public ResponseEntity<String> completedRAprimaryShiftsREA(@PathVariable String id, @PathVariable String raId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.saveAccountFile();
+
+        return new ResponseEntity<String>("Number of Primary Shifts Completed: " + ra.primaryShiftsCompleted(), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/ra-secondary/{raId}")
+    public ResponseEntity<String> completedRAsecondaryShiftsREA(@PathVariable String id, @PathVariable String raId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.saveAccountFile();
+
+        return new ResponseEntity<String>("Number of Secondary Shifts Completed: " + ra.secondaryShiftsCompleted(), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/ra-tertiary/{raId}")
+    public ResponseEntity<String> completedRAtertiaryShiftsREA(@PathVariable String id, @PathVariable String raId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.saveAccountFile();
+
+        return new ResponseEntity<String>("Number of Tertiary Shifts Completed: " + ra.tertiaryShiftsCompleted(), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/ra-stats/{raId}")
+    public ResponseEntity<String> completedRAShiftsREA(@PathVariable String id, @PathVariable String raId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.saveAccountFile();
+
+        return new ResponseEntity<String>("Total Shifts Completed: " + ra.totalShiftsCompleted(), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}/ra/{raId}/get-events")

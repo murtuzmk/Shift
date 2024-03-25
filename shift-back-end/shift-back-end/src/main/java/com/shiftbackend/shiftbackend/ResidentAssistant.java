@@ -15,6 +15,7 @@ public class ResidentAssistant extends Person{
     private boolean clockedIn = false;
     private Schedule schedule = null;
     private String reaId = null;
+    private int[] typesOfShifts = {0, 0, 0};
     private ArrayList<String> preferences = null;
     private ArrayList<String> shiftDropRequests = null;
     private ArrayList<String> chatIds = null;
@@ -86,6 +87,9 @@ public class ResidentAssistant extends Person{
             floor = raAttributes[0];
             clockedIn = Boolean.parseBoolean(raAttributes[1]);
             reaId = raAttributes[2];
+            typesOfShifts[0] = Integer.parseInt(raAttributes[3]);
+            typesOfShifts[1] = Integer.parseInt(raAttributes[4]);
+            typesOfShifts[2] = Integer.parseInt(raAttributes[5]);
 
             // Load Preferences
             for (String day : days) {
@@ -125,7 +129,7 @@ public class ResidentAssistant extends Person{
             PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
 
             pw.println(this.getName() + "|" + this.getEmail() + "|" + this.getGender() + "|" + this.getHall() + "|" + this.isEnabled() + "|" + this.getTimezone());
-            pw.println(floor + "|" + clockedIn + "|" + reaId);
+            pw.println(floor + "|" + clockedIn + "|" + reaId + "|" + typesOfShifts[0] + "|" + typesOfShifts[1] + "|" + typesOfShifts[2]);
 
             for (int i = 0; i < preferences.size(); i++) {
                 if (i != 0) {
@@ -226,6 +230,46 @@ public class ResidentAssistant extends Person{
 
     public void deleteShiftDropRequest(String eventId) {
         shiftDropRequests.remove(eventId);
+    }
+
+    public void clockIn() {
+        clockedIn = true;
+    }
+
+    public void clockOut() {
+        clockedIn = false;
+    }
+
+    public void addCompletedShift(Shift.DutyLevel duty) {
+        if (duty != null) {
+            switch(duty) {
+                case Shift.DutyLevel.PRIMARY:
+                    typesOfShifts[0]++;
+                    break;
+                case Shift.DutyLevel.SECONDARY:
+                    typesOfShifts[1]++;
+                    break;
+                case Shift.DutyLevel.TERTIARY:
+                    typesOfShifts[2]++;
+                    break;
+            }
+        }
+    }
+
+    public int primaryShiftsCompleted() {
+        return typesOfShifts[0];
+    }
+
+    public int secondaryShiftsCompleted() {
+        return typesOfShifts[1];
+    }
+
+    public int tertiaryShiftsCompleted() {
+        return typesOfShifts[2];
+    }
+
+    public int totalShiftsCompleted() {
+        return typesOfShifts[0] + typesOfShifts[1] + typesOfShifts[2];
     }
 
     /*------------------------ GETTERS & SETTERS ------------------------*/

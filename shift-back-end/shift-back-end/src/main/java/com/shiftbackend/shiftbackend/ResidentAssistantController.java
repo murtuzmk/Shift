@@ -110,8 +110,24 @@ public class ResidentAssistantController {
         return new ResponseEntity<String>("Basic Attributes Set", HttpStatus.CREATED);
     }
 
+    @GetMapping("/{id}/clock-in")
+    public ResponseEntity<String> clockInRA(@PathVariable String id) {
+        ra.loadAccountFile(id);
+        ra.clockIn();
+        ra.saveAccountFile();
+        return new ResponseEntity<String>("Clocked In", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/clock-out")
+    public ResponseEntity<String> clockOutRA(@PathVariable String id) {
+        ra.loadAccountFile(id);
+        ra.clockOut();
+        ra.saveAccountFile();
+        return new ResponseEntity<String>("Clocked Out", HttpStatus.OK);
+    }
+
     @GetMapping("/{id}/clear-preferences")
-    public ResponseEntity<String> clearPreferencesRA(@PathVariable String id, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> clearPreferencesRA(@PathVariable String id) {
         ra.loadAccountFile(id);
         ra.clearPreferences();
         ra.saveAccountFile();

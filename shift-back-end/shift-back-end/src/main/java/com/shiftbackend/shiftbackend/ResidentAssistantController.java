@@ -110,8 +110,24 @@ public class ResidentAssistantController {
         return new ResponseEntity<String>("Basic Attributes Set", HttpStatus.CREATED);
     }
 
+    @GetMapping("/{id}/clock-in")
+    public ResponseEntity<String> clockInRA(@PathVariable String id) {
+        ra.loadAccountFile(id);
+        ra.clockIn();
+        ra.saveAccountFile();
+        return new ResponseEntity<String>("Clocked In", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/clock-out")
+    public ResponseEntity<String> clockOutRA(@PathVariable String id) {
+        ra.loadAccountFile(id);
+        ra.clockOut();
+        ra.saveAccountFile();
+        return new ResponseEntity<String>("Clocked Out", HttpStatus.OK);
+    }
+
     @GetMapping("/{id}/clear-preferences")
-    public ResponseEntity<String> clearPreferencesRA(@PathVariable String id, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> clearPreferencesRA(@PathVariable String id) {
         ra.loadAccountFile(id);
         ra.clearPreferences();
         ra.saveAccountFile();
@@ -119,19 +135,25 @@ public class ResidentAssistantController {
     }
 
     @PostMapping("/{id}/set-preferences")
-    public ResponseEntity<String> setPreferenceRA(@PathVariable String id, @RequestBody Map<String, String[]> input) {
+    public ResponseEntity<String> setPreferenceRA(@PathVariable String id, @RequestBody Map<String, String> input) {
         ra.loadAccountFile(id);
         ra.setPreferences(input.get("preferences"));
         ra.saveAccountFile();
-        return new ResponseEntity<String>("Preferences Set: " + input.get("preference"), HttpStatus.OK);
+        return new ResponseEntity<String>("Preferences Set: " + input.get("preferences"), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/add-preference")
     public ResponseEntity<String> addPreferenceRA(@PathVariable String id, @RequestBody Map<String, String> input) {
         ra.loadAccountFile(id);
-        ra.addPreferences(input.get("preference"));
+        ra.addPreference(input.get("preference"));
         ra.saveAccountFile();
         return new ResponseEntity<String>("Preference Added: " + input.get("preference"), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/get-preferences")
+    public ResponseEntity<String> getPreferencesRA(@PathVariable String id) {
+        ra.loadAccountFile(id);
+        return new ResponseEntity<String>(ra.preferencesString(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/get-events")
@@ -230,6 +252,22 @@ public class ResidentAssistantController {
                                           Integer.parseInt(input.get("endMonth")), Integer.parseInt(input.get("endDay")),
                                           Integer.parseInt(input.get("endYear")), Integer.parseInt(input.get("endTimezone")));
         ra.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, (input.get("dutyLevel").equals("null")) ? null :Shift.DutyLevel.valueOf(input.get("dutyLevel"))));
+        ra.saveAccountFile();
+        return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/request-drop/{eventId}")
+    public ResponseEntity<String> requestShiftDropRA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+        ra.loadAccountFile(id);
+        ra.addShiftDropRequest(eventId);
+        ra.saveAccountFile();
+        return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/request-drop-delete/{eventId}")
+    public ResponseEntity<String> requestShiftDropDeleteRA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+        ra.loadAccountFile(id);
+        ra.deleteShiftDropRequest(eventId);
         ra.saveAccountFile();
         return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }

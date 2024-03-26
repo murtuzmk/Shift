@@ -62,6 +62,14 @@ public class ResidentEducationAssistantController {
         return new ResponseEntity<String>("Hall Edited", HttpStatus.CREATED);
     }
 
+    @GetMapping("/{id}/is-ra-clocked-in/{raId}")
+    public ResponseEntity<String> isRAClockedInREA(@PathVariable String id, @PathVariable String raId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.saveAccountFile();
+        return new ResponseEntity<String>("" + ra.isClockedIn(), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}/enable")
     public ResponseEntity<String> enableREA(@PathVariable String id) {
         rea.loadAccountFile(id);
@@ -147,6 +155,50 @@ public class ResidentEducationAssistantController {
         rea.saveAccountFile();
 
         return new ResponseEntity<String>("RA Removed: " + raId, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/get-ras/{raId}")
+    public ResponseEntity<String> getRAsInREA(@PathVariable String id, @PathVariable String raId) {
+        rea.loadAccountFile(id);
+        rea.saveAccountFile();
+
+        return new ResponseEntity<String>(rea.getRAs(), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/ra-primary/{raId}")
+    public ResponseEntity<String> completedRAprimaryShiftsREA(@PathVariable String id, @PathVariable String raId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.saveAccountFile();
+
+        return new ResponseEntity<String>("Number of Primary Shifts Completed: " + ra.primaryShiftsCompleted(), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/ra-secondary/{raId}")
+    public ResponseEntity<String> completedRAsecondaryShiftsREA(@PathVariable String id, @PathVariable String raId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.saveAccountFile();
+
+        return new ResponseEntity<String>("Number of Secondary Shifts Completed: " + ra.secondaryShiftsCompleted(), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/ra-tertiary/{raId}")
+    public ResponseEntity<String> completedRAtertiaryShiftsREA(@PathVariable String id, @PathVariable String raId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.saveAccountFile();
+
+        return new ResponseEntity<String>("Number of Tertiary Shifts Completed: " + ra.tertiaryShiftsCompleted(), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/ra-stats/{raId}")
+    public ResponseEntity<String> completedRAShiftsREA(@PathVariable String id, @PathVariable String raId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.saveAccountFile();
+
+        return new ResponseEntity<String>("Total Shifts Completed: " + ra.totalShiftsCompleted(), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}/ra/{raId}/get-events")
@@ -269,12 +321,30 @@ public class ResidentEducationAssistantController {
         return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/ra/{raId}/view-drop-requests/{eventId}")
+    public ResponseEntity<String> viewRAShiftDropsREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.saveAccountFile();
+        return new ResponseEntity<String>(ra.getShiftDropRequests(), HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/ra/{raId}/deny-drop/{eventId}")
+    public ResponseEntity<String> denyRADropREA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(id);
+        ra.deleteShiftDropRequest(eventId);
+        ra.saveAccountFile();
+        return new ResponseEntity<String>("Drop Denied for Event: " + eventId, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}/ra/{raId}/delete-shift/{eventId}")
     public ResponseEntity<String> deleteRAShiftREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
         ra.getSchedule().deleteShift(eventId);
+        ra.deleteShiftDropRequest(eventId);
         ra.saveAccountFile();
         return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }

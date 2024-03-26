@@ -185,24 +185,19 @@ public class ResidentEducationAssistant extends ResidentAssistant{
     public String getRAs() {
         StringBuilder buffer = new StringBuilder();
 
-        for (String ra : raAccounts) {
-            buffer.append("RA Id:" + ra);
-            buffer.append('\n');
+        buffer.append("{\"raIds\": \"");
+        for (int i = 0; i < raAccounts.size(); i++) {
+            if (i != 0) {
+                buffer.append("|");
+            }
+            buffer.append(raAccounts.get(i));
+            
         }
+        buffer.append("\"}");
 
         return buffer.toString();
     }
 
-    public String getRaNames() {
-        StringBuilder buffer = new StringBuilder();
-
-        for (String ra : raAccounts) {
-            buffer.append("RA Id:" + ra);
-            buffer.append('\n');
-        }
-
-        return buffer.toString();
-    }
 
     /*------------------------ GETTERS & SETTERS ------------------------*/
 

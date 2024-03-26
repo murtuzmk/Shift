@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class ResidentAssistant extends Person{
@@ -16,7 +15,9 @@ public class ResidentAssistant extends Person{
     private boolean clockedIn = false;
     private Schedule schedule = null;
     private String reaId = null;
+    private int[] typesOfShifts = {0, 0, 0};
     private ArrayList<String> preferences = null;
+    private ArrayList<String> shiftDropRequests = null;
     private ArrayList<String> chatIds = null;
 
     /* ------------------------ CONSTRUCTORS ------------------------ */
@@ -25,6 +26,7 @@ public class ResidentAssistant extends Person{
         this.setRole(Role.RA);
         schedule = new Schedule();
         preferences = new ArrayList<String>();
+        shiftDropRequests = new ArrayList<String>();
         chatIds = new ArrayList<String>();
     }
 
@@ -33,6 +35,7 @@ public class ResidentAssistant extends Person{
         this.clockedIn = clockedIn;
         schedule = new Schedule();
         preferences = new ArrayList<String>();
+        shiftDropRequests = new ArrayList<String>();
         chatIds = new ArrayList<String>();
         this.setRole(Role.RA);
     }
@@ -43,6 +46,7 @@ public class ResidentAssistant extends Person{
         this.clockedIn = clockedIn;
         schedule = new Schedule();
         preferences = new ArrayList<String>();
+        shiftDropRequests = new ArrayList<String>();
         chatIds = new ArrayList<String>();
         this.setRole(Role.RA);
     }
@@ -61,11 +65,13 @@ public class ResidentAssistant extends Person{
             String ra = reader.nextLine();
             String daysPreferred = reader.nextLine();
             //String raChats = reader.nextLine();
+            String drops = reader.nextLine();
 
             String[] personAttributes = person.split("[|]");
             String[] raAttributes = ra.split("[|]");
             String[] days = daysPreferred.split("[|]");
             //String[] chatIds = raChats.split("[|]");
+            String[] shiftDrops = drops.split("[|]");
 
             // Set Person attributes.
             this.setName(personAttributes[0]);
@@ -81,6 +87,9 @@ public class ResidentAssistant extends Person{
             floor = raAttributes[0];
             clockedIn = Boolean.parseBoolean(raAttributes[1]);
             reaId = raAttributes[2];
+            typesOfShifts[0] = Integer.parseInt(raAttributes[3]);
+            typesOfShifts[1] = Integer.parseInt(raAttributes[4]);
+            typesOfShifts[2] = Integer.parseInt(raAttributes[5]);
 
             // Load Preferences
             for (String day : days) {
@@ -94,6 +103,12 @@ public class ResidentAssistant extends Person{
 
             // Load Chats
 
+            // Load Drops
+            for (String request : shiftDrops) {
+                if (!request.equals("")) {
+                    shiftDropRequests.add(request);
+                }
+            }
 
             
 
@@ -114,7 +129,7 @@ public class ResidentAssistant extends Person{
             PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
 
             pw.println(this.getName() + "|" + this.getEmail() + "|" + this.getGender() + "|" + this.getHall() + "|" + this.isEnabled() + "|" + this.getTimezone());
-            pw.println(floor + "|" + clockedIn + "|" + reaId);
+            pw.println(floor + "|" + clockedIn + "|" + reaId + "|" + typesOfShifts[0] + "|" + typesOfShifts[1] + "|" + typesOfShifts[2]);
 
             for (int i = 0; i < preferences.size(); i++) {
                 if (i != 0) {
@@ -136,6 +151,14 @@ public class ResidentAssistant extends Person{
                 }
             }
             */
+
+            for (int i = 0; i < shiftDropRequests.size(); i++) {
+                if (i != 0) {
+                    pw.print("|");
+                }
+                pw.print(shiftDropRequests.get(i));
+            }
+            pw.println();
 
 
             pw.close();
@@ -185,13 +208,12 @@ public class ResidentAssistant extends Person{
         chatIds.remove(chatId);
     }
 
-    public void addPreferences(String day) {
+    public void addPreference(String day) {
         preferences.add(day);
     }
 
-    public void setPreferences(String[] days) {
-
-        preferences.clear();
+    public void setPreferences(String input) {
+        String[] days = input.split("|");
         for(String day : days) {
             preferences.add(day);
         }
@@ -199,6 +221,54 @@ public class ResidentAssistant extends Person{
 
     public void clearPreferences() {
         preferences = new ArrayList<String>();
+    }
+
+    public void addShiftDropRequest(String eventId) {
+        shiftDropRequests.add(eventId);
+    }
+
+    public void deleteShiftDropRequest(String eventId) {
+        shiftDropRequests.remove(eventId);
+    }
+
+    public void clockIn() {
+        clockedIn = true;
+    }
+
+    public void clockOut() {
+        clockedIn = false;
+    }
+
+    public void addCompletedShift(Shift.DutyLevel duty) {
+        if (duty != null) {
+            switch(duty) {
+                case Shift.DutyLevel.PRIMARY:
+                    typesOfShifts[0]++;
+                    break;
+                case Shift.DutyLevel.SECONDARY:
+                    typesOfShifts[1]++;
+                    break;
+                case Shift.DutyLevel.TERTIARY:
+                    typesOfShifts[2]++;
+                    break;
+            }
+        }
+    }
+
+    public int primaryShiftsCompleted() {
+        return typesOfShifts[0];
+    }
+
+    public int secondaryShiftsCompleted() {
+        return typesOfShifts[1];
+    }
+
+    public int tertiaryShiftsCompleted() {
+        return typesOfShifts[2];
+    }
+
+    public int totalShiftsCompleted() {
+        return typesOfShifts[0] + typesOfShifts[1] + typesOfShifts[2];
     }
 
     /*------------------------ GETTERS & SETTERS ------------------------*/
@@ -237,6 +307,38 @@ public class ResidentAssistant extends Person{
 
     public ArrayList<String> getPreferences() {
         return preferences;
+    }
+
+    public String preferencesString() {
+        StringBuilder buffer = new StringBuilder();
+
+        buffer.append("{\"preferences\": \"");
+        for (int i = 0; i < preferences.size(); i++) {
+            if (i != 0) {
+                buffer.append("|");
+            }
+            buffer.append(preferences.get(i));
+            
+        }
+        buffer.append("\"}");
+
+        return buffer.toString();
+    }
+
+    public String getShiftDropRequests() {
+        StringBuilder buffer = new StringBuilder();
+
+        buffer.append("{\"dropRequstIds\": \"");
+        for (int i = 0; i < shiftDropRequests.size(); i++) {
+            if (i != 0) {
+                buffer.append("|");
+            }
+            buffer.append(shiftDropRequests.get(i));
+            
+        }
+        buffer.append("\"}");
+
+        return buffer.toString();
     }
 
     /*------------------------ TOSTRING ------------------------*/

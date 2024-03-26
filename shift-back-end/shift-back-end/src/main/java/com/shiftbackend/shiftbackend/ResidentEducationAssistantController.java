@@ -157,6 +157,14 @@ public class ResidentEducationAssistantController {
         return new ResponseEntity<String>("RA Removed: " + raId, HttpStatus.CREATED);
     }
 
+    @GetMapping("/{id}/get-ras/{raId}")
+    public ResponseEntity<String> getRAsInREA(@PathVariable String id, @PathVariable String raId) {
+        rea.loadAccountFile(id);
+        rea.saveAccountFile();
+
+        return new ResponseEntity<String>(rea.getRAs(), HttpStatus.CREATED);
+    }
+
     @GetMapping("/{id}/ra-primary/{raId}")
     public ResponseEntity<String> completedRAprimaryShiftsREA(@PathVariable String id, @PathVariable String raId) {
         ResidentAssistant ra = new ResidentAssistant();

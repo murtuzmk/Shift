@@ -3,6 +3,7 @@ import Message from "./ExecutiveUserPage/Message";
 import TextField from "./ExecutiveUserPage/TextField";
 import Dropdown from "./ExecutiveUserPage/DropDown";
 import Notepad from "./ExecutiveUserPage/NotePad";
+import AvailabilityCalendar from "../components/AvailabilityCalendar";
 
 function ExecutivePage() {
   const [inputValue, setInputValue] = useState("");
@@ -10,6 +11,9 @@ function ExecutivePage() {
     const saved = localStorage.getItem("currentValue");
     return saved !== null ? saved : "10";
   });
+
+  const [currRa, setCurrRa] = useState("RA1"); /* Will use this to switch inbetween RA schedules */
+  
 
 
   useEffect(() => {
@@ -39,14 +43,17 @@ function ExecutivePage() {
     console.log("Selected:", event.target.value);
   };
 
+
+
   return (
     <>
       <div className="">
         <Message />
       </div>
+      <AvailabilityCalendar id={null} execAccess={true}>
 
+        </AvailabilityCalendar>
       <div className= "absolute right-20">
-
         <TextField
           label="Min Days: "
           onChange={handleInputChange}
@@ -55,8 +62,8 @@ function ExecutivePage() {
         /> 
         <label className="mr-2">Your RAs:</label>
         <Dropdown options={dropdownOptions} onSelect={handleDropdownChange} />
-
       </div>
+
       
     </>
   );

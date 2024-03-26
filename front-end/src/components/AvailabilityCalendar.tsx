@@ -11,21 +11,23 @@ interface TileClassNameArgs {
   view: string;
 }
 
-const AvailabilityCalendar: React.FC = () => {
+const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean | null}> = ({id, execAccess}) => {
   // Explicitly type freeDays as an array of strings
   const [freeDays, setFreeDays] = useState<string[]>([]);
   const [savedFreeDays, setSavedFreeDays] = useState<string[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [view, setView] = useState<"month">("month");
   const {user} = useAuth0();
-  const id = user && user.sub ? user.sub.split("|")[1] : null;
-  
-
+  const userid = id || (user && user.sub ? user.sub.split("|")[1] : null);
+  //user && user.sub ? user.sub.split("|")[1] : null;
+  if (execAccess == null) {
+    execAccess = false;
+  }
 
   /* Fetch the free days from the REST API */
   const fetchFreeDays = () => {
     // Update the freeDays state with the fetched data
-    fetch("http://localhost:8080/root/${id}/get-preferences")
+    fetch("http://localhost:8080/root/${userid}/get-preferences")
     .then((response) => response.json())
     .then((data) => {
       const dateStr: string= new Date(data).toISOString().split("T")[0];
@@ -34,7 +36,7 @@ const AvailabilityCalendar: React.FC = () => {
   }
 
   const addFreeDays = (dates : string[]) => {
-    fetch("http://localhost:8080/root/${id}/add-preference", {
+    fetch("http://localhost:8080/root/${userid}/add-preference", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -168,6 +170,7 @@ const AvailabilityCalendar: React.FC = () => {
         tileClassName={tileClassName}
       />
       <div className="flex w-full justify-center px-4 relative">
+        {!execAccess && (
         <div className="flex space-x-10">
           <button
             onClick={clearCurrentMonthSelections}
@@ -182,15 +185,19 @@ const AvailabilityCalendar: React.FC = () => {
             Submit Schedule
           </button>
         </div>
+
+        )}
         {/* Conditional message positioned to the right */}
-        {numDaysNeeded > 0 && (
+        {!execAccess && numDaysNeeded > 0 && (
           <div className="absolute right-0 pr-4">
             <span className="text-red-500 italic">
               Need {numDaysNeeded} more days
             </span>
           </div>
         )}
+        
       </div>
+      
       <style>{`
       .react-calendar {
         width: 80%; /* Adjust this value to make the calendar wider */

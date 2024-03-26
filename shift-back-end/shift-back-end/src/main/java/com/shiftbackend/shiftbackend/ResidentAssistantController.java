@@ -135,19 +135,25 @@ public class ResidentAssistantController {
     }
 
     @PostMapping("/{id}/set-preferences")
-    public ResponseEntity<String> setPreferenceRA(@PathVariable String id, @RequestBody Map<String, String[]> input) {
+    public ResponseEntity<String> setPreferenceRA(@PathVariable String id, @RequestBody Map<String, String> input) {
         ra.loadAccountFile(id);
         ra.setPreferences(input.get("preferences"));
         ra.saveAccountFile();
-        return new ResponseEntity<String>("Preferences Set: " + input.get("preference"), HttpStatus.OK);
+        return new ResponseEntity<String>("Preferences Set: " + input.get("preferences"), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/add-preference")
     public ResponseEntity<String> addPreferenceRA(@PathVariable String id, @RequestBody Map<String, String> input) {
         ra.loadAccountFile(id);
-        ra.addPreferences(input.get("preference"));
+        ra.addPreference(input.get("preference"));
         ra.saveAccountFile();
         return new ResponseEntity<String>("Preference Added: " + input.get("preference"), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/get-preferences")
+    public ResponseEntity<String> getPreferencesRA(@PathVariable String id) {
+        ra.loadAccountFile(id);
+        return new ResponseEntity<String>(ra.preferencesString(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/get-events")

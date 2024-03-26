@@ -208,13 +208,12 @@ public class ResidentAssistant extends Person{
         chatIds.remove(chatId);
     }
 
-    public void addPreferences(String day) {
+    public void addPreference(String day) {
         preferences.add(day);
     }
 
-    public void setPreferences(String[] days) {
-
-        preferences.clear();
+    public void setPreferences(String input) {
+        String[] days = input.split("|");
         for(String day : days) {
             preferences.add(day);
         }
@@ -310,13 +309,34 @@ public class ResidentAssistant extends Person{
         return preferences;
     }
 
+    public String preferencesString() {
+        StringBuilder buffer = new StringBuilder();
+
+        buffer.append("{\"preferences\": \"");
+        for (int i = 0; i < preferences.size(); i++) {
+            if (i != 0) {
+                buffer.append("|");
+            }
+            buffer.append(preferences.get(i));
+            
+        }
+        buffer.append("\"}");
+
+        return buffer.toString();
+    }
+
     public String getShiftDropRequests() {
         StringBuilder buffer = new StringBuilder();
 
-        for (String drop : shiftDropRequests) {
-            buffer.append("{\"Event Id\": \"" + drop);
-            buffer.append("\"\n");
+        buffer.append("{\"dropRequstIds\": \"");
+        for (int i = 0; i < shiftDropRequests.size(); i++) {
+            if (i != 0) {
+                buffer.append("|");
+            }
+            buffer.append(shiftDropRequests.get(i));
+            
         }
+        buffer.append("\"}");
 
         return buffer.toString();
     }

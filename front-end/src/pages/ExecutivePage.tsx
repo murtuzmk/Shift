@@ -4,6 +4,7 @@ import TextField from "./ExecutiveUserPage/TextField";
 import Dropdown from "./ExecutiveUserPage/DropDown";
 import Notepad from "./ExecutiveUserPage/NotePad";
 import AvailabilityCalendar from "../components/AvailabilityCalendar";
+import { Button } from "@chakra-ui/button";
 
 function ExecutivePage() {
   const [inputValue, setInputValue] = useState("");
@@ -50,9 +51,22 @@ function ExecutivePage() {
       <div className="">
         <Message />
       </div>
-      <AvailabilityCalendar id={null} execAccess={true}>
+      
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+      <div>
+      <AvailabilityCalendar id={null} execAccess={true} />
+      </div>
+    <div style={{ marginTop: '10px' }}>
+      <Button
+        type="button"
+        colorScheme="blue"
+        style={{ fontSize: '1rem', padding: '8px 20px' }}
+      >
+        Confirm
+      </Button>
+    </div>
+  </div>
 
-        </AvailabilityCalendar>
       <div className= "absolute right-20">
         <TextField
           label="Min Days: "
@@ -63,6 +77,9 @@ function ExecutivePage() {
         <label className="mr-2">Your RAs:</label>
         <Dropdown options={dropdownOptions} onSelect={handleDropdownChange} />
       </div>
+      <div className = "bottom">
+      </div>
+      
 
       
     </>

@@ -160,7 +160,6 @@ public class ResidentEducationAssistantController {
     @GetMapping("/{id}/get-ras/{raId}")
     public ResponseEntity<String> getRAsInREA(@PathVariable String id, @PathVariable String raId) {
         rea.loadAccountFile(id);
-        rea.saveAccountFile();
 
         return new ResponseEntity<String>(rea.getRAs(), HttpStatus.CREATED);
     }

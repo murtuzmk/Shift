@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import ExecutivePage from "../pages/ExecutivePage";
+import { useUser } from "../hooks/useUser";
+import { useAuth0 } from "@auth0/auth0-react";
+
 
 interface TileClassNameArgs {
   date: Date;
@@ -14,6 +17,46 @@ const AvailabilityCalendar: React.FC = () => {
   const [savedFreeDays, setSavedFreeDays] = useState<string[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [view, setView] = useState<"month">("month");
+  const {user} = useAuth0();
+  const id = user && user.sub ? user.sub.split("|")[1] : null;
+  
+
+
+  /* Fetch the free days from the REST API */
+  const fetchFreeDays = () => {
+    // Update the freeDays state with the fetched data
+    fetch("http://localhost:8080/root/${id}/get-preferences")
+    .then((response) => response.json())
+    .then((data) => {
+      const dateStr: string= new Date(data).toISOString().split("T")[0];
+      setFreeDays([dateStr]);
+    });
+  }
+
+  const addFreeDays = (dates : string[]) => {
+    fetch("http://localhost:8080/root/${id}/add-preference", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ 
+        dates: dates,
+      }),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      // Assuming you have a state variable 'freeDays' and a setter function 'setFreeDays'
+      setFreeDays([...freeDays, ...dates]); // Append the new dates to the existing ones
+    });
+  }
+
+
+  /* useEffect will call on fetch free days once, when the component is mounted */
+  useEffect(() => {
+    fetchFreeDays();
+  }, []);
+
+
   const minDaysRequired = parseInt(
     localStorage.getItem("currentValue") || "10"
   );
@@ -67,13 +110,13 @@ const AvailabilityCalendar: React.FC = () => {
     );
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     const loadedFreeDays = localStorage.getItem("savedFreeDays");
     if (loadedFreeDays) {
       setSavedFreeDays(JSON.parse(loadedFreeDays));
       setFreeDays(JSON.parse(loadedFreeDays));
     }
-  }, []);
+  }, []); */
 
   /* Clicking the Submit Schedule Button */
   const onSubmit = () => {
@@ -89,9 +132,10 @@ const AvailabilityCalendar: React.FC = () => {
     }
 
     /* Send the freeDays array to the local storage */
-    localStorage.setItem("savedFreeDays", JSON.stringify(freeDays));
+    /*localStorage.setItem("savedFreeDays", JSON.stringify(freeDays));
     setSavedFreeDays(freeDays);
-    console.log(freeDays);
+    console.log(freeDays);*/
+    addFreeDays(freeDays);
     window.alert("Availability Successfully Sent Out");
   };
 

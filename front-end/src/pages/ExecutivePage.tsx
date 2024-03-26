@@ -11,6 +11,7 @@ function ExecutivePage() {
     return saved !== null ? saved : "10";
   });
 
+
   useEffect(() => {
     // Update localStorage whenever currentValue changes
     localStorage.setItem("currentValue", currentValue);
@@ -40,26 +41,23 @@ function ExecutivePage() {
 
   return (
     <>
-      <div className="mt-[-600px]">
+      <div className="">
         <Message />
       </div>
-      <div className="fixed top-1/3 left-1/4 transform -translate-y-1/2 w-100">
+
+      <div className= "absolute right-20">
+
         <TextField
           label="Min Days: "
           onChange={handleInputChange}
           currentValue={currentValue} // Convert currentValue to a string
           onSubmit={handleSubmit}
-        />
-      </div>
-      <div className="fixed top-1/2 left-1/4 flex items-center">
+        /> 
         <label className="mr-2">Your RAs:</label>
         <Dropdown options={dropdownOptions} onSelect={handleDropdownChange} />
+
       </div>
-      <div className="fixed top-[calc(50%-150px)] right-10">
-        {" "}
-        {/* Adjusted top positioning */}
-        <Notepad />
-      </div>
+      
     </>
   );
 }

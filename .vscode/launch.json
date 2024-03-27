@@ -1,6 +1,20 @@
 {
     "configurations": [
         {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "com.shiftbackend.shiftbackend.Main",
+            "projectName": "shift-back-end"
+        },
+        {
+            "type": "java",
+            "name": "ShiftBackEndApplication",
+            "request": "launch",
+            "mainClass": "com.shiftbackend.shiftbackend.ShiftBackEndApplication",
+            "projectName": "shift-back-end"
+        },
+        {
             "name": "Docker Node.js Launch",
             "type": "docker",
             "request": "launch",

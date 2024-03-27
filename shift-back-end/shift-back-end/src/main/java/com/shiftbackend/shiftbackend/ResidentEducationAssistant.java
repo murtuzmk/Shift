@@ -41,7 +41,7 @@ public class ResidentEducationAssistant extends ResidentAssistant{
     @Override
     public boolean loadAccountFile(String userId) {
         String fileName = this.getRole() + "_" + userId + ".txt";
-        File userInformation = new File(System.getProperty("user.dir"), fileName);
+        File userInformation = new File(System.getProperty("user.dir") + "/test_database", fileName);
         if (!userInformation.exists()) {
             return false;
         }
@@ -49,11 +49,13 @@ public class ResidentEducationAssistant extends ResidentAssistant{
             Scanner reader = new Scanner(userInformation);
             String person = reader.nextLine();
             String ra = reader.nextLine();
+            String daysPreferred = reader.nextLine();
             //String raChats = reader.nextLine();
             String rea = reader.nextLine();
 
             String[] personAttributes = person.split("[|]");
             String[] raAttributes = ra.split("[|]");
+            String[] days = daysPreferred.split("[|]");
             //String[] chatIds = raChats.split("[|]");
             String[] reaAttributes = rea.split("[|]");
 
@@ -64,11 +66,20 @@ public class ResidentEducationAssistant extends ResidentAssistant{
             this.setGender(Person.Gender.valueOf(personAttributes[2]));
             this.setHall(Person.Hall.valueOf(personAttributes[3]));
             this.setEnabled(Boolean.parseBoolean(personAttributes[4]));
+            this.setTimezone(Integer.parseInt(personAttributes[5]));
 
             // Set RA attributes
             this.setFloor(raAttributes[0]);
             this.setClockedIn(Boolean.parseBoolean(raAttributes[1]));
+            this.setReaId(raAttributes[2]);
 
+            // Load Preferences
+            for (String day : days) {
+                if (!day.equals("")) {
+                    this.getPreferences().add(day);
+                }
+            }
+            
             // Load Schedule
             this.getSchedule().loadScheduleFile(this.getId());
 
@@ -80,6 +91,8 @@ public class ResidentEducationAssistant extends ResidentAssistant{
                     raAccounts.add(raId);
                 }
             }
+
+            // Load Master Schedule
             
 
             reader.close();
@@ -95,25 +108,24 @@ public class ResidentEducationAssistant extends ResidentAssistant{
     @Override
     public void saveAccountFile() {
         String fileName = this.getRole() + "_" + this.getId() + ".txt";
-        File userInformation = new File(System.getProperty("user.dir"), fileName);
+        File userInformation = new File(System.getProperty("user.dir") + "/test_database", fileName);
         try {
             PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
 
             pw.println(this.getName() + "|" + this.getEmail() + "|" + this.getGender() + "|" + this.getHall() + "|" + this.isEnabled() + "|" + this.getTimezone());
-            pw.println(this.getFloor() + "|" + this.isClockedIn());
+            pw.println(this.getFloor() + "|" + this.isClockedIn() + "|" + this.getTimezone());
+
+            for (int i = 0; i < getPreferences().size(); i++) {
+                if (i != 0) {
+                    pw.print("|");
+                }
+                pw.print(getPreferences().get(i));
+            }
+            pw.println();
 
             getSchedule().saveScheduleFile(this.getId());
 
-            /* 
-            if (chats != null) {
-                for (int i = 0; i < chats.size(); i++) {
-                    if (i != 0) {
-                        pw.print("|");
-                    }
-                    pw.print(chats.get(i).getId());
-                }
-            }
-            */
+            // Save Chats
 
             for (int i = 0; i < raAccounts.size(); i++) {
                 if (i != 0) {
@@ -121,8 +133,9 @@ public class ResidentEducationAssistant extends ResidentAssistant{
                 }
                 pw.print(raAccounts.get(i));
             }
-
             pw.println();
+
+            // Save Master Schedule
 
 
             pw.close();
@@ -169,7 +182,28 @@ public class ResidentEducationAssistant extends ResidentAssistant{
         raAccounts.remove(raId);
     }
 
+    public String getRAs() {
+        StringBuilder buffer = new StringBuilder();
+
+        buffer.append("{\"raIds\": \"");
+        for (int i = 0; i < raAccounts.size(); i++) {
+            if (i != 0) {
+                buffer.append("|");
+            }
+            buffer.append(raAccounts.get(i));
+            
+        }
+        buffer.append("\"}");
+
+        return buffer.toString();
+    }
+
+
     /*------------------------ GETTERS & SETTERS ------------------------*/
+
+    public ArrayList<String> getRaAccounts() {
+        return raAccounts;
+    }
 
     public Scheduler getMasterSchedule() {
         return masterSchedule;

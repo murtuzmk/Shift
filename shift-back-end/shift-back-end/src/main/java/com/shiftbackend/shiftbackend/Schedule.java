@@ -6,6 +6,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.shiftbackend.shiftbackend.Shift.DutyLevel;
+
 public class Schedule {
 
     /* ------------------------ VARIABLES ------------------------ */
@@ -70,7 +72,7 @@ public class Schedule {
 
     public void saveScheduleFile(String id) {
         String fileName = "Schedule_" + id +  ".txt";
-        File userInformation = new File(System.getProperty("user.dir"), fileName);
+        File userInformation = new File(System.getProperty("user.dir") + "/test_database", fileName);
         try {
             PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
 
@@ -95,7 +97,7 @@ public class Schedule {
 
     public boolean deleteAccountFile(String id) {
         String fileName = "Schedule_" + id +  ".txt";
-        File userInformation = new File(System.getProperty("user.dir"), fileName);
+        File userInformation = new File(System.getProperty("user.dir") + "/test_database", fileName);
         return userInformation.delete();
     }
 
@@ -103,9 +105,43 @@ public class Schedule {
         events.add(newEvent);
     }
 
+    public void editEventTitle(String eventId, String title) {
+        for (Shift event : events) {
+            if (eventId.equals(event.getId())) {
+                event.setTitle(title);
+            }
+        }
+    }
+
+    public void editEventDescription(String eventId, String description) {
+        for (Shift event : events) {
+            if (eventId.equals(event.getId())) {
+                event.setDescription(description);
+            }
+        }
+    }
+
+    public void editEventDutyLevel(String eventId, String dutyLevel) {
+        for (Shift event : events) {
+            if (eventId.equals(event.getId())) {
+                event.setDutyLevel(DutyLevel.valueOf(dutyLevel));
+            }
+        }
+    }
+
     public void deleteEvent(String eventId) {
         for (int i = 0; i < events.size(); i++) {
             if (eventId.equals(events.get(i).getId())) {
+                if (events.get(i).getDutyLevel() == null) {
+                    events.remove(i);
+                }
+            }
+        }
+    }
+
+    public void deleteShift(String ShiftId) {
+        for (int i = 0; i < events.size(); i++) {
+            if (ShiftId.equals(events.get(i).getId())) {
                 if (events.get(i).getDutyLevel() != null) {
                     events.remove(i);
                 }
@@ -113,20 +149,22 @@ public class Schedule {
         }
     }
 
+    /*
     public void deleteEventHour(int hour, int timezone) {
         for (int i = 0; i < events.size(); i++) {
             if (hour == events.get(i).getStart().getHour() && (timezone == events.get(i).getStart().getTimezone())) {
-                if (events.get(i).getDutyLevel() != null) {
+                if (events.get(i).getDutyLevel() == null) {
                     events.remove(i);
                 }
             }
         }
     }
+    */
 
     public void deleteEventDay(int day, int month, int timezone) {
         for (int i = 0; i < events.size(); i++) {
             if ((day == events.get(i).getStart().getDay()) && (month == events.get(i).getStart().getMonth()) && (timezone == events.get(i).getStart().getTimezone())) {
-                if (events.get(i).getDutyLevel() != null) {
+                if (events.get(i).getDutyLevel() == null) {
                     events.remove(i);
                 }
             }
@@ -139,7 +177,7 @@ public class Schedule {
 
         for (int i = 0; i < events.size(); i++) {
             if (weekEndSeconds > events.get(i).getStart().getSecondsEpoch()) {
-                if (events.get(i).getDutyLevel() != null) {
+                if (events.get(i).getDutyLevel() == null) {
                     events.remove(i);
                 }
             }
@@ -149,7 +187,7 @@ public class Schedule {
     public void deleteEventMonth(int month, int year, int timezone) {
         for (int i = 0; i < events.size(); i++) {
             if ((month == events.get(i).getStart().getMonth()) && (year == events.get(i).getStart().getYear()) && (timezone == events.get(i).getStart().getTimezone())) {
-                if (events.get(i).getDutyLevel() != null) {
+                if (events.get(i).getDutyLevel() == null) {
                     events.remove(i);
                 }
             }
@@ -158,8 +196,48 @@ public class Schedule {
 
     /*------------------------ GETTERS & SETTERS ------------------------*/
 
-    public ArrayList<Shift> getEvents() {
-        return events;
+    public String getEvents() {
+        StringBuilder buffer = new StringBuilder();
+
+        for (Shift event : events) {
+            if (event.getDutyLevel() == null) {
+                buffer.append("{\"eventId\": \"" + event.getId());
+                buffer.append("\"\n");
+                buffer.append("\"title\": \"" + event.getTitle());
+                buffer.append("\"\n");
+                buffer.append("\"description\": \"" + event.getDescription());
+                buffer.append("\"\n");
+                buffer.append("\"startTime\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"endTime\": \"" + event.getEnd().toString());
+                buffer.append("\"}\n");
+            }
+        }
+
+        return buffer.toString();
+    }
+
+    public String getShifts() {
+        StringBuilder buffer = new StringBuilder();
+
+        for (Shift event : events) {
+            if (event.getDutyLevel() != null) {
+                buffer.append("{\"shifttId\": \"" + event.getId());
+                buffer.append("\"\n");
+                buffer.append("\"title\": \"" + event.getTitle());
+                buffer.append("\"\n");
+                buffer.append("\"description\": \"" + event.getDescription());
+                buffer.append("\"\n");
+                buffer.append("\"dutyLevel\": \"" + event.getDutyLevel());
+                buffer.append("\"\n");
+                buffer.append("\"startTime\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"endTime\": \"" + event.getEnd().toString());
+                buffer.append("\"}\n");
+            }
+        }
+
+        return buffer.toString();
     }
 
 

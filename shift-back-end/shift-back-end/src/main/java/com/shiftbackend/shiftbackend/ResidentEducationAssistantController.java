@@ -11,6 +11,12 @@ import java.util.Map;
 public class ResidentEducationAssistantController {
     ResidentEducationAssistant rea = new ResidentEducationAssistant();
 
+    @GetMapping
+    public ResponseEntity<String> allREAs() {
+        return new ResponseEntity<String>("Access REA Methods", HttpStatus.OK);
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<String> loadREA(@PathVariable String id) {
         rea.loadAccountFile(id);

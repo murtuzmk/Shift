@@ -11,6 +11,12 @@ import java.util.Map;
 public class ResidentEducationCoordinatorController {
     ResidentEducationCoordinator rec = new ResidentEducationCoordinator();
 
+    @GetMapping
+    public ResponseEntity<String> allRECs() {
+        return new ResponseEntity<String>("Access REC Methods", HttpStatus.OK);
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<String> loadREC(@PathVariable String id) {
         rec.loadAccountFile(id);
@@ -198,13 +204,6 @@ public class ResidentEducationCoordinatorController {
         return new ResponseEntity<String>("RA Removed: " + raId, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}/get-ras")
-    public ResponseEntity<String> getRAsInREC(@PathVariable String id) {
-        rec.loadAccountFile(id);
-
-        return new ResponseEntity<String>(rec.getRAs(), HttpStatus.CREATED);
-    }
-
 
     @GetMapping("/{id}/remove-rea/{reaId}")
     public ResponseEntity<String> removeREAInREC(@PathVariable String id, @PathVariable String reaId) {
@@ -222,7 +221,7 @@ public class ResidentEducationCoordinatorController {
     }
 
     @GetMapping("/{id}/get-ras")
-    public ResponseEntity<String> getRAsInREA(@PathVariable String id) {
+    public ResponseEntity<String> getRAsInREC(@PathVariable String id) {
         rec.loadAccountFile(id);
 
         return new ResponseEntity<String>(rec.getRAs(), HttpStatus.CREATED);

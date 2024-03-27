@@ -72,7 +72,7 @@ public class Schedule {
 
     public void saveScheduleFile(String id) {
         String fileName = "Schedule_" + id +  ".txt";
-        File userInformation = new File(System.getProperty("user.dir"), fileName);
+        File userInformation = new File(System.getProperty("user.dir") + "/test_database", fileName);
         try {
             PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
 
@@ -97,7 +97,7 @@ public class Schedule {
 
     public boolean deleteAccountFile(String id) {
         String fileName = "Schedule_" + id +  ".txt";
-        File userInformation = new File(System.getProperty("user.dir"), fileName);
+        File userInformation = new File(System.getProperty("user.dir") + "/test_database", fileName);
         return userInformation.delete();
     }
 

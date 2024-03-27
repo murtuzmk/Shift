@@ -55,7 +55,7 @@ public class ResidentAssistant extends Person{
 
     public boolean loadAccountFile(String userId) {
         String fileName = this.getRole() + "_" + userId + ".txt";
-        File userInformation = new File(System.getProperty("user.dir"), fileName);
+        File userInformation = new File(System.getProperty("user.dir") + "/test_database", fileName);
         if (!userInformation.exists()) {
             return false;
         }
@@ -124,7 +124,7 @@ public class ResidentAssistant extends Person{
 
     public void saveAccountFile() {
         String fileName = this.getRole() + "_" + this.getId() + ".txt";
-        File userInformation = new File(System.getProperty("user.dir"), fileName);
+        File userInformation = new File(System.getProperty("user.dir") + "/test_database", fileName);
         try {
             PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
 

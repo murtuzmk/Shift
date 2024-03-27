@@ -6,15 +6,15 @@ import { useUser } from "../hooks/useUser";
 import { useAuth0 } from "@auth0/auth0-react";
 
 
+
 interface TileClassNameArgs {
   date: Date;
   view: string;
 }
 
-const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean | null}> = ({id, execAccess}) => {
+const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean | null}> =({id, execAccess}) => {
   // Explicitly type freeDays as an array of strings
   const [freeDays, setFreeDays] = useState<string[]>([]);
-  const [savedFreeDays, setSavedFreeDays] = useState<string[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [view, setView] = useState<"month">("month");
   const {user} = useAuth0();
@@ -27,13 +27,38 @@ const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean |
   /* Fetch the free days from the REST API */
   const fetchFreeDays = () => {
     // Update the freeDays state with the fetched data
-    fetch("http://localhost:8080/root/${userid}/get-preferences")
+    fetch("http://localhost:8080/ra/${userid}/get-preferences")
     .then((response) => response.json())
     .then((data) => {
       const dateStr: string= new Date(data).toISOString().split("T")[0];
       setFreeDays([dateStr]);
     });
   }
+
+  /* This is for when submit is enacted, tells us which days are left to be saved */
+  const setSavedFreeDays = (dates : string[]) => {
+    fetch("http://localhost:8080/ra/${userid}/add-preference", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ 
+        dates: dates,
+      }),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      // Assuming you have a state variable 'freeDays' and a setter function 'setFreeDays'
+      setFreeDays([...freeDays, ...dates]); // Append the new dates to the existing ones
+    });
+  }
+  
+
+
+  /* useEffect will call on fetch free days once, when the component is mounted */
+  useEffect(() => {
+    fetchFreeDays();
+  }, []);
 
   const addFreeDays = (dates : string[]) => {
     fetch("http://localhost:8080/root/${userid}/add-preference", {
@@ -112,7 +137,7 @@ const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean |
     );
   };
 
-  /*useEffect(() => {
+  /*/*useEffect(() => {
     const loadedFreeDays = localStorage.getItem("savedFreeDays");
     if (loadedFreeDays) {
       setSavedFreeDays(JSON.parse(loadedFreeDays));
@@ -134,10 +159,10 @@ const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean |
     }
 
     /* Send the freeDays array to the local storage */
-    /*localStorage.setItem("savedFreeDays", JSON.stringify(freeDays));
+    /*/*localStorage.setItem("savedFreeDays", JSON.stringify(freeDays));
     setSavedFreeDays(freeDays);
     console.log(freeDays);*/
-    addFreeDays(freeDays);
+    setSavedFreeDays(freeDays);
     window.alert("Availability Successfully Sent Out");
   };
 
@@ -188,7 +213,7 @@ const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean |
 
         )}
         {/* Conditional message positioned to the right */}
-        {!execAccess && numDaysNeeded > 0 && (
+        {!execAccess && !execAccess && numDaysNeeded > 0 && (
           <div className="absolute right-0 pr-4">
             <span className="text-red-500 italic">
               Need {numDaysNeeded} more days
@@ -196,7 +221,9 @@ const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean |
           </div>
         )}
         
+        
       </div>
+      
       
       <style>{`
       .react-calendar {

@@ -72,7 +72,7 @@ public class Schedule {
 
     public void saveScheduleFile(String id) {
         String fileName = "Schedule_" + id +  ".txt";
-        File userInformation = new File(System.getProperty("user.dir"), fileName);
+        File userInformation = new File(System.getProperty("user.dir") + "/test_database", fileName);
         try {
             PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
 
@@ -97,7 +97,7 @@ public class Schedule {
 
     public boolean deleteAccountFile(String id) {
         String fileName = "Schedule_" + id +  ".txt";
-        File userInformation = new File(System.getProperty("user.dir"), fileName);
+        File userInformation = new File(System.getProperty("user.dir") + "/test_database", fileName);
         return userInformation.delete();
     }
 
@@ -201,17 +201,15 @@ public class Schedule {
 
         for (Shift event : events) {
             if (event.getDutyLevel() == null) {
-                buffer.append("{\"Event Id\": \"" + event.getId());
+                buffer.append("{\"eventId\": \"" + event.getId());
                 buffer.append("\"\n");
-                buffer.append("\"Title\": \"" + event.getTitle());
+                buffer.append("\"title\": \"" + event.getTitle());
                 buffer.append("\"\n");
-                buffer.append("\"Description\": \"" + event.getDescription());
+                buffer.append("\"description\": \"" + event.getDescription());
                 buffer.append("\"\n");
-                buffer.append("\"Duty Level\": \"" + event.getDutyLevel());
+                buffer.append("\"startTime\": \"" + event.getStart().toString());
                 buffer.append("\"\n");
-                buffer.append("\"Start Time\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"End Time\": \"" + event.getEnd().toString());
+                buffer.append("\"endTime\": \"" + event.getEnd().toString());
                 buffer.append("\"}\n");
             }
         }
@@ -224,17 +222,17 @@ public class Schedule {
 
         for (Shift event : events) {
             if (event.getDutyLevel() != null) {
-                buffer.append("{\"Event Id\": \"" + event.getId());
+                buffer.append("{\"shifttId\": \"" + event.getId());
                 buffer.append("\"\n");
-                buffer.append("\"Title\": \"" + event.getTitle());
+                buffer.append("\"title\": \"" + event.getTitle());
                 buffer.append("\"\n");
-                buffer.append("\"Description\": \"" + event.getDescription());
+                buffer.append("\"description\": \"" + event.getDescription());
                 buffer.append("\"\n");
-                buffer.append("\"Duty Level\": \"" + event.getDutyLevel());
+                buffer.append("\"dutyLevel\": \"" + event.getDutyLevel());
                 buffer.append("\"\n");
-                buffer.append("\"Start Time\": \"" + event.getStart().toString());
+                buffer.append("\"startTime\": \"" + event.getStart().toString());
                 buffer.append("\"\n");
-                buffer.append("\"End Time\": \"" + event.getEnd().toString());
+                buffer.append("\"endTime\": \"" + event.getEnd().toString());
                 buffer.append("\"}\n");
             }
         }

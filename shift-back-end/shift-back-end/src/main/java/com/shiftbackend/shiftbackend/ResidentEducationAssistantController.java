@@ -11,6 +11,12 @@ import java.util.Map;
 public class ResidentEducationAssistantController {
     ResidentEducationAssistant rea = new ResidentEducationAssistant();
 
+    @GetMapping
+    public ResponseEntity<String> allREAs() {
+        return new ResponseEntity<String>("Access REA Methods", HttpStatus.OK);
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<String> loadREA(@PathVariable String id) {
         rea.loadAccountFile(id);
@@ -66,7 +72,7 @@ public class ResidentEducationAssistantController {
     public ResponseEntity<String> isRAClockedInREA(@PathVariable String id, @PathVariable String raId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
-        ra.saveAccountFile();
+        
         return new ResponseEntity<String>("" + ra.isClockedIn(), HttpStatus.OK);
     }
 
@@ -136,9 +142,9 @@ public class ResidentEducationAssistantController {
     @GetMapping("/{id}/add-ra/{raId}")
     public ResponseEntity<String> addRAInREA(@PathVariable String id, @PathVariable String raId) {
         rea.loadAccountFile(id);
+
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
-        ra.setId(raId);
         ra.setReaId(id);
         ra.saveAccountFile();
 
@@ -151,16 +157,21 @@ public class ResidentEducationAssistantController {
     @GetMapping("/{id}/remove-ra/{raId}")
     public ResponseEntity<String> removeRAInREA(@PathVariable String id, @PathVariable String raId) {
         rea.loadAccountFile(id);
+
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.setReaId(null);
+        ra.saveAccountFile();
+
         rea.removeRaAccount(raId);
         rea.saveAccountFile();
 
         return new ResponseEntity<String>("RA Removed: " + raId, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}/get-ras/{raId}")
-    public ResponseEntity<String> getRAsInREA(@PathVariable String id, @PathVariable String raId) {
+    @GetMapping("/{id}/get-ras")
+    public ResponseEntity<String> getRAsInREA(@PathVariable String id) {
         rea.loadAccountFile(id);
-        rea.saveAccountFile();
 
         return new ResponseEntity<String>(rea.getRAs(), HttpStatus.CREATED);
     }
@@ -169,7 +180,6 @@ public class ResidentEducationAssistantController {
     public ResponseEntity<String> completedRAprimaryShiftsREA(@PathVariable String id, @PathVariable String raId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
-        ra.saveAccountFile();
 
         return new ResponseEntity<String>("Number of Primary Shifts Completed: " + ra.primaryShiftsCompleted(), HttpStatus.CREATED);
     }
@@ -178,7 +188,6 @@ public class ResidentEducationAssistantController {
     public ResponseEntity<String> completedRAsecondaryShiftsREA(@PathVariable String id, @PathVariable String raId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
-        ra.saveAccountFile();
 
         return new ResponseEntity<String>("Number of Secondary Shifts Completed: " + ra.secondaryShiftsCompleted(), HttpStatus.CREATED);
     }
@@ -187,7 +196,6 @@ public class ResidentEducationAssistantController {
     public ResponseEntity<String> completedRAtertiaryShiftsREA(@PathVariable String id, @PathVariable String raId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
-        ra.saveAccountFile();
 
         return new ResponseEntity<String>("Number of Tertiary Shifts Completed: " + ra.tertiaryShiftsCompleted(), HttpStatus.CREATED);
     }
@@ -196,7 +204,6 @@ public class ResidentEducationAssistantController {
     public ResponseEntity<String> completedRAShiftsREA(@PathVariable String id, @PathVariable String raId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
-        ra.saveAccountFile();
 
         return new ResponseEntity<String>("Total Shifts Completed: " + ra.totalShiftsCompleted(), HttpStatus.CREATED);
     }

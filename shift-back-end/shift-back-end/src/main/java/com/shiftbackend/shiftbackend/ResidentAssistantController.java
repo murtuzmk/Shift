@@ -26,6 +26,7 @@ public class ResidentAssistantController {
     @GetMapping("/{id}/delete")
     public ResponseEntity<String> deleteRA(@PathVariable String id) {
         ra.loadAccountFile(id);
+        ra.deleteUser();
         ra.deleteAccountFile();
         ra.deleteUserInformation();
         ra = new ResidentAssistant();

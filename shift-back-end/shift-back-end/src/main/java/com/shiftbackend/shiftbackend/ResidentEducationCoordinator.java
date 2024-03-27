@@ -36,7 +36,7 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
      @Override
     public boolean loadAccountFile(String userId) {
         String fileName = this.getRole() + "_" + userId + ".txt";
-        File userInformation = new File(System.getProperty("user.dir"), fileName);
+        File userInformation = new File(System.getProperty("user.dir") + "/test_database", fileName);
         if (!userInformation.exists()) {
             return false;
         }
@@ -114,7 +114,7 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
     @Override
     public void saveAccountFile() {
         String fileName = this.getRole() + "_" + this.getId() + ".txt";
-        File userInformation = new File(System.getProperty("user.dir"), fileName);
+        File userInformation = new File(System.getProperty("user.dir") + "/test_database", fileName);
         try {
             PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
 
@@ -163,7 +163,7 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
     @Override
     public boolean deleteAccountFile() {
         String fileName = this.getRole() + "_" + this.getId() + ".txt";
-        File userInformation = new File(System.getProperty("user.dir"), fileName);
+        File userInformation = new File(System.getProperty("user.dir") + "/test_database", fileName);
         return (userInformation.delete() && getSchedule().deleteAccountFile(this.getId()));
     }
 

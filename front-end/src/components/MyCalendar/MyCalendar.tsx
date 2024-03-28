@@ -128,7 +128,6 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
   }; /* fetchEvents */
 
   const addEvents = (event: Event) => {
-    {
       fetch('http://localhost:8080/ra/{id}/add-event/{eventid}', {
       method: "POST",
       headers: {
@@ -260,5 +259,4 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
     </div>
   );
 };
-}
 export default MyCalendar;

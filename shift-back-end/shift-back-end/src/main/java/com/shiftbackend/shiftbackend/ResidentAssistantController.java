@@ -111,6 +111,18 @@ public class ResidentAssistantController {
         return new ResponseEntity<String>("Basic Attributes Set", HttpStatus.CREATED);
     }
 
+    @PostMapping("/{id}/create-account")
+    public ResponseEntity<String> createRA(@PathVariable String id, @RequestBody Map<String, String> input) {
+        ra.loadAccountFile(id);
+        ra.setName(input.get("name"));
+        ra.setEmail(input.get("email"));
+        ra.setId(input.get("inputId"));
+        ra.setEnabled(Boolean.parseBoolean(input.get("enabled")));
+        ra.saveAccountFile();
+
+        return new ResponseEntity<String>("New RA Account Created", HttpStatus.CREATED);
+    }
+
     @GetMapping("/{id}/clock-in")
     public ResponseEntity<String> clockInRA(@PathVariable String id) {
         ra.loadAccountFile(id);

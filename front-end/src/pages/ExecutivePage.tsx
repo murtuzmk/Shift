@@ -23,14 +23,16 @@ function ExecutivePage() {
   });  
 
   const fetchRas = () => {
-    fetch("http://localhost:8080/rea/${userid}/get-ras")
+    fetch('http://localhost:8080/rea/${userid}/get-ras')
     .then((response) => response.json())
     .then((data) => {
       setRas(data);
   });
 }
-
-  useEffect(() => { fetchRas}, []);
+  useEffect(() => {
+  // Correctly call fetchRas function
+  fetchRas(); // This executes the function
+  }, []); 
 
   /*useEffect(() => {
     // Update localStorage whenever currentValue changes
@@ -117,6 +119,4 @@ function ExecutivePage() {
 }
 
 export default ExecutivePage;
-function setCurrentValue(newValue: any) {
-  throw new Error("Function not implemented.");
-}
+

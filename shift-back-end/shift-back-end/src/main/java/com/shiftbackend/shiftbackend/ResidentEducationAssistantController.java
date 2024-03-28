@@ -138,6 +138,18 @@ public class ResidentEducationAssistantController {
         return new ResponseEntity<String>("Basic Attributes Set", HttpStatus.CREATED);
     }
 
+    @PostMapping("/{id}/create-account")
+    public ResponseEntity<String> createREA(@PathVariable String id, @RequestBody Map<String, String> input) {
+        rea.loadAccountFile(id);
+        rea.setName(input.get("name"));
+        rea.setEmail(input.get("email"));
+        rea.setId(input.get("inputId"));
+        rea.setEnabled(Boolean.parseBoolean(input.get("enabled")));
+        rea.saveAccountFile();
+
+        return new ResponseEntity<String>("New REA Account Created", HttpStatus.CREATED);
+    }
+
 
     @GetMapping("/{id}/add-ra/{raId}")
     public ResponseEntity<String> addRAInREA(@PathVariable String id, @PathVariable String raId) {

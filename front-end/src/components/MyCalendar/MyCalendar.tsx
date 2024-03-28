@@ -1,7 +1,8 @@
 import { useEffect, useState, useMemo} from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
-import Modal from "react-modal";
+import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react";
+import { Formik, Form, Field } from "formik";
 import { v4 as uuidv4 } from "uuid";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 const localizer = momentLocalizer(moment);
@@ -37,43 +38,47 @@ const EventDialog = ({
   start,
   end,
 }: EventDialogProps) => {
-  const [title, setTitle] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit({ start, end, title, id: uuidv4() });
-  };
-
   return (
-    <Modal
-      isOpen={isOpen}
-      style={{
-        content: {
-          width: "500px",
-          height: "400px",
-          margin: "auto",
-        },
-      }}
-    >
-      <form onSubmit={handleSubmit}>
-        <label>
-          Title:
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </label>
-        <button style={{ margin: "5px" }} onClick={onCancel}>
-          Cancel
-        </button>
-        <button style={{ margin: "5px" }} type="submit">
-          Create{" "}
-        </button>
-        <button style={{ margin: "5px" }} type="button" onClick={onDelete}>
-          Delete{" "}
-        </button>
-      </form>
+    <Modal isOpen={isOpen} onClose={onCancel}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Create Event</ModalHeader>
+        <ModalCloseButton />
+        <Formik
+          initialValues={{ title: "" }}
+          onSubmit={(values, actions) => {
+            onSubmit({ start, end, title: values.title, id: uuidv4() });
+            actions.resetForm();
+          }}
+        >
+          {(props) => (
+            <Form>
+              <ModalBody>
+                <Field name="title">
+                  {({ field, form }) => (
+                    <FormControl>
+                      <FormLabel htmlFor="title">Title</FormLabel>
+                      <Input {...field} id="title" placeholder="Enter title" />
+                    </FormControl>
+                  )}
+                </Field>
+              </ModalBody>
+
+              <ModalFooter>
+                <Button colorScheme="blue" mr={3} type="submit">
+                Create
+                </Button>
+                <Button variant="ghost" onClick={onCancel}>
+                  Cancel
+                </Button>
+                <Button variant="ghost" onClick={onDelete}>
+                  Delete
+                </Button>
+              </ModalFooter>
+            </Form>
+          )}
+        </Formik>
+      </ModalContent>
     </Modal>
   );
 };
@@ -110,11 +115,11 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
       .then((data) => {
         const s = data.startTime;
         /* s is a string in the format "HH:MM TZZ DD/MO/YYYY" */
-        const startTime = new Date(s.substring(16).toNumber(), s.substring(13, 15).toNumber(), s.substring(10, 12).toNumber(), s.substring(0, 2).toNumber(), s.substring(3, 5).toNumber());
+        const startTime = new Date(s.substring(16).parseInt(), s.substring(13, 15).parseInt(), s.substring(10, 12).parseInt(), s.substring(0, 2).parseInt(), s.substring(3, 5).parseInt());
         
         const e = data.endTime;
         /* e is a string in the format "HH:MM TZZ DD/MO/YYYY" */
-        const endTime = new Date(e.substring(16).toNumber(), e.substring(13, 15).toNumber(), e.substring(10, 12).toNumber(), e.substring(0, 2).toNumber(), e.substring(3, 5).toNumber());
+        const endTime = new Date(e.substring(16).parseInt(), e.substring(13, 15).parseInt(), e.substring(10, 12).parseInt(), e.substring(0, 2).parseInt(), e.substring(3, 5).parseInt());
         setEvents((prevEvents) => [
           ...prevEvents,
           {

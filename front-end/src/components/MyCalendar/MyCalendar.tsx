@@ -5,6 +5,7 @@ import Modal from "react-modal";
 import { v4 as uuidv4 } from "uuid";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 const localizer = momentLocalizer(moment);
+import axios from "axios";
 import "./MyCalendar.css";
 
 interface MyCalendarProps {
@@ -82,7 +83,7 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
-  useEffect(() => {
+/*  useEffect(() => {
     const savedEvents = localStorage.getItem("events");
     if (savedEvents) {
       const parsedEvents: Event[] = JSON.parse(savedEvents);
@@ -94,26 +95,75 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
       setEvents(eventsWithDates);
     }
   }, []);
-
-  useEffect(() => {
+*/
+/*  useEffect(() => {
     const savedEvents = localStorage.getItem("events");
     if (savedEvents) {
       setEvents(JSON.parse(savedEvents));
     }
+  }, []); 
+*/
+
+  const fetchEvents = () => {
+    fetch("http://localhost:8080/ra/{id}/get-events")
+      .then((response) => response.json())
+      .then((data) => {
+        const s = data.startTime;
+        /* s is a string in the format "HH:MM TZZ DD/MO/YYYY" */
+        const startTime = new Date(s.substring(16).toNumber(), s.substring(13, 15).toNumber(), s.substring(10, 12).toNumber(), s.substring(0, 2).toNumber(), s.substring(3, 5).toNumber());
+        
+        const e = data.endTime;
+        /* e is a string in the format "HH:MM TZZ DD/MO/YYYY" */
+        const endTime = new Date(e.substring(16).toNumber(), e.substring(13, 15).toNumber(), e.substring(10, 12).toNumber(), e.substring(0, 2).toNumber(), e.substring(3, 5).toNumber());
+        setEvents((prevEvents) => [
+          ...prevEvents,
+          {
+            start: startTime,
+            end: endTime,
+            title: data.title,
+            id: data.id,
+          },
+        ]);
+      });
+  }; /* fetchEvents */
+
+  const addEvents = (event: Event) => {
+    {
+      fetch('http://localhost:8080/ra/{id}/add-event/{eventid}', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: event.title,
+        starthour: event.start.getHours(),
+        startminute: event.start.getMinutes(),
+        startday: event.start.getDate(),
+        startyear: event.start.getFullYear(),
+        endhour: event.end.getHours(),
+        endminute: event.end.getMinutes(),
+        endday: event.end.getDate(),
+        endyear: event.end.getFullYear(),
+      })
+    })  
+  };
+
+  /* obtain all saved events of the user */
+  useEffect(() => {
+    fetchEvents();
   }, []);
 
-  useEffect(() => {
+/*  useEffect(() => {
     localStorage.setItem("events", JSON.stringify(events));
   }, [events]);
 
-  const allEvents = useMemo(() => {
-    return [...events, ...importedEvents];
-  }, [events, importedEvents]);
-  
+*/
+  /* ask Murtuza idk what this does */
   useEffect(() => {
-    onEventsChange(allEvents);
-  }, [allEvents]);
-  
+    onEventsChange(events);
+  }, [events]);
+
+
   const handleSelect = ({ start, end }: { start: Date; end: Date }) => {
     setSelectedEvent({ start, end, title: "", id: "" });
     setDialogOpen(true);
@@ -134,6 +184,7 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
   }, [selectedEvent, events]);
 
   const handleCreateEvent = (event: Event) => {
+    addEvents(event);
     setEvents((prevEvents) => [
       ...prevEvents,
       {
@@ -152,14 +203,27 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
     setDialogOpen(true);
   };
 
+  const editEvent = (newEvent: Event) => {
+    fetch('http://localhost:8080/ra/{id}/edit-event/{eventId}/edit-title', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        "Edited Title": newEvent.title
+      })
+    })  
+  };
   const handleUpdateEvent = (updatedEvent: Event) => {
-    setEvents((prevEvents) =>
+    //want to find some way to only call editEvent if the title has been changed
+    setEvents((prevEvents) => 
       prevEvents.map((event) =>
         event.start === updatedEvent.start && event.end === updatedEvent.end
-          ? updatedEvent
+          ? (updatedEvent)
           : event
       )
     );
+    editEvent(updatedEvent);
     setDialogOpen(false);
   };
 
@@ -175,7 +239,7 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
     <div style={{ width: "800px", height: "450px" }}>
       <Calendar
         localizer={localizer}
-        events={allEvents}
+        events={events}
         startAccessor="start"
         endAccessor="end"
         titleAccessor="title"

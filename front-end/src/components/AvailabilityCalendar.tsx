@@ -137,7 +137,7 @@ const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean |
     );
   };
 
-  /*/*useEffect(() => {
+  /*useEffect(() => {
     const loadedFreeDays = localStorage.getItem("savedFreeDays");
     if (loadedFreeDays) {
       setSavedFreeDays(JSON.parse(loadedFreeDays));

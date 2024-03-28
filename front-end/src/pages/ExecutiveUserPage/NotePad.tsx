@@ -1,21 +1,28 @@
 import React, { useEffect, useState } from "react";
 
 const Notepad = () => {
-  const [text, setText] = useState("");
+  //const [text, setText] = useState("");
   const [isEditable, setIsEditable] = useState(true);
-
+  const [rules, setRules] = useState(""); // Placeholder for rules]
 
   const handleSave = () => {
     // Save the text here. This could involve sending it to a server,
     // saving it to local storage, etc.
-    console.log(text);
+    console.log(rules);
+    localStorage.setItem("rules", rules);
     setIsEditable(false);
   };
 
   const handleEdit = () => {
     setIsEditable(true);
   };
-
+  
+  useEffect(() => {
+    const loadedRules = localStorage.getItem("rules");
+    if (loadedRules) {
+      setRules(JSON.parse(loadedRules));
+    }
+  }, []); 
 
   /* EXAMPLE OF ACCESSING OUTPUT FROM URL
   useEffect(()=>{
@@ -30,11 +37,11 @@ const Notepad = () => {
   
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-2xl mb-4">My Notepad</h1> {/* This is the title */}
+      <h1 className="text-2xl mb-4">Rules</h1> {/* This is the title */}
       <textarea
         className="border p-2 mb-2 w-96 h-60" // Adjust the width (w-96) and height (h-60) as needed
-        value={text}
-        onChange={(e) => setText(e.target.value)}
+        value={rules}
+        onChange={(e) => setRules(e.target.value)}
         readOnly={!isEditable}
       />
       <div>

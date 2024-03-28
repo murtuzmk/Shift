@@ -3,18 +3,39 @@ import Message from "./ExecutiveUserPage/Message";
 import TextField from "./ExecutiveUserPage/TextField";
 import Dropdown from "./ExecutiveUserPage/DropDown";
 import Notepad from "./ExecutiveUserPage/NotePad";
+import AvailabilityCalendar from "../components/AvailabilityCalendar";
+import { Button } from "@chakra-ui/button";
+import { useAuth0 } from "@auth0/auth0-react";
 
+/*
+ *  This is the Executive Page, where the executive can view the RA schedules and assign them to RAs.
+ *
+ */
 function ExecutivePage() {
   const [inputValue, setInputValue] = useState("");
+  const [ras, setRas] = useState<string[]>([]); /* Will use this to switch inbetween RA schedules */
+  const [currRa, setCurrRa] = useState<string>(""); /* Will use this to switch inbetween RA schedules */
+  const { user } = useAuth0();
+  const userid = (user && user.sub ? user.sub.split("|")[1] : null);
   const [currentValue, setCurrentValue] = useState(() => {
     const saved = localStorage.getItem("currentValue");
     return saved !== null ? saved : "10";
-  });
+  });  
 
-  useEffect(() => {
+  const fetchRas = () => {
+    fetch("http://localhost:8080/rea/${userid}/get-ras")
+    .then((response) => response.json())
+    .then((data) => {
+      setRas(data);
+  });
+}
+
+  useEffect(() => { fetchRas}, []);
+
+  /*useEffect(() => {
     // Update localStorage whenever currentValue changes
     localStorage.setItem("currentValue", currentValue);
-  }, [currentValue]); /* This only needs to be stored locally,"*/
+  }, [currentValue]); This only needs to be stored locally,"*/
 
   const handleInputChange = (event: {
     target: { value: SetStateAction<string> };
@@ -22,46 +43,77 @@ function ExecutivePage() {
     setInputValue(event.target.value);
   };
   const handleSubmit = (newValue: any) => {
+    window.alert(`You submitted: ${newValue}`);
     setCurrentValue(newValue); // Update the current value with the new input value
     localStorage.setItem("currentValue", newValue);
   };
 
-  const dropdownOptions = [
+  /*const dropdownOptions = [
     { label: "RA 1", value: "RA1" }, // Ensure each option has a value property
     { label: "RA 2", value: "RA2" },
     { label: "RA 3", value: "RA3" },
-  ];
+  ];*/
+
+  const raOptions = ras.map((ra, index) => {
+    return { key: index, value: ra };
+  });
 
   const handleDropdownChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
+    setCurrRa(event.target.value);
+
     console.log("Selected:", event.target.value);
   };
 
+  /*PostMapping("/{id}/ra/{raId}/add-shift/{eventId}")*/
+
+  const handleREASubmit = (newValue: any) => { // raID is retrievable by getRAs function call
+    fetch("http://localhost:8080/rea/${userid}/ra/${currRa}/add-shift/${eventId}")
+  }
+
   return (
     <>
-      <div className="mt-[-600px]">
+      <div className="ml-2"> {/* Adjust the ml-* class as needed for desired spacing */}
         <Message />
       </div>
-      <div className="fixed top-1/3 left-1/4 transform -translate-y-1/2 w-100">
+
+      <div className="flex flex-row items-center">
+        <div className="w-1/5 mr-2">
+          <Notepad />
+        </div>
+        <div className="flex flex-1 flex-col items-center justify-center mt-8">
+
+        <label className = "-mt-0"> RA Availability:</label>
+        <div className = "mb-2">
+        <Dropdown options={raOptions} onSelect={handleDropdownChange} />
+        </div>
+          <AvailabilityCalendar id={null} execAccess={true} />
+          <div className="mt-2.5">
+            <Button
+              type="button"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-medium text-lg px-5 py-2 rounded"
+              onSubmit={handleREASubmit}
+            >
+              Assign {currRa} this Schedule
+            </Button>
+          </div>
+        </div>
+      </div>
+      
+      <div className="absolute right-5">
         <TextField
           label="Min Days: "
           onChange={handleInputChange}
-          currentValue={currentValue} // Convert currentValue to a string
+          currentValue={currentValue}
           onSubmit={handleSubmit}
         />
       </div>
-      <div className="fixed top-1/2 left-1/4 flex items-center">
-        <label className="mr-2">Your RAs:</label>
-        <Dropdown options={dropdownOptions} onSelect={handleDropdownChange} />
-      </div>
-      <div className="fixed top-[calc(50%-150px)] right-10">
-        {" "}
-        {/* Adjusted top positioning */}
-        <Notepad />
+      <div className="bottom-0">
       </div>
     </>
   );
+  
 }
 
 export default ExecutivePage;

@@ -1,5 +1,9 @@
 package com.shiftbackend.shiftbackend;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
 public class Person {
 
@@ -97,6 +101,45 @@ public class Person {
      */
     public void disableAccount() {
         enabled = false;
+    }
+
+    public void addUser() {
+        File accounts = new File(System.getProperty("user.dir") + "/test_database", "allAccounts.txt");
+        try {
+            PrintWriter pw = new PrintWriter(new FileOutputStream(accounts, true));
+
+            pw.println(this.getName() + "|" + this.getEmail() + "|" + this.getRole() + "|" + this.getHall());
+
+            pw.close();
+        } catch (Exception e) {
+            System.out.println("Error in Account Saving");
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteUser() {
+        File accounts = new File(System.getProperty("user.dir") + "/test_database", "allAccounts.txt");
+        try {
+            Scanner reader = new Scanner(accounts);
+            StringBuffer buffer = new StringBuffer();
+            
+            while (reader.hasNextLine()) {
+                buffer.append(reader.nextLine() + "\n");
+            }
+ 
+            reader.close();
+
+            String fileString = buffer.toString();
+            fileString = fileString.replaceAll(this.getName() + "|" + this.getEmail() + "|" + this.getRole() + "|" + this.getHall() + "\n", "");
+
+            PrintWriter pw = new PrintWriter(new FileOutputStream(accounts, false));
+            pw.print(fileString);
+
+            pw.close();
+        } catch (Exception e) {
+            System.out.println("Error in Global Account Deletion");
+            e.printStackTrace();
+        }
     }
 
     /*------------------------ GETTERS & SETTERS ------------------------*/

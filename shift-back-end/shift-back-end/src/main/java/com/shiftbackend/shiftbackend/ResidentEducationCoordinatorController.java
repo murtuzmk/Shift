@@ -158,6 +158,18 @@ public class ResidentEducationCoordinatorController {
         return new ResponseEntity<String>("Basic Attributes Set", HttpStatus.CREATED);
     }
 
+    @PostMapping("/{id}/create-account")
+    public ResponseEntity<String> createREC(@PathVariable String id, @RequestBody Map<String, String> input) {
+        rec.loadAccountFile(id);
+        rec.setName(input.get("name"));
+        rec.setEmail(input.get("email"));
+        rec.setId(input.get("inputId"));
+        rec.setEnabled(Boolean.parseBoolean(input.get("enabled")));
+        rec.saveAccountFile();
+
+        return new ResponseEntity<String>("New REA Account Created", HttpStatus.CREATED);
+    }
+
     @GetMapping("/{id}/add-ra/{raId}")
     public ResponseEntity<String> addRAInREC(@PathVariable String id, @PathVariable String raId) {
         rec.loadAccountFile(id);

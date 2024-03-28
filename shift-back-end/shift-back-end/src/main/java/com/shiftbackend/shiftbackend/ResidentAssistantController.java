@@ -26,6 +26,7 @@ public class ResidentAssistantController {
     @GetMapping("/{id}/delete")
     public ResponseEntity<String> deleteRA(@PathVariable String id) {
         ra.loadAccountFile(id);
+        ra.deleteUser();
         ra.deleteAccountFile();
         ra.deleteUserInformation();
         ra = new ResidentAssistant();
@@ -108,6 +109,18 @@ public class ResidentAssistantController {
         ra.saveAccountFile();
 
         return new ResponseEntity<String>("Basic Attributes Set", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{id}/create-account")
+    public ResponseEntity<String> createRA(@PathVariable String id, @RequestBody Map<String, String> input) {
+        ra.loadAccountFile(id);
+        ra.setName(input.get("name"));
+        ra.setEmail(input.get("email"));
+        ra.setId(input.get("inputId"));
+        ra.setEnabled(Boolean.parseBoolean(input.get("enabled")));
+        ra.saveAccountFile();
+
+        return new ResponseEntity<String>("New RA Account Created", HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}/clock-in")

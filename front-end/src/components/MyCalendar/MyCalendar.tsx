@@ -260,5 +260,5 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
     </div>
   );
 };
-
+}
 export default MyCalendar;

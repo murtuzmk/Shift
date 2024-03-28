@@ -162,10 +162,14 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
   }, [events]);
 
 */
+ const allevents = useMemo(() => {
+    console.log("importedEvents", importedEvents);
+    return [...importedEvents, ...events];
+  } , [importedEvents, events]);  
   /* ask Murtuza idk what this does */
   useEffect(() => {
-    onEventsChange(events);
-  }, [events]);
+    onEventsChange(allevents);
+  }, [allevents]);
 
 
   const handleSelect = ({ start, end }: { start: Date; end: Date }) => {
@@ -243,7 +247,7 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
     <div style={{ width: "800px", height: "450px" }}>
       <Calendar
         localizer={localizer}
-        events={events}
+        events={allevents}
         startAccessor="start"
         endAccessor="end"
         titleAccessor="title"

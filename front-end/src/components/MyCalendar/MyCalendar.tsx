@@ -1,11 +1,13 @@
 import { useEffect, useState, useMemo} from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
-import Modal from "react-modal";
+import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react";
+import { Formik, Form, Field, FieldProps } from "formik";
 import { v4 as uuidv4 } from "uuid";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 const localizer = momentLocalizer(moment);
 import "./MyCalendar.css";
+
 
 interface MyCalendarProps {
   importedEvents: Event[];
@@ -36,43 +38,47 @@ const EventDialog = ({
   start,
   end,
 }: EventDialogProps) => {
-  const [title, setTitle] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit({ start, end, title, id: uuidv4() });
-  };
-
   return (
-    <Modal
-      isOpen={isOpen}
-      style={{
-        content: {
-          width: "500px",
-          height: "400px",
-          margin: "auto",
-        },
-      }}
-    >
-      <form onSubmit={handleSubmit}>
-        <label>
-          Title:
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </label>
-        <button style={{ margin: "5px" }} onClick={onCancel}>
-          Cancel
-        </button>
-        <button style={{ margin: "5px" }} type="submit">
-          Create{" "}
-        </button>
-        <button style={{ margin: "5px" }} type="button" onClick={onDelete}>
-          Delete{" "}
-        </button>
-      </form>
+    <Modal isOpen={isOpen} onClose={onCancel}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Create Event</ModalHeader>
+        <ModalCloseButton />
+        <Formik
+          initialValues={{ title: "" }}
+          onSubmit={(values, actions) => {
+            onSubmit({ start, end, title: values.title, id: uuidv4() });
+            actions.resetForm();
+          }}
+        >
+          {(props) => (
+            <Form>
+              <ModalBody>
+                <Field name="title">
+                  {({ field, form }: FieldProps) => (
+                    <FormControl>
+                      <FormLabel htmlFor="title">Title</FormLabel>
+                      <Input {...field} id="title" placeholder="Enter title" />
+                    </FormControl>
+                  )}
+                </Field>
+              </ModalBody>
+
+              <ModalFooter>
+                <Button colorScheme="blue" mr={3} type="submit">
+                Create
+                </Button>
+                <Button variant="ghost" onClick={onCancel}>
+                  Cancel
+                </Button>
+                <Button variant="ghost" onClick={onDelete}>
+                  Delete
+                </Button>
+              </ModalFooter>
+            </Form>
+          )}
+        </Formik>
+      </ModalContent>
     </Modal>
   );
 };
@@ -82,7 +88,7 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
-  useEffect(() => {
+/*  useEffect(() => {
     const savedEvents = localStorage.getItem("events");
     if (savedEvents) {
       const parsedEvents: Event[] = JSON.parse(savedEvents);
@@ -94,26 +100,78 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
       setEvents(eventsWithDates);
     }
   }, []);
-
-  useEffect(() => {
+*/
+/*  useEffect(() => {
     const savedEvents = localStorage.getItem("events");
     if (savedEvents) {
       setEvents(JSON.parse(savedEvents));
     }
+  }, []); 
+*/
+
+  const fetchEvents = () => {
+    fetch("http://localhost:8080/ra/{id}/get-events")
+      .then((response) => response.json())
+      .then((data) => {
+        const s = data.startTime;
+        /* s is a string in the format "HH:MM TZZ DD/MO/YYYY" */
+        const startTime = new Date(s.substring(16).parseInt(), s.substring(13, 15).parseInt(), s.substring(10, 12).parseInt(), s.substring(0, 2).parseInt(), s.substring(3, 5).parseInt());
+        
+        const e = data.endTime;
+        /* e is a string in the format "HH:MM TZZ DD/MO/YYYY" */
+        const endTime = new Date(e.substring(16).parseInt(), e.substring(13, 15).parseInt(), e.substring(10, 12).parseInt(), e.substring(0, 2).parseInt(), e.substring(3, 5).parseInt());
+        setEvents((prevEvents) => [
+          ...prevEvents,
+          {
+            start: startTime,
+            end: endTime,
+            title: data.title,
+            id: data.id,
+          },
+        ]);
+      });
+  }; /* fetchEvents */
+
+  const addEvents = (event: Event) => {
+      fetch('http://localhost:8080/ra/{id}/add-event/{eventid}', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: event.title,
+        starthour: event.start.getHours(),
+        startminute: event.start.getMinutes(),
+        startday: event.start.getDate(),
+        startyear: event.start.getFullYear(),
+        endhour: event.end.getHours(),
+        endminute: event.end.getMinutes(),
+        endday: event.end.getDate(),
+        endyear: event.end.getFullYear(),
+      })
+    })  
+  };
+
+  /* obtain all saved events of the user */
+  useEffect(() => {
+    fetchEvents();
   }, []);
 
-  useEffect(() => {
+/*  useEffect(() => {
     localStorage.setItem("events", JSON.stringify(events));
   }, [events]);
 
-  const allEvents = useMemo(() => {
-    return [...events, ...importedEvents];
-  }, [events, importedEvents]);
-  
+*/
+ const allevents = useMemo(() => {
+    console.log("importedEvents", importedEvents);
+    return [...importedEvents, ...events];
+  } , [importedEvents, events]);  
+  /* ask Murtuza idk what this does */
   useEffect(() => {
-    onEventsChange(allEvents);
-  }, [allEvents]);
-  
+    onEventsChange(allevents);
+  }, [allevents]);
+
+
   const handleSelect = ({ start, end }: { start: Date; end: Date }) => {
     setSelectedEvent({ start, end, title: "", id: "" });
     setDialogOpen(true);
@@ -134,6 +192,7 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
   }, [selectedEvent, events]);
 
   const handleCreateEvent = (event: Event) => {
+    addEvents(event);
     setEvents((prevEvents) => [
       ...prevEvents,
       {
@@ -152,14 +211,27 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
     setDialogOpen(true);
   };
 
+  const editEvent = (newEvent: Event) => {
+    fetch('http://localhost:8080/ra/{id}/edit-event/{eventId}/edit-title', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        "Edited Title": newEvent.title
+      })
+    })  
+  };
   const handleUpdateEvent = (updatedEvent: Event) => {
-    setEvents((prevEvents) =>
+    //want to find some way to only call editEvent if the title has been changed
+    setEvents((prevEvents) => 
       prevEvents.map((event) =>
         event.start === updatedEvent.start && event.end === updatedEvent.end
-          ? updatedEvent
+          ? (updatedEvent)
           : event
       )
     );
+    editEvent(updatedEvent);
     setDialogOpen(false);
   };
 
@@ -175,7 +247,7 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
     <div style={{ width: "800px", height: "450px" }}>
       <Calendar
         localizer={localizer}
-        events={allEvents}
+        events={allevents}
         startAccessor="start"
         endAccessor="end"
         titleAccessor="title"
@@ -196,5 +268,4 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
     </div>
   );
 };
-
 export default MyCalendar;

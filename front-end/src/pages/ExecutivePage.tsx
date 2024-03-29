@@ -6,6 +6,9 @@ import Notepad from "./ExecutiveUserPage/NotePad";
 import AvailabilityCalendar from "../components/AvailabilityCalendar";
 import { Button } from "@chakra-ui/button";
 import { useAuth0 } from "@auth0/auth0-react";
+import React from "react";
+
+import { ViewClockedIn } from "../components/ViewClockedIn";
 
 /*
  *  This is the Executive Page, where the executive can view the RA schedules and assign them to RAs.
@@ -129,7 +132,7 @@ function ExecutivePage() {
         <div className = "mb-2">
         <Dropdown options={raOptions} onSelect={handleDropdownChange} />
         </div>
-          <AvailabilityCalendar id={null} execAccess={true} />
+          <AvailabilityCalendar id={null} accFrmExec={true} />
           <div className="mt-2.5">
             <Button
               type="button"
@@ -150,6 +153,7 @@ function ExecutivePage() {
           onSubmit={handleSubmit}
         />          
       </div>
+       <ViewClockedIn />
       <div className="bottom-0">
       </div>
     </>

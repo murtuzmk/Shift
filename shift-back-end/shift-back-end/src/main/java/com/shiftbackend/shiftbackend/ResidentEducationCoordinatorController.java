@@ -182,6 +182,31 @@ public class ResidentEducationCoordinatorController {
         return new ResponseEntity<String>("New REA Account Created", HttpStatus.CREATED);
     }
 
+    @PostMapping("/{id}/create-welcome-message")
+    public ResponseEntity<String> createWelcomeMessageREC(@PathVariable String id, @RequestBody Map<String, String> input) {
+        rec.loadAccountFile(id);
+        rec.createWelcomeMessage(input.get("message"));
+        rec.saveAccountFile();
+        
+        return new ResponseEntity<String>("Welcome Message Created", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/get-welcome-message")
+    public ResponseEntity<String> getWelcomeMessageREC(@PathVariable String id) {
+        rec.loadAccountFile(id);
+        
+        return new ResponseEntity<String>(rec.getWelcomeMessage(), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/delete-welcome-message")
+    public ResponseEntity<String> deleteWelcomeMessageREC(@PathVariable String id) {
+        rec.loadAccountFile(id);
+        rec.deleteWelcomeMessage();
+        rec.saveAccountFile();
+        
+        return new ResponseEntity<String>("Welcome Message Deleted", HttpStatus.CREATED);
+    }
+
     @GetMapping("/{id}/add-ra/{raId}")
     public ResponseEntity<String> addRAInREC(@PathVariable String id, @PathVariable String raId) {
         rec.loadAccountFile(id);

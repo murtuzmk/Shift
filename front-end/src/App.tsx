@@ -110,6 +110,43 @@ function App() {
                               </FormControl>
                             )}
                           </Field>
+                          <Field name="hall">
+                            {({ field, form }: any) => (
+                              <FormControl>
+                                <FormLabel>Hall</FormLabel>
+                                <Select {...field} placeholder="">
+                                  <option value="Hillenbrand">Hillenbrand</option>
+                                  <option value="Cary">
+                                    Cary
+                                  </option>
+                                  <option value="Frieda">
+                                    Frieda Parker
+                                  </option>
+                                  <option value="Earhart">
+                                    Earhart
+                                  </option>
+                                  <option value="Wiley">
+                                    Wiley
+                                  </option>
+                                  <option value="Windsor">
+                                    Windsor
+                                  </option>
+                                  <option value="Owen">
+                                    Owen
+                                  </option>
+                                  <option value="Shreve">
+                                    Shreve
+                                  </option>
+                                  <option value="Harrison">
+                                    Harrison
+                                  </option>
+                                  <option value="McCutcheon">
+                                    McCutcheon
+                                  </option>
+                                </Select>
+                              </FormControl>
+                            )}
+                          </Field>
                           <Button
                             mt={4}
                             colorScheme="teal"

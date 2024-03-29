@@ -17,6 +17,7 @@ import { MyAvailability } from "./pages/MyAvailability.tsx";
 import ErrorPage from "./pages/ErrorPage.tsx";
 import { UserProvider } from "./context/UserDataContext.tsx";
 import CreateRAAccount from "./components/CreateRAAccount.tsx";
+import  RAWelcome  from "./pages/RAWelcome.tsx";
 import Coworkers from "./pages/Coworkers/index.tsx";
 import Employees from "./pages/Employees/index.tsx";
 import "./index.css";
@@ -42,6 +43,7 @@ const router = createBrowserRouter([
       { path: "co-workers", element: <Coworkers /> },
       { path: "availability", element: <MyAvailability /> },
       { path: "create-ra-account", element: <CreateRAAccount /> },
+      { path: "ra-welcome", element: <RAWelcome />}
       { path: "settings", element: <Settings /> },
     ],
   },

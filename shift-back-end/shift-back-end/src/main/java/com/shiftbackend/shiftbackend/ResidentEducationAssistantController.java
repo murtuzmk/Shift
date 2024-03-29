@@ -26,6 +26,7 @@ public class ResidentEducationAssistantController {
     @GetMapping("/{id}/delete")
     public ResponseEntity<String> deleteREA(@PathVariable String id) {
         rea.loadAccountFile(id);
+        rea.deleteUser();
         rea.deleteAccountFile();
         rea.deleteUserInformation();
         rea = new ResidentEducationAssistant();
@@ -146,6 +147,7 @@ public class ResidentEducationAssistantController {
         rea.setId(input.get("inputId"));
         rea.setEnabled(Boolean.parseBoolean(input.get("enabled")));
         rea.saveAccountFile();
+        rea.addUser();
 
         return new ResponseEntity<String>("New REA Account Created", HttpStatus.CREATED);
     }

@@ -5,8 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
@@ -472,6 +470,21 @@ public class ResidentEducationAssistantController {
         rea.getSchedule().deleteEventMonth(Integer.parseInt(input.get("month")), Integer.parseInt(input.get("year")), Integer.parseInt(input.get("timezone")));
         rea.saveAccountFile();
         return new ResponseEntity<String>("Deleted Month", HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/find-user-in-hall")
+    public ResponseEntity<String> findIdsInHallRA(@PathVariable String id, @RequestBody Map<String, String> input) {
+        
+        StringBuilder buffer = new StringBuilder();
+        buffer.append("{ \"raIds\" : ");
+        buffer.append(rea.findInHall("RA", input.get("hall")));
+        buffer.append("\n\"reaIds\" : ");
+        buffer.append(rea.findInHall("REA", input.get("hall")));
+        buffer.append("\n\"recIds\" : ");
+        buffer.append(rea.findInHall("REC", input.get("hall")));
+        buffer.append(" }");
+        
+        return new ResponseEntity<String>(buffer.toString(), HttpStatus.OK);
     }
 
 }

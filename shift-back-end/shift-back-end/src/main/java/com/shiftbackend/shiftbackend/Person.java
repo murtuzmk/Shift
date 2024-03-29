@@ -178,6 +178,48 @@ public class Person {
         }
     }
 
+    public String findInHall(String role, String hall)  {
+
+        File accounts = new File(System.getProperty("user.dir") + "/test_database", "allAccounts.txt");
+        String returnString = "Error Finding Related Hall Users";
+        try {
+            Scanner reader = new Scanner(accounts);
+            StringBuilder buffer = new StringBuilder();
+            String line = "";
+            boolean first = true;
+
+            buffer.append("\"");
+            while (reader.hasNextLine()) {
+                line = reader.nextLine();
+                String [] userInformation = line.split("[|]");
+
+                if (userInformation[3].equals(role) && userInformation[4].equals(hall)) {
+                    if (!first) {
+                        buffer.append("|");
+                    }
+                    else {
+                        first = false;
+                    }
+                    
+
+                    buffer.append(userInformation[2]);
+                }
+                
+            }
+            buffer.append("\"");
+
+            returnString = buffer.toString();
+            
+            reader.close();
+        
+        } catch (Exception e) {
+            System.out.println("Error in Find In Hall");
+            e.printStackTrace();
+        }
+
+        return returnString;
+    }
+
     /*------------------------ GETTERS & SETTERS ------------------------*/
 
     public String getName() {

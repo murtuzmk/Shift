@@ -18,6 +18,7 @@ import { MyAvailability } from "./pages/MyAvailability.tsx";
 import ErrorPage from "./pages/ErrorPage.tsx";
 import { UserProvider } from "./context/UserDataContext.tsx";
 import CreateRAAccount from "./components/CreateRAAccount.tsx";
+import  RAWelcome  from "./pages/RAWelcome.tsx";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
       { path: "executivepage", element: <ExecutivePage /> },
       { path: "availability", element: <MyAvailability /> },
       { path: "create-ra-account", element: <CreateRAAccount /> },
+      { path: "ra-welcome", element: <RAWelcome />}
     ],
   },
 ]);

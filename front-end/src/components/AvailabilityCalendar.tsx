@@ -4,8 +4,12 @@ import "react-calendar/dist/Calendar.css";
 import ExecutivePage from "../pages/ExecutivePage";
 import { useUser } from "../hooks/useUser";
 import { useAuth0 } from "@auth0/auth0-react";
+
 import UserDataContext from "../context/UserDataContext";
 import Dropdown from "../pages/ExecutiveUserPage/DropDown";
+
+import { useToast } from "@/components/ui/use-toast"
+import { Button } from "./ui/button";
 
 interface TileClassNameArgs {
   date: Date;
@@ -50,6 +54,9 @@ const AvailabilityCalendar: React.FC<{ id: string | null, accFrmExec : boolean |
         }
       })();
   }, [user]);
+  const { toast } = useToast();
+
+
 
   /* Fetch the free days from the REST API */
   const fetchFreeDays = () => {
@@ -183,6 +190,10 @@ const AvailabilityCalendar: React.FC<{ id: string | null, accFrmExec : boolean |
       if (!userConfirmation) {
         return;
       }
+
+      if(userConfirmation) {
+        window.alert("Availability Successfully Sent Out");
+      };
     }
 
     /* Send the freeDays array to the local storage */
@@ -309,22 +320,23 @@ const AvailabilityCalendar: React.FC<{ id: string | null, accFrmExec : boolean |
         value={new Date()} // Convert each free day back to a Date object
         view="month"
         tileClassName={tileClassName}
+        
       />
       <div className="flex w-full justify-center px-4 relative">
         {!execAccess && (
         <div className="flex space-x-10">
-          <button
+          <Button
             onClick={clearCurrentMonthSelections}
-            className="w-32 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-xs"
+            className="w-32 bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded text-xs"
           >
             Clear
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={onSubmit}
-            className="w-32 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-xs"
+            className="w-32 bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded text-xs"
           >
             Submit Schedule
-          </button>
+          </Button>
         </div>
 
         )}

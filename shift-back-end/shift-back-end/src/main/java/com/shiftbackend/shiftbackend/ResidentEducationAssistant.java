@@ -206,6 +206,54 @@ public class ResidentEducationAssistant extends ResidentAssistant{
         return buffer.toString();
     }
 
+    public void createWelcomeMessage(String input) {
+        String fileName = "Welcome_Message_" + this.getRole() + "_" + this.getId() + ".txt";
+        File welcomeMessage = new File(System.getProperty("user.dir") + "/test_database", fileName);
+
+        try {
+            PrintWriter pw = new PrintWriter(new FileOutputStream(welcomeMessage, false));
+
+            pw.println(input);
+
+            pw.close();
+        } catch (Exception e) {
+            System.out.println("Error in Account Saving");
+            e.printStackTrace();
+        }
+    }
+
+    public String getWelcomeMessage() {
+        String fileName = "Welcome_Message_" + this.getRole() + "_" + this.getId() + ".txt";
+        File welcomeMessage = new File(System.getProperty("user.dir") + "/test_database", fileName);
+        String message = "Error Loading Welcome Message";
+
+        try {
+            Scanner reader = new Scanner(welcomeMessage);
+            StringBuffer buffer = new StringBuffer();
+
+            buffer.append("{ \"message\" : \"");
+
+            buffer.append(reader.nextLine());
+
+            buffer.append("\" }");
+
+            message = buffer.toString();
+
+            reader.close();
+        } catch (Exception e) {
+            System.out.println("Error in Welcome Message Loading");
+            e.printStackTrace();
+        }
+
+        return message;
+    }
+
+    public boolean deleteWelcomeMessage() {
+        String fileName = "Welcome_Message_" + this.getRole() + "_" + this.getId() + ".txt";
+        File welcomeMessage = new File(System.getProperty("user.dir") + "/test_database", fileName);
+        return welcomeMessage.delete();
+    }
+
 
     /*------------------------ GETTERS & SETTERS ------------------------*/
 

@@ -17,5 +17,4 @@ public class ShiftBackEndApplication {
 	public String apiRoot() {
 		return "Hello, World!";
 	}
-
 }

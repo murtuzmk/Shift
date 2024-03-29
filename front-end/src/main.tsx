@@ -9,7 +9,7 @@ import Landing from "./pages/Landing.tsx";
 import App from "./App.tsx";
 
 import { Auth0Provider } from "@auth0/auth0-react";
-import Dashboard from "./pages/Dashboard.tsx";
+// import Dashboard from "./pages/Dashboard.tsx";
 import Settings from "./pages/Settings.tsx";
 
 import ExecutivePage from "./pages/ExecutivePage.tsx";
@@ -20,7 +20,7 @@ import CreateRAAccount from "./components/CreateRAAccount.tsx";
 import Coworkers from "./pages/Coworkers/index.tsx";
 import Employees from "./pages/Employees/index.tsx";
 import "./index.css";
-import { ThemeProvider } from "./components/themes/theme-provider.tsx";
+import Dashboard from "./pages/Dashboard.tsx";
 
 const router = createBrowserRouter([
   {
@@ -57,9 +57,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           redirect_uri: "http://localhost:5173/app",
         }}
       >
-        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-          <RouterProvider router={router} />
-        </ThemeProvider>
+        <RouterProvider router={router} />
       </Auth0Provider>
     </UserProvider>
   </React.StrictMode>

@@ -24,7 +24,6 @@ interface HeaderProps {
 
 const Header = ({ user }: HeaderProps) => {
   const [open, setOpen] = useState(false);
-  console.log(window.location);
   return (
     <header className="flex justify-between h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <Menu open={open} onOpenChange={setOpen}>

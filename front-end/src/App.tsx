@@ -61,83 +61,85 @@ function App() {
   }
   return (
     <ChakraProvider>
-      {isAuthenticated && user ? (
-        <>
-          <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-            <Sidebar />
-            <div className="flex flex-col">
-              <Header user={user} />
-              <Outlet context={user} />
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        {isAuthenticated && user ? (
+          <>
+            <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+              <Sidebar />
+              <div className="flex flex-col">
+                <Header user={user} />
+                <Outlet context={{ user }} />
+              </div>
+              <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                  <ModalHeader>Why, hello there! 👋</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody>
+                    It seems you are a new user. We would like to collect some
+                    data from you. You can't change this later (for now).
+                    <Formik
+                      initialValues={{ name: user.name, role: "ra" }}
+                      onSubmit={(values, actions) => {
+                        handleOnboardingSubmit(values, actions);
+                      }}
+                    >
+                      {(props) => (
+                        <Form>
+                          <Field name="name">
+                            {({ field, form }: any) => (
+                              <FormControl>
+                                <FormLabel>Name</FormLabel>
+                                <Input {...field} placeholder="" />
+                              </FormControl>
+                            )}
+                          </Field>
+                          <Field name="role">
+                            {({ field, form }: any) => (
+                              <FormControl>
+                                <FormLabel>Role</FormLabel>
+                                <Select {...field} placeholder="">
+                                  <option value="ra">Resident Assistant</option>
+                                  <option value="rea">
+                                    Resident Education Assistant
+                                  </option>
+                                  <option value="rec">
+                                    Resident Education Coordinator
+                                  </option>
+                                </Select>
+                              </FormControl>
+                            )}
+                          </Field>
+                          <Button
+                            mt={4}
+                            colorScheme="teal"
+                            isLoading={props.isSubmitting}
+                            type="submit"
+                          >
+                            Submit
+                          </Button>
+                        </Form>
+                      )}
+                    </Formik>
+                  </ModalBody>
+                  <ModalFooter></ModalFooter>
+                </ModalContent>
+              </Modal>
             </div>
-            <Modal isOpen={isOpen} onClose={onClose}>
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>Why, hello there! 👋</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>
-                  It seems you are a new user. We would like to collect some
-                  data from you. You can't change this later (for now).
-                  <Formik
-                    initialValues={{ name: user.name, role: "ra" }}
-                    onSubmit={(values, actions) => {
-                      handleOnboardingSubmit(values, actions);
-                    }}
-                  >
-                    {(props) => (
-                      <Form>
-                        <Field name="name">
-                          {({ field, form }: any) => (
-                            <FormControl>
-                              <FormLabel>Name</FormLabel>
-                              <Input {...field} placeholder="" />
-                            </FormControl>
-                          )}
-                        </Field>
-                        <Field name="role">
-                          {({ field, form }: any) => (
-                            <FormControl>
-                              <FormLabel>Role</FormLabel>
-                              <Select {...field} placeholder="">
-                                <option value="ra">Resident Assistant</option>
-                                <option value="rea">
-                                  Resident Education Assistant
-                                </option>
-                                <option value="rec">
-                                  Resident Education Coordinator
-                                </option>
-                              </Select>
-                            </FormControl>
-                          )}
-                        </Field>
-                        <Button
-                          mt={4}
-                          colorScheme="teal"
-                          isLoading={props.isSubmitting}
-                          type="submit"
-                        >
-                          Submit
-                        </Button>
-                      </Form>
-                    )}
-                  </Formik>
-                </ModalBody>
-                <ModalFooter></ModalFooter>
-              </ModalContent>
-            </Modal>
+            {/* For notifications */}
+            <Toaster />
+          </>
+        ) : (
+          <div className="h-full flex flex-col gap-6 justify-center items-center">
+            <h1 className="font-bold text-4xl">
+              You have to be logged in to see that.
+            </h1>
+            <Button colorScheme="blue" onClick={() => navigate("/")} size="lg">
+              Go home
+            </Button>
           </div>
-          {/* For notifications */}
-          <Toaster />
-        </>
-      ) : (
-        <div className="h-full flex flex-col gap-6 justify-center items-center">
-          <h1 className="font-bold text-4xl">
-            You have to be logged in to see that.
-          </h1>
-          <Button colorScheme="blue" onClick={() => navigate("/")} size="lg">
-            Go home
-          </Button>
-        </div>
-      )}
+        )}
+      </ThemeProvider>
     </ChakraProvider>
   );
 }

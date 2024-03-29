@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
 import {
   Navigate,
   RouterProvider,
@@ -10,7 +9,7 @@ import Landing from "./pages/Landing.tsx";
 import App from "./App.tsx";
 
 import { Auth0Provider } from "@auth0/auth0-react";
-import Dashboard from "./pages/Dashboard.tsx";
+// import Dashboard from "./pages/Dashboard.tsx";
 import Settings from "./pages/Settings.tsx";
 
 import ExecutivePage from "./pages/ExecutivePage.tsx";
@@ -19,6 +18,10 @@ import ErrorPage from "./pages/ErrorPage.tsx";
 import { UserProvider } from "./context/UserDataContext.tsx";
 import CreateRAAccount from "./components/CreateRAAccount.tsx";
 import  RAWelcome  from "./pages/RAWelcome.tsx";
+import Coworkers from "./pages/Coworkers/index.tsx";
+import Employees from "./pages/Employees/index.tsx";
+import "./index.css";
+import Dashboard from "./pages/Dashboard.tsx";
 
 const router = createBrowserRouter([
   {
@@ -35,11 +38,13 @@ const router = createBrowserRouter([
         element: <Navigate to="/app/dashboard" />,
       },
       { path: "dashboard", element: <Dashboard /> },
-      { path: "settings", element: <Settings /> },
+      { path: "employees", element: <Employees /> },
       { path: "executivepage", element: <ExecutivePage /> },
+      { path: "co-workers", element: <Coworkers /> },
       { path: "availability", element: <MyAvailability /> },
       { path: "create-ra-account", element: <CreateRAAccount /> },
       { path: "ra-welcome", element: <RAWelcome />}
+      { path: "settings", element: <Settings /> },
     ],
   },
 ]);

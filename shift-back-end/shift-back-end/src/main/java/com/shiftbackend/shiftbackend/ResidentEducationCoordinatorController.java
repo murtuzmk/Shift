@@ -523,4 +523,19 @@ public class ResidentEducationCoordinatorController {
         return new ResponseEntity<String>("Deleted Month", HttpStatus.OK);
     }
 
+    @PostMapping("/{id}/find-user-in-hall")
+    public ResponseEntity<String> findIdsInHallRA(@PathVariable String id, @RequestBody Map<String, String> input) {
+        
+        StringBuilder buffer = new StringBuilder();
+        buffer.append("{ \"raIds\" : ");
+        buffer.append(rec.findInHall("RA", input.get("hall")));
+        buffer.append("\n\"reaIds\" : ");
+        buffer.append(rec.findInHall("REA", input.get("hall")));
+        buffer.append("\n\"recIds\" : ");
+        buffer.append(rec.findInHall("REC", input.get("hall")));
+        buffer.append(" }");
+        
+        return new ResponseEntity<String>(buffer.toString(), HttpStatus.OK);
+    }
+
 }

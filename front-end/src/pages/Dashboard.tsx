@@ -117,10 +117,13 @@ const Dashboard = () => {
           <h1 className="text-xl font-extrabold">General Information</h1>
             <MyCalendar importedEvents={importedEvents} onEventsChange={setEvents} />
           <div className="flex gap-2">
-          <button 
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={() => document.getElementById('fileInput')?.click()}
-          >
+          
+            <button 
+              className="bg-teal-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+            Download
+            </button>
+            <button className="bg-teal-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Import
             </button>
             <input 
@@ -130,7 +133,7 @@ const Dashboard = () => {
             accept=".ics"
             onChange={handleFileImport}
             />
-            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleExport}>
+            <button className="bg-teal-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleExport}>
               Export
             </button>
           </div>

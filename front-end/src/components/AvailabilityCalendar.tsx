@@ -1,28 +1,55 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import ExecutivePage from "../pages/ExecutivePage";
 import { useUser } from "../hooks/useUser";
 import { useAuth0 } from "@auth0/auth0-react";
-
-
+import UserDataContext from "../context/UserDataContext";
+import Dropdown from "../pages/ExecutiveUserPage/DropDown";
 
 interface TileClassNameArgs {
   date: Date;
   view: string;
 }
 
-const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean | null}> =({id, execAccess}) => {
+/*
+ * AvailabilityCalendar component is a calendar that allows the user to select their availability.
+ * It is used from two mediums: The Executive Page and the the Availability/Shifts Page.
+ * 
+ * Executive Page: From the executive page it is used to view the RA schedules for approval and assignment.
+ *  For this reason, we have props to pass in so that the id of the RA can be passed in and their schedule will be fetched
+ * 
+ * Availability/Shifts Page: From the availability/shifts page it is used to allow the RA to select their availability. And then
+ *  in the perspective of the executive, they can select an "availability" but its actually just shifts that will pop up as shifst to
+ *  pick up
+ */
+
+const AvailabilityCalendar: React.FC<{ id: string | null, accFrmExec : boolean | null}> =({id, accFrmExec}) => {
   // Explicitly type freeDays as an array of strings
   const [freeDays, setFreeDays] = useState<string[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [view, setView] = useState<"month">("month");
   const {user} = useAuth0();
+  const {getUserRole} : any = useContext(UserDataContext);
+  const [isExec, setIsExec] = useState(false);
   const userid = id || (user && user.sub ? user.sub.split("|")[1] : null);
-  //user && user.sub ? user.sub.split("|")[1] : null;
-  if (execAccess == null) {
-    execAccess = false;
-  }
+  const execAccess = accFrmExec || false;
+  /* Check if user is an executive */
+
+  useEffect(() => {
+    user &&
+      (async () => {
+        const userRole = await getUserRole(user?.sub);
+        if (
+          userRole == "Resident Education Assistant" ||
+          userRole == "Resident Education Coordinator"
+        ) {
+          setIsExec(true);
+          console.log("User is an exec" + userRole);
+          console.log("\n User id is +" + userid);
+        }
+      })();
+  }, [user]);
 
   /* Fetch the free days from the REST API */
   const fetchFreeDays = () => {
@@ -148,7 +175,7 @@ const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean |
   /* Clicking the Submit Schedule Button */
   const onSubmit = () => {
     /* Warning if they don't have the minimum number of days working */
-    if (freeDays.length < minDaysRequired) {
+    if (!isExec && freeDays.length < minDaysRequired) {
       const userConfirmation = window.confirm(
         "You do not meet the minimum requirement, are you sure you want to submit"
       );
@@ -177,6 +204,45 @@ const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean |
     return null; // Return null if no specific class should be applied
   };
 
+
+  /* Checkboxes */
+  const [isChecked1, setIsChecked1] = useState(false);
+  const [isChecked2, setIsChecked2] = useState(false);
+  const [isChecked3, setIsChecked3] = useState(false);
+  const [isChecked4, setIsChecked4] = useState(false);
+  const [dropdownValue, setDropdownValue] = useState('');
+
+  const handleCheckboxChange = (checkboxNumber: number) => {
+    if (checkboxNumber === 1) {
+      setIsChecked1(!isChecked1);
+      if (isChecked2) {
+        setIsChecked2(!isChecked2);
+      }
+      if (isChecked3) {
+        setIsChecked3(false);
+      }
+    } else if (checkboxNumber === 2) {
+      setIsChecked2(!isChecked2);
+      if (isChecked1) {
+        setIsChecked1(!isChecked1);
+      }
+      if (isChecked3) {
+        setIsChecked3(false);
+      }
+    } else if (checkboxNumber === 3) {
+      if (isChecked1 || isChecked2) {
+        setIsChecked1(false);
+        setIsChecked2(false);
+      }
+      setIsChecked3(!isChecked3);
+    } else if (checkboxNumber === 4) {
+      setIsChecked4(!isChecked4);
+    }
+  }
+  const handleDropdownChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setDropdownValue(event.target.value);
+  }
+
   return (
     <div
       className="space-y-5"
@@ -187,6 +253,56 @@ const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean |
         flexDirection: "column",
       }}
     >
+      {(isExec && !execAccess) &&  (
+      <div style={{ backgroundColor: 'lightgray', padding: '20px' }}>
+      <div className = "flex flex-row">
+        <div>
+          <input
+            type="checkbox"
+            checked={isChecked1}
+            onChange={() => handleCheckboxChange(1)}
+          /> Boys
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            checked={isChecked2}
+            onChange={() => handleCheckboxChange(2)}
+          /> Girls
+        </div>
+      </div>
+      <div className = "flex flex-row">
+        <div>
+          <input
+            type="checkbox"
+            checked={isChecked3}
+            onChange={() => handleCheckboxChange(3)}
+          /> Coed
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            checked={isChecked4}
+            onChange= {() => handleCheckboxChange(4)}
+            style={{ width: '150px', padding: '2px', fontSize: '14px' }}
+          /> Specific Floor: 
+          <Dropdown
+                options={[
+                  { label: "Floor 1", value: 1 },
+                  { label: "Floor 2", value: 2 },
+                  { label: "Floor 3", value: 3 },
+                  { label: "Floor 4", value: 4 },
+                  { label: "Floor 5", value: 5 },
+                  { label: "Floor 6", value: 6 },
+                  { label: "Floor 7", value: 7 },
+                  { label: "Floor 8", value: 8 },
+                ]}
+                onSelect={handleDropdownChange}
+          />
+        </div>
+      </div>
+    </div>
+    )}
       <Calendar
         onChange={(value, event) => onChange(value as Date, event)}
         onActiveStartDateChange={onActiveStartDateChange}
@@ -213,7 +329,7 @@ const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean |
 
         )}
         {/* Conditional message positioned to the right */}
-        {!execAccess && !execAccess && numDaysNeeded > 0 && (
+        {!execAccess && !isExec && numDaysNeeded > 0 && (
           <div className="absolute right-0 pr-4">
             <span className="text-red-500 italic">
               Need {numDaysNeeded} more days
@@ -224,7 +340,7 @@ const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean |
         
       </div>
       
-      
+      {!isExec && (
       <style>{`
       .react-calendar {
         width: 80%; /* Adjust this value to make the calendar wider */
@@ -248,6 +364,34 @@ const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean |
         color: white;
       }
     `}</style>
+    )}
+    ||
+    {isExec && ( 
+      <style>{`
+      .react-calendar {
+        width: 50%; /* Adjust this value to make the calendar wider */
+        max-width: none; /* Remove any maximum width restrictions */
+        font-size: 16px; /* Increase the base font size to scale up text elements */
+      }
+      .react-calendar__tile {
+        height: 100px; /* Adjust this value to increase the tile height */
+        width: 80px; /* Adjust this value to increase the tile width */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2em; /* Scale up the font size within each tile */
+      }
+      .react-calendar__navigation button {
+        font-size: 1.4em; /* Scale up the navigation buttons */
+      }
+
+      .freeDay {
+        background-color: #0f0 !important;
+        color: white;
+      }
+    `}</style>
+
+    )}
     </div>
   );
 };

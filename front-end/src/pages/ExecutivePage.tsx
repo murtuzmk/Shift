@@ -23,14 +23,16 @@ function ExecutivePage() {
   });  
 
   const fetchRas = () => {
-    fetch("http://localhost:8080/rea/${userid}/get-ras")
+    fetch('http://localhost:8080/rea/${userid}/get-ras')
     .then((response) => response.json())
     .then((data) => {
       setRas(data);
   });
 }
-
-  useEffect(() => { fetchRas}, []);
+  useEffect(() => {
+  // Correctly call fetchRas function
+  fetchRas(); // This executes the function
+  }, []); 
 
   /*useEffect(() => {
     // Update localStorage whenever currentValue changes
@@ -48,12 +50,15 @@ function ExecutivePage() {
     localStorage.setItem("currentValue", newValue);
   };
 
-  const dropdownOptions = [
+  /*const dropdownOptions = [
     { label: "RA 1", value: "RA1" }, // Ensure each option has a value property
     { label: "RA 2", value: "RA2" },
     { label: "RA 3", value: "RA3" },
-  ];
+  ];*/
 
+  const raOptions = ras.map((ra, index) => {
+    return { key: index, value: ra };
+  });
 
   const handleDropdownChange = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -71,46 +76,47 @@ function ExecutivePage() {
 
   return (
     <>
-      <div className="">
+      <div className="ml-2"> {/* Adjust the ml-* class as needed for desired spacing */}
         <Message />
       </div>
-      
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-      <div>
-      <AvailabilityCalendar id={null} execAccess={true} />
-      </div>
-    <div style={{ marginTop: '10px' }}>
-      <Button
-        type="button"
-        colorScheme="blue"
-        style={{ fontSize: '1rem', padding: '8px 20px' }}
-        onSubmit={handleREASubmit}
-      >
-        Assign {currRa} this Schedule
-      </Button>
-    </div>
-  </div>
 
-      <div className= "absolute right-20">
-      <TextField
+      <div className="flex flex-row items-center">
+        <div className="w-1/5 mr-2">
+          <Notepad />
+        </div>
+        <div className="flex flex-1 flex-col items-center justify-center mt-8">
+
+        <label className = "-mt-0"> RA Availability:</label>
+        <div className = "mb-2">
+        <Dropdown options={raOptions} onSelect={handleDropdownChange} />
+        </div>
+          <AvailabilityCalendar id={null} execAccess={true} />
+          <div className="mt-2.5">
+            <Button
+              type="button"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-medium text-lg px-5 py-2 rounded"
+              onSubmit={handleREASubmit}
+            >
+              Assign {currRa} this Schedule
+            </Button>
+          </div>
+        </div>
+      </div>
+      
+      <div className="absolute right-5">
+        <TextField
           label="Min Days: "
           onChange={handleInputChange}
-          currentValue={currentValue} // Convert currentValue to a string
+          currentValue={currentValue}
           onSubmit={handleSubmit}
         />
-        <label className="mr-2">Your RAs:</label>
-        <Dropdown options={dropdownOptions} onSelect={handleDropdownChange} />
       </div>
-      <div className = "bottom">
+      <div className="bottom-0">
       </div>
-      
-
-      
     </>
   );
+  
 }
 
 export default ExecutivePage;
-function setCurrentValue(newValue: any) {
-  throw new Error("Function not implemented.");
-}
+

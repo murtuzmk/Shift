@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
 import {
   Navigate,
   RouterProvider,
@@ -18,6 +17,10 @@ import { MyAvailability } from "./pages/MyAvailability.tsx";
 import ErrorPage from "./pages/ErrorPage.tsx";
 import { UserProvider } from "./context/UserDataContext.tsx";
 import CreateRAAccount from "./components/CreateRAAccount.tsx";
+import Coworkers from "./pages/Coworkers/index.tsx";
+import Employees from "./pages/Employees/index.tsx";
+import "./index.css";
+import { ThemeProvider } from "./components/themes/theme-provider.tsx";
 
 const router = createBrowserRouter([
   {
@@ -34,10 +37,12 @@ const router = createBrowserRouter([
         element: <Navigate to="/app/dashboard" />,
       },
       { path: "dashboard", element: <Dashboard /> },
-      { path: "settings", element: <Settings /> },
+      { path: "employees", element: <Employees /> },
       { path: "executivepage", element: <ExecutivePage /> },
+      { path: "co-workers", element: <Coworkers /> },
       { path: "availability", element: <MyAvailability /> },
       { path: "create-ra-account", element: <CreateRAAccount /> },
+      { path: "settings", element: <Settings /> },
     ],
   },
 ]);
@@ -52,7 +57,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           redirect_uri: "http://localhost:5173/app",
         }}
       >
-        <RouterProvider router={router} />
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+          <RouterProvider router={router} />
+        </ThemeProvider>
       </Auth0Provider>
     </UserProvider>
   </React.StrictMode>

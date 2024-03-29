@@ -94,11 +94,9 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    console.log("use effect running");
     console.log(user);
     user &&
       (async () => {
-        console.log("getting user role");
         setUserRole(await getUserRole(user?.sub));
       })();
   }, [user]);

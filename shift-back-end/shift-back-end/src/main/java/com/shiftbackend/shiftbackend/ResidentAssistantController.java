@@ -38,6 +38,7 @@ public class ResidentAssistantController {
         ra.loadAccountFile(id);
         ra.setName(input.get("name"));
         ra.saveAccountFile();
+        ra.addUser();
 
         return new ResponseEntity<String>("Name Edited", HttpStatus.CREATED);
     }
@@ -47,6 +48,7 @@ public class ResidentAssistantController {
         ra.loadAccountFile(id);
         ra.setEmail(input.get("email"));
         ra.saveAccountFile();
+        ra.addUser();
 
         return new ResponseEntity<String>("Email Edited", HttpStatus.CREATED);
     }
@@ -65,6 +67,7 @@ public class ResidentAssistantController {
         ra.loadAccountFile(id);
         ra.setHall(Person.Hall.valueOf(input.get("hall")));
         ra.saveAccountFile();
+        ra.addUser();
 
         return new ResponseEntity<String>("Hall Edited", HttpStatus.CREATED);
     }
@@ -74,6 +77,7 @@ public class ResidentAssistantController {
         ra.loadAccountFile(id);
         ra.enableAccount();
         ra.saveAccountFile();
+        ra.addUser();
 
         return new ResponseEntity<String>("Account Enabled", HttpStatus.CREATED);
     }
@@ -83,6 +87,7 @@ public class ResidentAssistantController {
         ra.loadAccountFile(id);
         ra.disableAccount();
         ra.saveAccountFile();
+        ra.addUser();
 
         return new ResponseEntity<String>("Account Disabled", HttpStatus.CREATED);
     }
@@ -92,6 +97,7 @@ public class ResidentAssistantController {
         ra.loadAccountFile(id);
         ra.setFloor(input.get("floor"));
         ra.saveAccountFile();
+        ra.addUser();
 
         return new ResponseEntity<String>("Floor Edited", HttpStatus.CREATED);
     }
@@ -107,6 +113,7 @@ public class ResidentAssistantController {
         ra.setEnabled(Boolean.parseBoolean(input.get("enabled")));
         ra.setFloor(input.get("floor"));
         ra.saveAccountFile();
+        ra.addUser();
 
         return new ResponseEntity<String>("Basic Attributes Set", HttpStatus.CREATED);
     }

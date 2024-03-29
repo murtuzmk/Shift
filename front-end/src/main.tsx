@@ -43,7 +43,7 @@ const router = createBrowserRouter([
       { path: "co-workers", element: <Coworkers /> },
       { path: "availability", element: <MyAvailability /> },
       { path: "create-ra-account", element: <CreateRAAccount /> },
-      { path: "ra-welcome", element: <RAWelcome />}
+      { path: "ra-welcome", element: <RAWelcome />},
       { path: "settings", element: <Settings /> },
     ],
   },

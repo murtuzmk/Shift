@@ -34,6 +34,17 @@ public class ResidentEducationAssistantController {
         return new ResponseEntity<String>("Deleted User: " + id, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/delete-ra/{raId}")
+    public ResponseEntity<String> deleteRAinREA(@PathVariable String id, @PathVariable String raId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.deleteUser();
+        ra.deleteAccountFile();
+        ra.deleteUserInformation();
+        ra = new ResidentAssistant();
+        return new ResponseEntity<String>("Deleted User: " + raId, HttpStatus.OK);
+    }
+
     @PostMapping("/{id}/set-name")
     public ResponseEntity<String> setNameREA(@PathVariable String id, @RequestBody Map<String, String> input) {
         rea.loadAccountFile(id);

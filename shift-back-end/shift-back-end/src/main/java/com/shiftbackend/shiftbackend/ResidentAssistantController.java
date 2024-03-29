@@ -119,6 +119,7 @@ public class ResidentAssistantController {
         ra.setId(input.get("inputId"));
         ra.setEnabled(Boolean.parseBoolean(input.get("enabled")));
         ra.saveAccountFile();
+        ra.addUser();
 
         return new ResponseEntity<String>("New RA Account Created", HttpStatus.CREATED);
     }

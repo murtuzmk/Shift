@@ -130,7 +130,8 @@ public class Person {
             reader.close();
 
             String fileString = buffer.toString();
-            fileString = fileString.replaceAll(this.getName() + "|" + this.getEmail() + "|" + this.getRole() + "|" + this.getHall() + "\n", "");
+            String targeString = this.getName() + "|" + this.getEmail() + "|" + this.getRole() + "|" + this.getHall() + "\n";
+            fileString = fileString.replaceAll(targeString, "");
 
             PrintWriter pw = new PrintWriter(new FileOutputStream(accounts, false));
             pw.print(fileString);

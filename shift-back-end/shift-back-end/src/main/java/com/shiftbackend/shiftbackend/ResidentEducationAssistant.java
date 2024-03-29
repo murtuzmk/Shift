@@ -63,8 +63,14 @@ public class ResidentEducationAssistant extends ResidentAssistant{
             this.setName(personAttributes[0]);
             this.setEmail(personAttributes[1]);
             this.setId(userId);
-            this.setGender(Person.Gender.valueOf(personAttributes[2]));
-            this.setHall(Person.Hall.valueOf(personAttributes[3]));
+            
+            if (personAttributes[2] != "null") {
+                this.setGender(Person.Gender.valueOf(personAttributes[2]));
+            }
+            if (personAttributes[3] != "null") {
+                this.setHall(Person.Hall.valueOf(personAttributes[3]));
+            }
+
             this.setEnabled(Boolean.parseBoolean(personAttributes[4]));
             this.setTimezone(Integer.parseInt(personAttributes[5]));
 
@@ -148,7 +154,7 @@ public class ResidentEducationAssistant extends ResidentAssistant{
     @Override
     public boolean deleteAccountFile() {
         String fileName = this.getRole() + "_" + this.getId() + ".txt";
-        File userInformation = new File(System.getProperty("user.dir"), fileName);
+        File userInformation = new File(System.getProperty("user.dir") + "/test_database", fileName);
         return (userInformation.delete() && getSchedule().deleteAccountFile(this.getId()));
     }
 

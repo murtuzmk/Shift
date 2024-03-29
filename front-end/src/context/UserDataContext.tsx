@@ -111,6 +111,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         },
       }
     );
+    console.log("here");
     const response = await data.json();
     return response[0].name;
   };

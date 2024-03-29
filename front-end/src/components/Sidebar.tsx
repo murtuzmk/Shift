@@ -6,6 +6,7 @@ import { HiCalendar, HiMiniInboxArrowDown } from "react-icons/hi2";
 import { MdSpaceDashboard } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import UserDataContext from "../context/UserDataContext";
+import React from "react";
 
 const Sidebar = () => {
   const { user, isLoading } = useAuth0();

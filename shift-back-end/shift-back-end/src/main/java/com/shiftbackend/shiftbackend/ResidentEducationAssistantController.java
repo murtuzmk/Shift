@@ -34,6 +34,17 @@ public class ResidentEducationAssistantController {
         return new ResponseEntity<String>("Deleted User: " + id, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/delete-ra/{raId}")
+    public ResponseEntity<String> deleteRAinREA(@PathVariable String id, @PathVariable String raId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.deleteUser();
+        ra.deleteAccountFile();
+        ra.deleteUserInformation();
+        ra = new ResidentAssistant();
+        return new ResponseEntity<String>("Deleted User: " + raId, HttpStatus.OK);
+    }
+
     @PostMapping("/{id}/set-name")
     public ResponseEntity<String> setNameREA(@PathVariable String id, @RequestBody Map<String, String> input) {
         rea.loadAccountFile(id);
@@ -86,7 +97,6 @@ public class ResidentEducationAssistantController {
         rea.loadAccountFile(id);
         rea.enableAccount();
         rea.saveAccountFile();
-        rea.addUser();
 
         return new ResponseEntity<String>("Account Enabled", HttpStatus.CREATED);
     }
@@ -97,7 +107,6 @@ public class ResidentEducationAssistantController {
         ra.loadAccountFile(raId);
         ra.enableAccount();
         ra.saveAccountFile();
-        ra.addUser();
 
         return new ResponseEntity<String>("Account Enabled", HttpStatus.CREATED);
     }
@@ -107,7 +116,6 @@ public class ResidentEducationAssistantController {
         rea.loadAccountFile(id);
         rea.disableAccount();
         rea.saveAccountFile();
-        rea.addUser();
 
         return new ResponseEntity<String>("Account Disabled", HttpStatus.CREATED);
     }
@@ -118,7 +126,6 @@ public class ResidentEducationAssistantController {
         ra.loadAccountFile(raId);
         ra.disableAccount();
         ra.saveAccountFile();
-        ra.addUser();
 
         return new ResponseEntity<String>("Account Disabled", HttpStatus.CREATED);
     }

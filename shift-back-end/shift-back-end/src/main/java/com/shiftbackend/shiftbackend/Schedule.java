@@ -32,6 +32,7 @@ public class Schedule {
             return false;
         }
         try {
+            events.clear();
             Scanner reader = new Scanner(userInformation);
 
             while (reader.hasNextLine()) {

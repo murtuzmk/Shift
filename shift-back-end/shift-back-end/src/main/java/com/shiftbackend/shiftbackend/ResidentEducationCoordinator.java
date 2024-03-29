@@ -79,6 +79,7 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
             this.setReaId(raAttributes[2]);
 
             // Load Preferences
+            this.getPreferences().clear();
             for (String day : days) {
                 if (!day.equals("")) {
                     this.getPreferences().add(day);
@@ -91,6 +92,7 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
             // Load Chats
 
             // Load REA attributes
+            this.getRaAccounts().clear();
             for (String raId : reaAttributes) {
                 if (!raId.equals("")) {
                     this.getRaAccounts().add(raId);
@@ -100,6 +102,7 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
             // Load Master Schedule
 
             // Load REC Attributes
+            reaAccounts.clear();
             for (String reaId : recAttributes) {
                 if (!reaId.equals("")) {
                     reaAccounts.add(reaId);

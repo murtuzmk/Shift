@@ -80,6 +80,7 @@ public class ResidentEducationAssistant extends ResidentAssistant{
             this.setReaId(raAttributes[2]);
 
             // Load Preferences
+            this.getPreferences().clear();
             for (String day : days) {
                 if (!day.equals("")) {
                     this.getPreferences().add(day);
@@ -92,6 +93,7 @@ public class ResidentEducationAssistant extends ResidentAssistant{
             // Load Chats
 
             // Load REA attributes
+            raAccounts.clear();
             for (String raId : reaAttributes) {
                 if (!raId.equals("")) {
                     raAccounts.add(raId);

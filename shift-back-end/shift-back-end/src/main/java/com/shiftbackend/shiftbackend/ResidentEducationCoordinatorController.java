@@ -38,6 +38,7 @@ public class ResidentEducationCoordinatorController {
         rec.loadAccountFile(id);
         rec.setName(input.get("name"));
         rec.saveAccountFile();
+        rec.addUser();
 
         return new ResponseEntity<String>("Name Edited", HttpStatus.CREATED);
     }
@@ -47,6 +48,7 @@ public class ResidentEducationCoordinatorController {
         rec.loadAccountFile(id);
         rec.setEmail(input.get("email"));
         rec.saveAccountFile();
+        rec.addUser();
 
         return new ResponseEntity<String>("Email Edited", HttpStatus.CREATED);
     }
@@ -65,6 +67,7 @@ public class ResidentEducationCoordinatorController {
         rec.loadAccountFile(id);
         rec.setHall(Person.Hall.valueOf(input.get("hall")));
         rec.saveAccountFile();
+        rec.addUser();
 
         return new ResponseEntity<String>("Hall Edited", HttpStatus.CREATED);
     }
@@ -82,6 +85,7 @@ public class ResidentEducationCoordinatorController {
         rec.loadAccountFile(id);
         rec.enableAccount();
         rec.saveAccountFile();
+        rec.addUser();
 
         return new ResponseEntity<String>("Account Enabled", HttpStatus.CREATED);
     }
@@ -92,6 +96,7 @@ public class ResidentEducationCoordinatorController {
         rea.loadAccountFile(reaId);
         rea.enableAccount();
         rea.saveAccountFile();
+        rea.addUser();
 
         return new ResponseEntity<String>("Account Enabled", HttpStatus.CREATED);
     }
@@ -102,6 +107,7 @@ public class ResidentEducationCoordinatorController {
         ra.loadAccountFile(raId);
         ra.enableAccount();
         ra.saveAccountFile();
+        ra.addUser();
 
         return new ResponseEntity<String>("Account Enabled", HttpStatus.CREATED);
     }
@@ -111,6 +117,7 @@ public class ResidentEducationCoordinatorController {
         rec.loadAccountFile(id);
         rec.disableAccount();
         rec.saveAccountFile();
+        rec.addUser();
 
         return new ResponseEntity<String>("Account Disabled", HttpStatus.CREATED);
     }
@@ -121,6 +128,7 @@ public class ResidentEducationCoordinatorController {
         rea.loadAccountFile(reaId);
         rea.disableAccount();
         rea.saveAccountFile();
+        rea.addUser();
 
         return new ResponseEntity<String>("Account Disabled", HttpStatus.CREATED);
     }
@@ -131,6 +139,7 @@ public class ResidentEducationCoordinatorController {
         ra.loadAccountFile(id);
         ra.disableAccount();
         ra.saveAccountFile();
+        ra.addUser();
 
         return new ResponseEntity<String>("Account Disabled", HttpStatus.CREATED);
     }
@@ -155,6 +164,7 @@ public class ResidentEducationCoordinatorController {
         rec.setEnabled(Boolean.parseBoolean(input.get("enabled")));
         rec.setFloor(input.get("floor"));
         rec.saveAccountFile();
+        rec.addUser();
 
         return new ResponseEntity<String>("Basic Attributes Set", HttpStatus.CREATED);
     }

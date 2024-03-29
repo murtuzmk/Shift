@@ -38,6 +38,7 @@ public class ResidentEducationAssistantController {
         rea.loadAccountFile(id);
         rea.setName(input.get("name"));
         rea.saveAccountFile();
+        rea.addUser();
 
         return new ResponseEntity<String>("Name Edited", HttpStatus.CREATED);
     }
@@ -47,6 +48,7 @@ public class ResidentEducationAssistantController {
         rea.loadAccountFile(id);
         rea.setEmail(input.get("email"));
         rea.saveAccountFile();
+        rea.addUser();
 
         return new ResponseEntity<String>("Email Edited", HttpStatus.CREATED);
     }
@@ -65,6 +67,7 @@ public class ResidentEducationAssistantController {
         rea.loadAccountFile(id);
         rea.setHall(Person.Hall.valueOf(input.get("hall")));
         rea.saveAccountFile();
+        rea.addUser();
 
         return new ResponseEntity<String>("Hall Edited", HttpStatus.CREATED);
     }
@@ -82,6 +85,7 @@ public class ResidentEducationAssistantController {
         rea.loadAccountFile(id);
         rea.enableAccount();
         rea.saveAccountFile();
+        rea.addUser();
 
         return new ResponseEntity<String>("Account Enabled", HttpStatus.CREATED);
     }
@@ -92,6 +96,7 @@ public class ResidentEducationAssistantController {
         ra.loadAccountFile(raId);
         ra.enableAccount();
         ra.saveAccountFile();
+        ra.addUser();
 
         return new ResponseEntity<String>("Account Enabled", HttpStatus.CREATED);
     }
@@ -101,6 +106,7 @@ public class ResidentEducationAssistantController {
         rea.loadAccountFile(id);
         rea.disableAccount();
         rea.saveAccountFile();
+        rea.addUser();
 
         return new ResponseEntity<String>("Account Disabled", HttpStatus.CREATED);
     }
@@ -111,6 +117,7 @@ public class ResidentEducationAssistantController {
         ra.loadAccountFile(raId);
         ra.disableAccount();
         ra.saveAccountFile();
+        ra.addUser();
 
         return new ResponseEntity<String>("Account Disabled", HttpStatus.CREATED);
     }
@@ -135,6 +142,7 @@ public class ResidentEducationAssistantController {
         rea.setEnabled(Boolean.parseBoolean(input.get("enabled")));
         rea.setFloor(input.get("floor"));
         rea.saveAccountFile();
+        rea.addUser();
 
         return new ResponseEntity<String>("Basic Attributes Set", HttpStatus.CREATED);
     }
@@ -147,6 +155,7 @@ public class ResidentEducationAssistantController {
         rea.setId(input.get("inputId"));
         rea.setEnabled(Boolean.parseBoolean(input.get("enabled")));
         rea.saveAccountFile();
+        rea.addUser();
         rea.addUser();
 
         return new ResponseEntity<String>("New REA Account Created", HttpStatus.CREATED);

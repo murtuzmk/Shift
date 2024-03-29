@@ -55,7 +55,7 @@ const EventDialog = ({
             <Form>
               <ModalBody>
                 <Field name="title">
-                  {({ field, form }: FieldProps) => (
+                  {({ field }: FieldProps) => (
                     <FormControl>
                       <FormLabel htmlFor="title">Title</FormLabel>
                       <Input {...field} id="title" placeholder="Enter title" />

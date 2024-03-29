@@ -12,11 +12,16 @@ import { useAuth0 } from "@auth0/auth0-react";
  *
  */
 function ExecutivePage() {
+
   const [inputValue, setInputValue] = useState("");
   const [ras, setRas] = useState<string[]>([]); /* Will use this to switch inbetween RA schedules */
   const [currRa, setCurrRa] = useState<string>(""); /* Will use this to switch inbetween RA schedules */
   const { user } = useAuth0();
+  const [report, setReport] = useState<string[]>([]); // Placeholder for report]
+  const typeOfReports = ["DAILY", "WEEKLY", "MONTHLY"];
+
   const userid = (user && user.sub ? user.sub.split("|")[1] : null);
+  const [currType, setCurrType] = useState<string>("DAILY");
   const [currentValue, setCurrentValue] = useState(() => {
     const saved = localStorage.getItem("currentValue");
     return saved !== null ? saved : "10";
@@ -29,6 +34,7 @@ function ExecutivePage() {
       setRas(data);
   });
 }
+
   useEffect(() => {
   // Correctly call fetchRas function
   fetchRas(); // This executes the function
@@ -44,6 +50,7 @@ function ExecutivePage() {
   }) => {
     setInputValue(event.target.value);
   };
+
   const handleSubmit = (newValue: any) => {
     window.alert(`You submitted: ${newValue}`);
     setCurrentValue(newValue); // Update the current value with the new input value
@@ -59,12 +66,15 @@ function ExecutivePage() {
   const raOptions = ras.map((ra, index) => {
     return { key: index, value: ra };
   });
+  
+  const typeofReportOptions = typeOfReports.map((report, index) => {
+    return { label: report, value: index };
+  });
 
   const handleDropdownChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     setCurrRa(event.target.value);
-
     console.log("Selected:", event.target.value);
   };
 
@@ -74,18 +84,47 @@ function ExecutivePage() {
     fetch("http://localhost:8080/rea/${userid}/ra/${currRa}/add-shift/${eventId}")
   }
 
+  /*
+   * This function will generate a report for the executive to view.
+   * This will download a file containing 
+   */
+
+  const generateReport = (newValue: any) => {
+    //fetch("http://localhost:8080/rea/${userid}/generate-report")
+    console.log("Generating Report");
+  }
+  const changeTypeOfReport = (newValue: any) => {
+    setReport(newValue);
+    console.log("Report Type: ", newValue);
+  }
+
   return (
     <>
-      <div className="ml-2"> {/* Adjust the ml-* class as needed for desired spacing */}
+      <div className="ml-5"> {/* Adjust the ml-* class as needed for desired spacing */}
         <Message />
       </div>
 
       <div className="flex flex-row items-center">
-        <div className="w-1/5 mr-2">
-          <Notepad />
-        </div>
-        <div className="flex flex-1 flex-col items-center justify-center mt-8">
 
+        <div className="w-1/5 mr-2">
+          <div className = "flex flex-col">
+            <Notepad/>
+            <div className = "flex flex-row items-center justify-start mt-2">
+              <Button
+                type="button"
+                className="w-full h-full bg-blue-500 hover:bg-blue-700 text-white font-medium text-lg px-3 py-5 rounded mr-5"
+                onSubmit={generateReport}
+                >
+                Generate Report
+              </Button>
+                <Dropdown
+                  options={typeofReportOptions}
+                  onSelect={changeTypeOfReport} />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-1 flex-col items-center justify-center mt-8">
         <label className = "-mt-0"> RA Availability:</label>
         <div className = "mb-2">
         <Dropdown options={raOptions} onSelect={handleDropdownChange} />
@@ -103,20 +142,18 @@ function ExecutivePage() {
         </div>
       </div>
       
-      <div className="absolute right-5">
-        <TextField
+      <div className="absolute right-5 mr-10 flex flex-row">
+        <TextField 
           label="Min Days: "
           onChange={handleInputChange}
           currentValue={currentValue}
           onSubmit={handleSubmit}
-        />
+        />          
       </div>
       <div className="bottom-0">
       </div>
     </>
   );
-  
 }
 
 export default ExecutivePage;
-

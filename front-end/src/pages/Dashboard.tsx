@@ -3,6 +3,7 @@ import MyCalendar from "../components/MyCalendar/MyCalendar";
 import { useUser } from "../hooks/useUser";
 import UserDataContext from "../context/UserDataContext";
 import * as ICAL from 'ical.js';
+import jsPDF from 'jspdf';
 
 interface Event {
   start: Date;
@@ -93,6 +94,34 @@ const Dashboard = () => {
         setUserRole(await getUserRole(user?.sub));
       })();
   }, [user]);
+  
+  const handleDownload = () => {
+    // Create a PDF document
+    const doc = new jsPDF();
+
+    // Set the document properties
+    doc.setProperties({
+      title: 'My Schedule'
+    });
+
+    // Add content to the document
+    doc.text('My Schedule', 10, 10);
+    doc.text(`User: ${user?.name}`, 10, 20);
+    doc.text(`Role: ${userRole}`, 10, 30);
+    doc.text('Shifts:', 10, 40);
+
+    // Add each shift to the document
+    events.forEach((event, index) => {
+      const startY = 50 + index * 10;
+      doc.text(`${event.start.toLocaleString()} - ${event.end.toLocaleString()}`, 10, startY);
+      doc.text(`Title: ${event.title}`, 10, startY + 10);
+      doc.text(`ID: ${event.id}`, 10, startY + 20);
+    });
+
+    // Save the document as a PDF file
+    doc.save('schedule.pdf');
+  };
+
   return (
     <div className="bg-gray-100 flex-1 p-4 flex flex-col gap-4">
       <div className="flex flex-col">
@@ -115,26 +144,31 @@ const Dashboard = () => {
         </div>
         <div className="bg-gray-50 rounded-lg border-dashed border-2 border-gray-300 col-span-5 row-span-4 p-6 flex flex-col gap-3">
           <h1 className="text-xl font-extrabold">General Information</h1>
-            <MyCalendar importedEvents={importedEvents} onEventsChange={setEvents} />
+          <MyCalendar importedEvents={importedEvents} onEventsChange={setEvents} />
           <div className="flex gap-2">
-          
-            <button 
+            <button
               className="bg-teal-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={handleDownload}
             >
-            Download
+              Download
             </button>
-            <button className="bg-teal-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => document.getElementById('fileInput')?.click()}>
+            <button
+              className="bg-teal-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={() => document.getElementById('fileInput')?.click()}
+            >
               Import
             </button>
-            <input 
-            type="file" 
-            id="fileInput" 
-            style={{ display: 'none' }} 
-            accept=".ics"
-            onChange={handleFileImport}
+            <input
+              type="file"
+              id="fileInput"
+              style={{ display: 'none' }}
+              accept=".ics"
+              onChange={handleFileImport}
             />
-            <button className="bg-teal-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleExport}>
+            <button
+              className="bg-teal-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              onClick={handleExport}
+            >
               Export
             </button>
           </div>

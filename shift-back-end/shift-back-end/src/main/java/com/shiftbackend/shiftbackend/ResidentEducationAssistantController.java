@@ -156,7 +156,6 @@ public class ResidentEducationAssistantController {
         rea.setEnabled(Boolean.parseBoolean(input.get("enabled")));
         rea.saveAccountFile();
         rea.addUser();
-        rea.addUser();
 
         return new ResponseEntity<String>("New REA Account Created", HttpStatus.CREATED);
     }

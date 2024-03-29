@@ -98,6 +98,7 @@ public class ResidentAssistant extends Person{
             typesOfShifts[2] = Integer.parseInt(raAttributes[5]);
 
             // Load Preferences
+            preferences.clear();
             for (String day : days) {
                 if (!day.equals("")) {
                     preferences.add(day);
@@ -110,6 +111,7 @@ public class ResidentAssistant extends Person{
             // Load Chats
 
             // Load Drops
+            shiftDropRequests.clear();
             for (String request : shiftDrops) {
                 if (!request.equals("")) {
                     shiftDropRequests.add(request);

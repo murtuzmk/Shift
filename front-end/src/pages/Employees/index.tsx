@@ -13,7 +13,12 @@ import { Input } from "@/components/ui/input";
 import { employees } from "@/data/employees";
 import { DataTableColumns } from "@/lib/dataTableColumns";
 import { Plus } from "lucide-react";
-import { FunctionComponentElement, useState } from "react";
+import React, {
+  FunctionComponentElement,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -37,6 +42,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
+import UserDataContext from "@/context/UserDataContext";
+import { Avatar } from "@radix-ui/react-avatar";
+import { AvatarImage } from "@/components/ui/avatar";
 
 export interface EmployeeColumns {
   id: string;
@@ -60,6 +68,87 @@ const newEmployeeSchema = z.object({
 });
 
 const Employees = () => {
+  const { getUsers, getRAs, getREAs, getRECs }: any =
+    useContext(UserDataContext);
+  useEffect(() => {
+    (async () => {
+      const users = await getUsers();
+      // if (userInfo.role == "ra") {
+      //   roleId = "rol_B4q5MnHKp5bAK3GZ";
+      // } else if (userInfo.role == "rec") {
+      //   roleId = "rol_dThVMHLWvXU9omdm";
+      // } else {
+      //   roleId = "rol_TEPNE600izWN97kg";
+      // }
+      const ras = await getRAs();
+      const reas = await getREAs();
+      const recs = await getRECs();
+      const raData = await ras.map((ra: any) => {
+        return {
+          id: ra.id,
+          residentAssistant: {
+            name: ra.name,
+            email: ra.email,
+            avatar: React.createElement(
+              Avatar,
+              { className: "h-12 w-12" },
+              React.createElement(AvatarImage, {
+                src: ra.picture,
+                className: "rounded-full",
+              })
+            ),
+          },
+          role: "Resident Assistant",
+          hall: "Unassigned",
+          status: "Clocked Out",
+        };
+      });
+      const reaData = await reas.map((rea: any) => {
+        return {
+          id: rea.id,
+          residentAssistant: {
+            name: rea.name,
+            email: rea.email,
+            avatar: React.createElement(
+              Avatar,
+              { className: "h-12 w-12" },
+              React.createElement(AvatarImage, {
+                src: rea.picture,
+                className: "rounded-full",
+              })
+            ),
+          },
+          role: "Resident Education Assistant",
+          hall: "Unassigned",
+          status: "Clocked Out",
+        };
+      });
+      const recData = await recs.map((rec: any) => {
+        return {
+          id: rec.id,
+          residentAssistant: {
+            name: rec.name,
+            email: rec.email,
+            avatar: React.createElement(
+              Avatar,
+              { className: "h-12 w-12" },
+              React.createElement(AvatarImage, {
+                src: rec.picture,
+                className: "rounded-full",
+              })
+            ),
+          },
+          role: "Resident Education Coordinator",
+          hall: "Unassigned",
+          status: "Clocked Out",
+        };
+      });
+      const fullData = [...raData, ...reaData, ...recData];
+      const typedData: EmployeeColumns[] = fullData;
+      setData(typedData);
+    })();
+  }, []);
+
   // for notifications
   const { toast } = useToast();
   let columns = new DataTableColumns<EmployeeColumns, EmployeeHeaders>([
@@ -72,8 +161,9 @@ const Employees = () => {
     .formatColumn("status", "status")
     .addActionColumn()
     .addAction("Disable user account")
-    .addAction("Delete user account");
-  const [data, setData] = useState(employees);
+    .addAction("Delete user account")
+    .addAction("View Shifts");
+  const [data, setData] = useState<EmployeeColumns[]>([]);
   const newEmployeeForm = useForm<z.infer<typeof newEmployeeSchema>>({
     resolver: zodResolver(newEmployeeSchema),
     defaultValues: {

@@ -4,7 +4,8 @@ import "react-calendar/dist/Calendar.css";
 import ExecutivePage from "../pages/ExecutivePage";
 import { useUser } from "../hooks/useUser";
 import { useAuth0 } from "@auth0/auth0-react";
-
+import { useContext } from "react";
+import UserDataContext from "../context/UserDataContext";
 
 
 interface TileClassNameArgs {
@@ -12,14 +13,16 @@ interface TileClassNameArgs {
   view: string;
 }
 
-const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean | null}> =({id, execAccess}) => {
+const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean | null, role: string | null}> =({id, execAccess, role}) => {
   // Explicitly type freeDays as an array of strings
   const [freeDays, setFreeDays] = useState<string[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [view, setView] = useState<"month">("month");
   const {user} = useAuth0();
   const userid = id || (user && user.sub ? user.sub.split("|")[1] : null);
-  //user && user.sub ? user.sub.split("|")[1] : null;
+  //const userRole = role;
+  const userRole = role !== null ? role : "Resident Assistant";
+  const isExec = userRole !== "Resident Assistant";
   if (execAccess == null) {
     execAccess = false;
   }
@@ -223,8 +226,32 @@ const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean |
         
         
       </div>
-      
-      
+      {isExec && (
+      <style>{`
+      .react-calendar {
+        width: 80%; /* Adjust this value to make the calendar wider */
+        max-width: none; /* Remove any maximum width restrictions */
+        font-size: 16px; /* Increase the base font size to scale up text elements */
+      }
+      .react-calendar__tile {
+        height: 80px; /* Adjust this value to increase the tile height */
+        width: 80px; /* Adjust this value to increase the tile width */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2em; /* Scale up the font size within each tile */
+      }
+      .react-calendar__navigation button {
+        font-size: 1.4em; /* Scale up the navigation buttons */
+      }
+
+      .freeDay {
+        background-color: #0f0 !important;
+        color: white;
+      }
+    `}</style>
+    )}
+    {!isExec && (
       <style>{`
       .react-calendar {
         width: 80%; /* Adjust this value to make the calendar wider */
@@ -248,6 +275,7 @@ const AvailabilityCalendar: React.FC<{ id: string | null, execAccess : boolean |
         color: white;
       }
     `}</style>
+    )}
     </div>
   );
 };

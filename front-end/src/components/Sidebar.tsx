@@ -12,11 +12,18 @@ const Sidebar = () => {
   const { getUserRole }: any = useContext(UserDataContext);
   const navigate = useNavigate();
   const [displayCAButton, setDisplayCAButton] = useState(false);
-
   useEffect(() => {
     user &&
       (async () => {
+
+        /* 
+         * THIS PART NEEDS OWRK DONE TO MAKE USER ROELS WORK
+         *
+         */
+
+        //const userRole = getUserRole(user?.sub)//"Resident Education Assistant" //await getUserRole(user?.sub);
         const userRole = await getUserRole(user?.sub);
+        console.log("ROle is " + userRole);
         if (
           userRole == "Resident Education Assistant" ||
           userRole == "Resident Education Coordinator"
@@ -60,7 +67,8 @@ const Sidebar = () => {
         >
            {displayCAButton ? "Shifts" : "Availability"}
         </Button>
-        {displayCAButton && (
+
+      {displayCAButton && (
         <Button
           leftIcon={
             <Icon
@@ -75,7 +83,7 @@ const Sidebar = () => {
         >
           Executive
         </Button>
-        )}
+       )}
         <Button
           leftIcon={
             <Icon

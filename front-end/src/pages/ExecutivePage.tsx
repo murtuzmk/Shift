@@ -129,7 +129,7 @@ function ExecutivePage() {
         <div className = "mb-2">
         <Dropdown options={raOptions} onSelect={handleDropdownChange} />
         </div>
-          <AvailabilityCalendar id={null} execAccess={true} />
+          <AvailabilityCalendar id={null} execAccess={true} role={null} />
           <div className="mt-2.5">
             <Button
               type="button"

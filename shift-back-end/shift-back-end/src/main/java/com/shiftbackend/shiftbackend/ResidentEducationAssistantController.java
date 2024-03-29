@@ -97,7 +97,6 @@ public class ResidentEducationAssistantController {
         rea.loadAccountFile(id);
         rea.enableAccount();
         rea.saveAccountFile();
-        rea.addUser();
 
         return new ResponseEntity<String>("Account Enabled", HttpStatus.CREATED);
     }
@@ -108,7 +107,6 @@ public class ResidentEducationAssistantController {
         ra.loadAccountFile(raId);
         ra.enableAccount();
         ra.saveAccountFile();
-        ra.addUser();
 
         return new ResponseEntity<String>("Account Enabled", HttpStatus.CREATED);
     }
@@ -118,7 +116,6 @@ public class ResidentEducationAssistantController {
         rea.loadAccountFile(id);
         rea.disableAccount();
         rea.saveAccountFile();
-        rea.addUser();
 
         return new ResponseEntity<String>("Account Disabled", HttpStatus.CREATED);
     }
@@ -129,7 +126,6 @@ public class ResidentEducationAssistantController {
         ra.loadAccountFile(raId);
         ra.disableAccount();
         ra.saveAccountFile();
-        ra.addUser();
 
         return new ResponseEntity<String>("Account Disabled", HttpStatus.CREATED);
     }

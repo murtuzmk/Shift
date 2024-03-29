@@ -63,8 +63,14 @@ public class ResidentEducationAssistant extends ResidentAssistant{
             this.setName(personAttributes[0]);
             this.setEmail(personAttributes[1]);
             this.setId(userId);
-            this.setGender(Person.Gender.valueOf(personAttributes[2]));
-            this.setHall(Person.Hall.valueOf(personAttributes[3]));
+            
+            if (personAttributes[2] != "null") {
+                this.setGender(Person.Gender.valueOf(personAttributes[2]));
+            }
+            if (personAttributes[3] != "null") {
+                this.setHall(Person.Hall.valueOf(personAttributes[3]));
+            }
+
             this.setEnabled(Boolean.parseBoolean(personAttributes[4]));
             this.setTimezone(Integer.parseInt(personAttributes[5]));
 
@@ -74,6 +80,7 @@ public class ResidentEducationAssistant extends ResidentAssistant{
             this.setReaId(raAttributes[2]);
 
             // Load Preferences
+            this.getPreferences().clear();
             for (String day : days) {
                 if (!day.equals("")) {
                     this.getPreferences().add(day);
@@ -86,6 +93,7 @@ public class ResidentEducationAssistant extends ResidentAssistant{
             // Load Chats
 
             // Load REA attributes
+            raAccounts.clear();
             for (String raId : reaAttributes) {
                 if (!raId.equals("")) {
                     raAccounts.add(raId);
@@ -148,7 +156,7 @@ public class ResidentEducationAssistant extends ResidentAssistant{
     @Override
     public boolean deleteAccountFile() {
         String fileName = this.getRole() + "_" + this.getId() + ".txt";
-        File userInformation = new File(System.getProperty("user.dir"), fileName);
+        File userInformation = new File(System.getProperty("user.dir") + "/test_database", fileName);
         return (userInformation.delete() && getSchedule().deleteAccountFile(this.getId()));
     }
 
@@ -196,6 +204,54 @@ public class ResidentEducationAssistant extends ResidentAssistant{
         buffer.append("\"}");
 
         return buffer.toString();
+    }
+
+    public void createWelcomeMessage(String input) {
+        String fileName = "Welcome_Message_" + this.getRole() + "_" + this.getId() + ".txt";
+        File welcomeMessage = new File(System.getProperty("user.dir") + "/test_database", fileName);
+
+        try {
+            PrintWriter pw = new PrintWriter(new FileOutputStream(welcomeMessage, false));
+
+            pw.println(input);
+
+            pw.close();
+        } catch (Exception e) {
+            System.out.println("Error in Account Saving");
+            e.printStackTrace();
+        }
+    }
+
+    public String getWelcomeMessage() {
+        String fileName = "Welcome_Message_" + this.getRole() + "_" + this.getId() + ".txt";
+        File welcomeMessage = new File(System.getProperty("user.dir") + "/test_database", fileName);
+        String message = "Error Loading Welcome Message";
+
+        try {
+            Scanner reader = new Scanner(welcomeMessage);
+            StringBuffer buffer = new StringBuffer();
+
+            buffer.append("{ \"message\" : \"");
+
+            buffer.append(reader.nextLine());
+
+            buffer.append("\" }");
+
+            message = buffer.toString();
+
+            reader.close();
+        } catch (Exception e) {
+            System.out.println("Error in Welcome Message Loading");
+            e.printStackTrace();
+        }
+
+        return message;
+    }
+
+    public boolean deleteWelcomeMessage() {
+        String fileName = "Welcome_Message_" + this.getRole() + "_" + this.getId() + ".txt";
+        File welcomeMessage = new File(System.getProperty("user.dir") + "/test_database", fileName);
+        return welcomeMessage.delete();
     }
 
 

@@ -6,10 +6,10 @@ function Message() {
 
   // JSX: JavaScript XML
   return (
-    <div className="text-center">
+    <div className = "text-center">
       <h2 className="text-2xl font-bold"> Executive Page</h2>
       <h3 className="text-lg italic font-semibold"> Welcome, {user?.name}!</h3>
-    </div>
+      </div>
   );
 }
 

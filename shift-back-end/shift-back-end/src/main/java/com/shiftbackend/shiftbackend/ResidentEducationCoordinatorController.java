@@ -26,6 +26,7 @@ public class ResidentEducationCoordinatorController {
     @GetMapping("/{id}/delete")
     public ResponseEntity<String> deleteREC(@PathVariable String id) {
         rec.loadAccountFile(id);
+        rec.deleteUser();
         rec.deleteAccountFile();
         rec.deleteUserInformation();
         rec = new ResidentEducationCoordinator();
@@ -37,6 +38,7 @@ public class ResidentEducationCoordinatorController {
         rec.loadAccountFile(id);
         rec.setName(input.get("name"));
         rec.saveAccountFile();
+        rec.addUser();
 
         return new ResponseEntity<String>("Name Edited", HttpStatus.CREATED);
     }
@@ -46,6 +48,7 @@ public class ResidentEducationCoordinatorController {
         rec.loadAccountFile(id);
         rec.setEmail(input.get("email"));
         rec.saveAccountFile();
+        rec.addUser();
 
         return new ResponseEntity<String>("Email Edited", HttpStatus.CREATED);
     }
@@ -64,6 +67,7 @@ public class ResidentEducationCoordinatorController {
         rec.loadAccountFile(id);
         rec.setHall(Person.Hall.valueOf(input.get("hall")));
         rec.saveAccountFile();
+        rec.addUser();
 
         return new ResponseEntity<String>("Hall Edited", HttpStatus.CREATED);
     }
@@ -81,6 +85,7 @@ public class ResidentEducationCoordinatorController {
         rec.loadAccountFile(id);
         rec.enableAccount();
         rec.saveAccountFile();
+        rec.addUser();
 
         return new ResponseEntity<String>("Account Enabled", HttpStatus.CREATED);
     }
@@ -91,6 +96,7 @@ public class ResidentEducationCoordinatorController {
         rea.loadAccountFile(reaId);
         rea.enableAccount();
         rea.saveAccountFile();
+        rea.addUser();
 
         return new ResponseEntity<String>("Account Enabled", HttpStatus.CREATED);
     }
@@ -101,6 +107,7 @@ public class ResidentEducationCoordinatorController {
         ra.loadAccountFile(raId);
         ra.enableAccount();
         ra.saveAccountFile();
+        ra.addUser();
 
         return new ResponseEntity<String>("Account Enabled", HttpStatus.CREATED);
     }
@@ -110,6 +117,7 @@ public class ResidentEducationCoordinatorController {
         rec.loadAccountFile(id);
         rec.disableAccount();
         rec.saveAccountFile();
+        rec.addUser();
 
         return new ResponseEntity<String>("Account Disabled", HttpStatus.CREATED);
     }
@@ -120,6 +128,7 @@ public class ResidentEducationCoordinatorController {
         rea.loadAccountFile(reaId);
         rea.disableAccount();
         rea.saveAccountFile();
+        rea.addUser();
 
         return new ResponseEntity<String>("Account Disabled", HttpStatus.CREATED);
     }
@@ -130,6 +139,7 @@ public class ResidentEducationCoordinatorController {
         ra.loadAccountFile(id);
         ra.disableAccount();
         ra.saveAccountFile();
+        ra.addUser();
 
         return new ResponseEntity<String>("Account Disabled", HttpStatus.CREATED);
     }
@@ -154,6 +164,7 @@ public class ResidentEducationCoordinatorController {
         rec.setEnabled(Boolean.parseBoolean(input.get("enabled")));
         rec.setFloor(input.get("floor"));
         rec.saveAccountFile();
+        rec.addUser();
 
         return new ResponseEntity<String>("Basic Attributes Set", HttpStatus.CREATED);
     }
@@ -166,8 +177,34 @@ public class ResidentEducationCoordinatorController {
         rec.setId(input.get("inputId"));
         rec.setEnabled(Boolean.parseBoolean(input.get("enabled")));
         rec.saveAccountFile();
+        rec.addUser();
 
         return new ResponseEntity<String>("New REA Account Created", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{id}/create-welcome-message")
+    public ResponseEntity<String> createWelcomeMessageREC(@PathVariable String id, @RequestBody Map<String, String> input) {
+        rec.loadAccountFile(id);
+        rec.createWelcomeMessage(input.get("message"));
+        rec.saveAccountFile();
+        
+        return new ResponseEntity<String>("Welcome Message Created", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/get-welcome-message")
+    public ResponseEntity<String> getWelcomeMessageREC(@PathVariable String id) {
+        rec.loadAccountFile(id);
+        
+        return new ResponseEntity<String>(rec.getWelcomeMessage(), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/delete-welcome-message")
+    public ResponseEntity<String> deleteWelcomeMessageREC(@PathVariable String id) {
+        rec.loadAccountFile(id);
+        rec.deleteWelcomeMessage();
+        rec.saveAccountFile();
+        
+        return new ResponseEntity<String>("Welcome Message Deleted", HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}/add-ra/{raId}")

@@ -77,8 +77,14 @@ public class ResidentAssistant extends Person{
             this.setName(personAttributes[0]);
             this.setEmail(personAttributes[1]);
             this.setId(userId);
-            this.setGender(Person.Gender.valueOf(personAttributes[2]));
-            this.setHall(Person.Hall.valueOf(personAttributes[3]));
+
+            if (!personAttributes[2].equals("null")) {
+                this.setGender(Person.Gender.valueOf(personAttributes[2]));
+            }
+            if (!personAttributes[3].equals("null")) {
+                this.setHall(Person.Hall.valueOf(personAttributes[3]));
+            }
+
             this.setEnabled(Boolean.parseBoolean(personAttributes[4]));
             this.setTimezone(Integer.parseInt(personAttributes[5]));
 
@@ -92,6 +98,7 @@ public class ResidentAssistant extends Person{
             typesOfShifts[2] = Integer.parseInt(raAttributes[5]);
 
             // Load Preferences
+            preferences.clear();
             for (String day : days) {
                 if (!day.equals("")) {
                     preferences.add(day);
@@ -104,6 +111,7 @@ public class ResidentAssistant extends Person{
             // Load Chats
 
             // Load Drops
+            shiftDropRequests.clear();
             for (String request : shiftDrops) {
                 if (!request.equals("")) {
                     shiftDropRequests.add(request);
@@ -170,8 +178,9 @@ public class ResidentAssistant extends Person{
 
     public boolean deleteAccountFile() {
         String fileName = this.getRole() + "_" + this.getId() + ".txt";
-        File userInformation = new File(System.getProperty("user.dir"), fileName);
-        return (userInformation.delete() && schedule.deleteAccountFile(this.getId()));
+        File userInformation = new File(System.getProperty("user.dir") + "/test_database", fileName);
+       
+        return userInformation.delete() && schedule.deleteAccountFile(this.getId());
     }
 
     /*

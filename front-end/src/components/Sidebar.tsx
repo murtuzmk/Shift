@@ -58,8 +58,9 @@ const Sidebar = () => {
           role="group"
           onClick={() => navigate("availability")}
         >
-          Availability
+           {displayCAButton ? "Shifts" : "Availability"}
         </Button>
+        {displayCAButton && (
         <Button
           leftIcon={
             <Icon
@@ -74,6 +75,7 @@ const Sidebar = () => {
         >
           Executive
         </Button>
+        )}
         <Button
           leftIcon={
             <Icon

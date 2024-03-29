@@ -104,11 +104,39 @@ public class Person {
     }
 
     public void addUser() {
+        boolean exists = false;
         File accounts = new File(System.getProperty("user.dir") + "/test_database", "allAccounts.txt");
         try {
-            PrintWriter pw = new PrintWriter(new FileOutputStream(accounts, true));
 
-            pw.println(this.getName() + "|" + this.getEmail() + "|" + this.getRole() + "|" + this.getHall());
+            Scanner reader = new Scanner(accounts);
+            StringBuffer buffer = new StringBuffer();
+            
+            while (reader.hasNextLine()) {
+                buffer.append(reader.nextLine() + "\n");
+            }
+ 
+            reader.close();
+
+            String [] fileStrings = buffer.toString().split("\n");
+
+            PrintWriter pw = new PrintWriter(new FileOutputStream(accounts, false));
+
+            for (String user : fileStrings) {
+                String [] userInformation = user.split("[|]");
+                if (userInformation.length == 5) {
+                    if (this.getId().equals(userInformation[2])) {
+                        exists = true;
+                        pw.println(this.getName() + "|" + this.getEmail() + "|" + this.getId() +"|" + this.getRole() + "|" + this.getHall());
+                    }
+                    else {
+                        pw.println(user);
+                    }
+                }
+            }
+
+            if (!exists) {
+                pw.println(this.getName() + "|" + this.getEmail() + "|" + this.getId() +"|" + this.getRole() + "|" + this.getHall());
+            }
 
             pw.close();
         } catch (Exception e) {
@@ -129,11 +157,19 @@ public class Person {
  
             reader.close();
 
-            String fileString = buffer.toString();
-            fileString = fileString.replaceAll(this.getName() + "|" + this.getEmail() + "|" + this.getRole() + "|" + this.getHall() + "\n", "");
+            String [] fileStrings = buffer.toString().split("\n");
+
+            
 
             PrintWriter pw = new PrintWriter(new FileOutputStream(accounts, false));
-            pw.print(fileString);
+
+            for (String user : fileStrings) {
+                String [] userInformation = user.split("[|]");
+                if (!this.getId().equals(userInformation[2])) {
+                    pw.println(user);
+                }
+        
+            }
 
             pw.close();
         } catch (Exception e) {

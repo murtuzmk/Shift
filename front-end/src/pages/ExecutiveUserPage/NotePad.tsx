@@ -9,7 +9,7 @@ const Notepad = () => {
     // Save the text here. This could involve sending it to a server,
     // saving it to local storage, etc.
     console.log(rules);
-    localStorage.setItem("rules", rules);
+    localStorage.setItem("rules", JSON.stringify(rules));
     setIsEditable(false);
   };
 
@@ -20,9 +20,15 @@ const Notepad = () => {
   useEffect(() => {
     const loadedRules = localStorage.getItem("rules");
     if (loadedRules) {
-      setRules(JSON.parse(loadedRules));
-    }
-  }, []); 
+      try {
+        setRules(JSON.parse(loadedRules));
+      } catch (e) {
+        console.error(e);
+        localStorage.removeItem("rules");
+        setRules("");
+      }
+    } 
+  }, []);
 
   /* EXAMPLE OF ACCESSING OUTPUT FROM URL
   useEffect(()=>{

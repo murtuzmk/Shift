@@ -2,8 +2,9 @@ import { useContext, useEffect, useState } from "react";
 import MyCalendar from "../components/MyCalendar/MyCalendar";
 import { useUser } from "../hooks/useUser";
 import UserDataContext from "../context/UserDataContext";
+import { ThemeProvider, useTheme } from "@/components/themes/theme-provider";
 import * as ICAL from 'ical.js';
-
+import { ModeToggle } from "@/components/themes/mode-toggle";
 interface Event {
   start: Date;
   end: Date;
@@ -17,6 +18,7 @@ const Dashboard = () => {
   const [userRole, setUserRole] = useState("Loading...");
   const [importedEvents, setImportedEvents] = useState<Event[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
+  const { theme } = useTheme();
 
   const handleExport = () => {
     // Create a new calendar
@@ -57,7 +59,7 @@ const Dashboard = () => {
     // Remove the link from the body
     document.body.removeChild(link);
   };
- 
+
   const handleFileImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -94,26 +96,26 @@ const Dashboard = () => {
       })();
   }, [user]);
   return (
-    <div className="bg-gray-100 flex-1 p-4 flex flex-col gap-4">
+    <div className="bg-gray-100 dark:bg-slate-600 text-black dark:text-white flex-1 p-4 flex flex-col gap-4">
       <div className="flex flex-col">
         <h1 className="text-2xl font-bold">Welcome, {user?.name}! 👋</h1>
         <p className="text-base">Role: {userRole}</p>
         <p className="text-base">Welcome back, track your shifts here!</p>
       </div>
       <div className="flex-1 rounded-lg grid grid-cols-8 grid-rows-6 gap-4">
-        <div className="bg-gray-50 rounded-lg border-dashed border-2 border-gray-300 col-span-2 row-span-1">
+        <div className="bg-gray-50 dark:bg-slate-600 text-black dark:text-white rounded-lg border-dashed border-2 border-gray-300 col-span-2 row-span-1 ">
           Statistic 1
         </div>
-        <div className="bg-gray-50 rounded-lg border-dashed border-2 border-gray-300 col-span-2 row-span-1">
+        <div className="bg-gray-50 dark:bg-slate-600 text-black dark:text-white rounded-lg border-dashed border-2 border-gray-300 col-span-2 row-span-1">
           Statistic 2
         </div>
-        <div className="bg-gray-50 rounded-lg border-dashed border-2 border-gray-300 col-span-2 row-span-1">
+        <div className="bg-gray-50 dark:bg-slate-600 text-black dark:text-white rounded-lg border-dashed border-2 border-gray-300 col-span-2 row-span-1">
           Statistic 3
         </div>
-        <div className="bg-gray-50 rounded-lg border-dashed border-2 border-gray-300 col-span-2 row-span-1">
+        <div className=" bg-gray-50 dark:bg-slate-600 text-black dark:text-white rounded-lg border-dashed border-2 border-gray-300 col-span-2 row-span-1">
           Statistic 4
         </div>
-        <div className="bg-gray-50 rounded-lg border-dashed border-2 border-gray-300 col-span-5 row-span-4 p-6 flex flex-col gap-3">
+        <div className="bg-gray-50 dark:bg-slate-600 text-black dark:text-white rounded-lg border-dashed border-2 border-gray-300 col-span-6 row-span-4 p-6 flex flex-col gap-3">
           <h1 className="text-xl font-extrabold">General Information</h1>
             <MyCalendar importedEvents={importedEvents} onEventsChange={setEvents} />
           <div className="flex gap-2">
@@ -133,9 +135,10 @@ const Dashboard = () => {
             <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleExport}>
               Export
             </button>
+            <ModeToggle /> 
           </div>
         </div>
-        <div className="bg-gray-50 rounded-lg border-dashed border-2 border-gray-300 col-span-3 row-span-3">
+        <div className= "bg-gray-100 dark:bg-slate-600 text-black dark:text-white rounded-lg border-dashed border-2 =border-gray-300 col-span-3 row-span-3">
           Co-workers
         </div>
       </div>
@@ -143,4 +146,12 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+const WrappedDashboard = () => {
+  return (
+    <ThemeProvider>
+      <Dashboard />
+    </ThemeProvider>
+  );
+}
+
+export default WrappedDashboard;

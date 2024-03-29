@@ -2,12 +2,12 @@ import { useEffect, useState, useMemo} from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field, FieldProps } from "formik";
 import { v4 as uuidv4 } from "uuid";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 const localizer = momentLocalizer(moment);
-import axios from "axios";
 import "./MyCalendar.css";
+
 
 interface MyCalendarProps {
   importedEvents: Event[];
@@ -55,7 +55,7 @@ const EventDialog = ({
             <Form>
               <ModalBody>
                 <Field name="title">
-                  {({ field, form }) => (
+                  {({ field, form }: FieldProps) => (
                     <FormControl>
                       <FormLabel htmlFor="title">Title</FormLabel>
                       <Input {...field} id="title" placeholder="Enter title" />

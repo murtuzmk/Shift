@@ -30,7 +30,7 @@ const Sidebar = () => {
     return <h1>Loading...</h1>;
   }
   return (
-    <div className="bg-gray-50 w-64 border-r border-gray-300 flex flex-col gap-3">
+    <div className="!bg-gray-50 dark:!bg-slate-600 w-64 border-r border-gray-300 flex flex-col gap-3">
       <div className="flex flex-col p-3 gap-3">
         <Button
           leftIcon={
@@ -40,7 +40,7 @@ const Sidebar = () => {
               _groupHover={{ fill: "gray.600" }}
             />
           }
-          className="!bg-gray-50 hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
+          className="!bg-gray-50 dark:!bg-slate-600 !text-black dark:!text-white hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
           role="group"
           onClick={() => navigate("dashboard")}
         >
@@ -54,7 +54,7 @@ const Sidebar = () => {
               _groupHover={{ fill: "gray.600" }}
             />
           }
-          className="!bg-gray-50 hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
+          className="!bg-gray-50 dark:!bg-slate-600 !text-black dark:!text-white hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
           role="group"
           onClick={() => navigate("availability")}
         >
@@ -69,7 +69,7 @@ const Sidebar = () => {
               _groupHover={{ fill: "gray.600" }}
             />
           }
-          className="!bg-gray-50 hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
+          className="!bg-gray-50 dark:!bg-slate-600 !text-black dark:!text-white hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
           role="group"
           onClick={() => navigate("executivepage")}
         >
@@ -84,7 +84,7 @@ const Sidebar = () => {
               _groupHover={{ fill: "gray.600" }}
             />
           }
-          className="!bg-gray-50 hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
+          className="!bg-gray-50 dark:!bg-slate-600 !text-black dark:!text-white hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
           role="group"
         >
           Messages
@@ -98,7 +98,7 @@ const Sidebar = () => {
                 _groupHover={{ fill: "gray.600" }}
               />
             }
-            className="!bg-gray-50 hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
+            className="!bg-gray-50 dark:!bg-slate-600 !text-black dark:!text-white hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
             role="group"
             onClick={() => navigate("create-ra-account")}
           >
@@ -117,7 +117,7 @@ const Sidebar = () => {
               _groupHover={{ fill: "gray.600" }}
             />
           }
-          className="!bg-gray-50 hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
+          className="!bg-gray-50 dark:!bg-slate-600 !text-black dark:!text-white hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
           role="group"
           onClick={() => navigate("settings")}
         >

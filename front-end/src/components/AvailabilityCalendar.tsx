@@ -265,40 +265,37 @@ const AvailabilityCalendar: React.FC<{ id: string | null, accFrmExec : boolean |
       }}
     >
       {(isExec && !execAccess) &&  (
-      <div style={{ backgroundColor: 'lightgray', padding: '20px' }}>
+      <div className="flex flex-row justify-center w-9/12 space-x-10"
+      style={{ backgroundColor: 'lightgray', padding: '20px' }}>
       <div className = "flex flex-row">
-        <div>
+        <div className = "mr-20">
           <input
             type="checkbox"
             checked={isChecked1}
             onChange={() => handleCheckboxChange(1)}
-          /> Boys
+          /> Male
         </div>
-        <div>
+        <div className = "mr-20">
           <input
             type="checkbox"
             checked={isChecked2}
             onChange={() => handleCheckboxChange(2)}
-          /> Girls
+          /> Female
         </div>
       </div>
       <div className = "flex flex-row">
-        <div>
+        <div className = "mr-20">
           <input
             type="checkbox"
             checked={isChecked3}
             onChange={() => handleCheckboxChange(3)}
-          /> Coed
+          /> Co-ed
         </div>
         <div>
-          <input
-            type="checkbox"
-            checked={isChecked4}
-            onChange= {() => handleCheckboxChange(4)}
-            style={{ width: '150px', padding: '2px', fontSize: '14px' }}
-          /> Specific Floor: 
+           Floor: 
           <Dropdown
                 options={[
+                  { label: "Any", value: 0},
                   { label: "Floor 1", value: 1 },
                   { label: "Floor 2", value: 2 },
                   { label: "Floor 3", value: 3 },
@@ -322,6 +319,7 @@ const AvailabilityCalendar: React.FC<{ id: string | null, accFrmExec : boolean |
         tileClassName={tileClassName}
         
       />
+      
       <div className="flex w-full justify-center px-4 relative">
         {!execAccess && (
         <div className="flex space-x-10">
@@ -333,7 +331,7 @@ const AvailabilityCalendar: React.FC<{ id: string | null, accFrmExec : boolean |
           </Button>
           <Button
             onClick={onSubmit}
-            className="w-32 bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded text-xs"
+            className="w-32 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-xs"
           >
             Submit Schedule
           </Button>

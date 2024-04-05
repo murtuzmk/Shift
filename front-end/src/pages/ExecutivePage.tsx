@@ -107,18 +107,18 @@ function ExecutivePage() {
         <Message />
       </div>
 
-      <div className="flex flex-row items-center">
+      <div className="flex flex-row items-center ml-20">
 
-        <div className="w-1/5 mr-2">
+        <div className="w-1/5 ml-10">
           <div className = "flex flex-col">
             <Notepad/>
             <div className = "flex flex-row items-center justify-start mt-2">
               <Button
                 type="button"
-                className="w-full h-full bg-blue-500 hover:bg-blue-700 text-white font-medium text-lg px-3 py-5 rounded mr-5"
+                className="w-full h-full bg-blue-500 hover:bg-blue-700 text-white font-medium text-lg px-5 py-5 rounded mr-5"
                 onSubmit={generateReport}
                 >
-                Generate Report
+                Generate
               </Button>
                 <Dropdown
                   options={typeofReportOptions}

@@ -106,9 +106,17 @@ function ExecutivePage() {
       <div className="ml-5"> {/* Adjust the ml-* class as needed for desired spacing */}
         <Message />
       </div>
-
+      <div className="right mr-5 flex flex-row">
+        <TextField 
+          label="Min Days: "
+          onChange={handleInputChange}
+          currentValue={currentValue}
+          onSubmit={handleSubmit}
+        />
+                  
+      </div>
       <div className="flex flex-row items-center ml-20">
-
+      
         <div className="w-1/5 ml-10">
           <div className = "flex flex-col">
             <Notepad/>
@@ -126,7 +134,7 @@ function ExecutivePage() {
             </div>
           </div>
         </div>
-
+        
         <div className="flex flex-1 flex-col items-center justify-center mt-8">
         <label className = "-mt-0"> RA Availability:</label>
         <div className = "mb-2">
@@ -136,23 +144,22 @@ function ExecutivePage() {
           <div className="mt-2.5">
             <Button
               type="button"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-medium text-lg px-5 py-2 rounded"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-medium text-lg px-5 py-2 rounded ml-2" // Adjust the ml-* class as needed for desired spacing
               onSubmit={handleREASubmit}
             >
               Assign {currRa} this Schedule
             </Button>
           </div>
+          <div className="mt-2.5">
+            <Button
+            type="button"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-medium text-lg px-5 py-2 rounded"
+            >Assign Random Schedule</Button>
+          </div>
         </div>
       </div>
       
-      <div className="absolute right-5 mr-10 flex flex-row">
-        <TextField 
-          label="Min Days: "
-          onChange={handleInputChange}
-          currentValue={currentValue}
-          onSubmit={handleSubmit}
-        />          
-      </div>
+      
        <ViewClockedIn />
       <div className="bottom-0">
       </div>

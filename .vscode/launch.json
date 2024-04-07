@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Chat",
+            "request": "launch",
+            "mainClass": "com.shiftbackend.shiftbackend.Chat",
+            "projectName": "shift-back-end"
+        },
+        {
+            "type": "java",
             "name": "Main",
             "request": "launch",
             "mainClass": "com.shiftbackend.shiftbackend.Main",

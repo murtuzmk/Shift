@@ -12,7 +12,6 @@ interface ToggleSwitchProps {
 const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ checked, onChange, id}) => {
 
   return (
-    <>
       <StyledLabel htmlFor={id} checked={checked}>
         <input
           id= {id}
@@ -22,7 +21,6 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ checked, onChange, id}) => 
           style={{ opacity: 0, width: 0, height: 0 }}
         />
       </StyledLabel>
-    </>
   );
 };
 

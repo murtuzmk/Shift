@@ -9,6 +9,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import React from "react";
 
 import { ViewClockedIn } from "../components/ViewClockedIn";
+import ToggleSwitch from "@/components/themes/ToggleSwitch";
 
 /*
  *  This is the Executive Page, where the executive can view the RA schedules and assign them to RAs.

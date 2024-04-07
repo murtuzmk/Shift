@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Image, Input } from "@chakra-ui/react";
+import { Button, FormControl, FormLabel, Image, Input, Select } from "@chakra-ui/react";
 import { useUser } from "../hooks/useUser";
 import { useContext, useEffect, useState } from "react";
 import UserDataContext from "../context/UserDataContext";
@@ -43,6 +43,28 @@ const Settings = () => {
                 placeholder={user?.name}
                 className="text-gray-900 !text-sm !bg-gray-50 !border !border-gray-300 focus:!ring-4"
               />
+            </FormControl>
+
+            <FormControl>
+              <FormLabel> Notification Preference</FormLabel>
+              <Select
+                placeholder="Select Option"
+                className="text-gray-900 !text-sm !bg-gray-50 !border !border-gray-300 focus:!ring-4">
+                <option value="email">Email</option>
+                <option value="sms">SMS</option>
+                <option value="both">Both</option>
+              </Select>
+            </FormControl>
+
+              <FormControl>
+              <FormLabel>Notification Times</FormLabel>
+              <Select
+                placeholder="Select Option"
+                className="text-gray-900 !text-sm !bg-gray-50 !border !border-gray-300 focus:!ring-4">
+                <option value="1 Week">1 Week Prior</option>
+                <option value="3 Days">3 Days Prior</option>
+                <option value="1 Day">1 Day Prior</option>
+              </Select>
             </FormControl>
           </div>
           <Button className="!bg-blue-700 hover:!bg-blue-800 focus:ring-4 !font-semibold !text-base !text-white w-fit">

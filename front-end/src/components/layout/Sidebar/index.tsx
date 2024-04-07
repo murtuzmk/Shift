@@ -9,6 +9,7 @@ import {
   MessageCircleMore,
   UsersRound,
   UserRoundPlus,
+  Settings,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import SidebarLink from "./SidebarLink";
@@ -76,6 +77,9 @@ const Sidebar = () => {
             )}
             <SidebarLink to="#" Icon={MessageCircleMore}>
               Messages
+            </SidebarLink>
+            <SidebarLink to="settings" Icon={Settings}>
+              Settings
             </SidebarLink>
           </nav>
         </div>

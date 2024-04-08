@@ -308,4 +308,25 @@ public class ResidentAssistantController {
         return new ResponseEntity<String>(buffer.toString(), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/report-ra/{raId}")
+    public ResponseEntity<String> reportRAInRA(@PathVariable String id, @PathVariable String raId) {
+        
+        ra.loadAccountFile(raId);
+        ra.reportUser();
+        ra.saveAccountFile();
+        
+        return new ResponseEntity<String>("RA Id: " + raId + " Reported", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/report-rea/{reaId}")
+    public ResponseEntity<String> reportREAInRA(@PathVariable String id, @PathVariable String reaId) {
+        
+        ResidentEducationAssistant rea = new ResidentEducationAssistant();
+        rea.loadAccountFile(reaId);
+        rea.reportUser();
+        rea.saveAccountFile();
+        
+        return new ResponseEntity<String>("REA Id: " + reaId + " Reported", HttpStatus.OK);
+    }
+
 }

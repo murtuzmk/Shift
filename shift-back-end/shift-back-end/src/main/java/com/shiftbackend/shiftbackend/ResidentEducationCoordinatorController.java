@@ -554,4 +554,80 @@ public class ResidentEducationCoordinatorController {
         return new ResponseEntity<String>(buffer.toString(), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/report-ra/{raId}")
+    public ResponseEntity<String> reportRAInREC(@PathVariable String id, @PathVariable String raId) {
+
+        ResidentEducationAssistant ra = new ResidentEducationAssistant();
+        ra.loadAccountFile(raId);
+        ra.reportUser();
+        ra.saveAccountFile();
+        
+        return new ResponseEntity<String>("RA Id: " + raId + " Reported", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/false-report-ra/{raId}")
+    public ResponseEntity<String> falseReportRAInREC(@PathVariable String id, @PathVariable String raId) {
+        
+        ResidentEducationAssistant ra = new ResidentEducationAssistant();
+        ra.loadAccountFile(raId);
+        ra.falseReport();
+        ra.saveAccountFile();
+        
+        return new ResponseEntity<String>(raId + " Report Nullified", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/clear-reports-ra/{raId}")
+    public ResponseEntity<String> clearReportsRAInREC(@PathVariable String id, @PathVariable String raId) {
+        
+        ResidentEducationAssistant ra = new ResidentEducationAssistant();
+        ra.loadAccountFile(raId);
+        ra.resetReports();
+        ra.saveAccountFile();
+        
+        return new ResponseEntity<String>(raId + " Reports Reset", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/report-rea/{reaId}")
+    public ResponseEntity<String> reportREAInREC(@PathVariable String id, @PathVariable String reaId) {
+        
+        ResidentEducationAssistant rea = new ResidentEducationAssistant();
+        rea.loadAccountFile(reaId);
+        rea.reportUser();
+        rea.saveAccountFile();
+        
+        return new ResponseEntity<String>("REA Id: " + reaId + " Reported", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/false-report-rea/{reaId}")
+    public ResponseEntity<String> falseReportREAInREC(@PathVariable String id, @PathVariable String reaId) {
+        
+        ResidentEducationAssistant rea = new ResidentEducationAssistant();
+        rea.loadAccountFile(reaId);
+        rea.falseReport();
+        rea.saveAccountFile();
+        
+        return new ResponseEntity<String>(reaId + " Report Nullified", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/clear-reports-rea/{reaId}")
+    public ResponseEntity<String> clearReportsREAInREC(@PathVariable String id, @PathVariable String reaId) {
+        
+        ResidentEducationAssistant rea = new ResidentEducationAssistant();
+        rea.loadAccountFile(reaId);
+        rea.resetReports();
+        rea.saveAccountFile();
+        
+        return new ResponseEntity<String>(reaId + " Reports Reset", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/report-rec/{recId}")
+    public ResponseEntity<String> reportRECInREC(@PathVariable String id, @PathVariable String recId) {
+        
+        rec.loadAccountFile(recId);
+        rec.reportUser();
+        rec.saveAccountFile();
+        
+        return new ResponseEntity<String>("REC Id: " + recId + " Reported", HttpStatus.OK);
+    }
+
 }

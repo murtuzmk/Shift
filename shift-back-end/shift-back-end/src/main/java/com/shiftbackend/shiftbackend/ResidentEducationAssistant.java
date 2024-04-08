@@ -78,6 +78,7 @@ public class ResidentEducationAssistant extends ResidentAssistant{
             this.setFloor(raAttributes[0]);
             this.setClockedIn(Boolean.parseBoolean(raAttributes[1]));
             this.setReaId(raAttributes[2]);
+            this.setReported(Integer.parseInt(personAttributes[3]));
 
             // Load Preferences
             this.getPreferences().clear();
@@ -121,7 +122,7 @@ public class ResidentEducationAssistant extends ResidentAssistant{
             PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
 
             pw.println(this.getName() + "|" + this.getEmail() + "|" + this.getGender() + "|" + this.getHall() + "|" + this.isEnabled() + "|" + this.getTimezone());
-            pw.println(this.getFloor() + "|" + this.isClockedIn() + "|" + this.getTimezone());
+            pw.println(this.getFloor() + "|" + this.isClockedIn() + "|" + this.getTimezone() + "|" + this.getReports());
 
             for (int i = 0; i < getPreferences().size(); i++) {
                 if (i != 0) {

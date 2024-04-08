@@ -1,0 +1,8 @@
+Alex|alecks@gmail.com|123|RA|CARY
+Bob|bobert@gmail.com|456|REA|CARY
+Deck|cardss@gmail.com|1230|RA|CARY
+Extra|terrestrial@gmail.com|1231|RA|CARY
+Cab|taxi@gmail.com|789|REC|WINDSOR
+Dummy1|dummy1@gmail.com|1238|RA|WINDSOR
+Dummy2|dummy1@gmail.com|1239|REA|WINDSOR
+Dummy3|dummy3@gmail.com|1240|RA|WINDSOR

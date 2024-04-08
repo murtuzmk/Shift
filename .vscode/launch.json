@@ -1,0 +1,36 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Chat",
+            "request": "launch",
+            "mainClass": "com.shiftbackend.shiftbackend.Chat",
+            "projectName": "shift-back-end"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "com.shiftbackend.shiftbackend.Main",
+            "projectName": "shift-back-end"
+        },
+        {
+            "type": "java",
+            "name": "ShiftBackEndApplication",
+            "request": "launch",
+            "mainClass": "com.shiftbackend.shiftbackend.ShiftBackEndApplication",
+            "projectName": "shift-back-end"
+        },
+        {
+            "name": "Docker Node.js Launch",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "platform": "node",
+            "node": {
+                "package": "${workspaceFolder}/front_end/package.json",
+                "localRoot": "${workspaceFolder}/front_end"
+            }
+        }
+    ]
+}

@@ -494,4 +494,58 @@ public class ResidentEducationAssistantController {
         return new ResponseEntity<String>(buffer.toString(), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/report-ra/{raId}")
+    public ResponseEntity<String> reportRAInREA(@PathVariable String id, @PathVariable String raId) {
+
+        ResidentEducationAssistant ra = new ResidentEducationAssistant();
+        ra.loadAccountFile(raId);
+        ra.reportUser();
+        ra.saveAccountFile();
+        
+        return new ResponseEntity<String>("RA Id: " + raId + " Reported", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/false-report-ra/{raId}")
+    public ResponseEntity<String> falseReportRAInREA(@PathVariable String id, @PathVariable String raId) {
+        
+        ResidentEducationAssistant ra = new ResidentEducationAssistant();
+        ra.loadAccountFile(raId);
+        ra.falseReport();
+        ra.saveAccountFile();
+        
+        return new ResponseEntity<String>(raId + " Report Nullified", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/clear-reports-ra/{raId}")
+    public ResponseEntity<String> clearReportsRAInREA(@PathVariable String id, @PathVariable String raId) {
+        
+        ResidentEducationAssistant ra = new ResidentEducationAssistant();
+        ra.loadAccountFile(raId);
+        ra.resetReports();
+        ra.saveAccountFile();
+        
+        return new ResponseEntity<String>(raId + " Reports Reset", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/report-rea/{reaId}")
+    public ResponseEntity<String> reportREAInREA(@PathVariable String id, @PathVariable String reaId) {
+        
+        rea.loadAccountFile(reaId);
+        rea.reportUser();
+        rea.saveAccountFile();
+        
+        return new ResponseEntity<String>("REA Id: " + reaId + " Reported", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/report-rec/{recId}")
+    public ResponseEntity<String> reportRECInREA(@PathVariable String id, @PathVariable String recId) {
+        
+        ResidentEducationCoordinator rec = new ResidentEducationCoordinator();
+        rec.loadAccountFile(recId);
+        rec.reportUser();
+        rec.saveAccountFile();
+        
+        return new ResponseEntity<String>("REC Id: " + recId + " Reported", HttpStatus.OK);
+    }
+
 }

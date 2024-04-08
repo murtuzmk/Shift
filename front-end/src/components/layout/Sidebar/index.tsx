@@ -9,12 +9,33 @@ import {
   MessageCircleMore,
   UsersRound,
   UserRoundPlus,
+  Settings,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import SidebarLink from "./SidebarLink";
 import { logoIconLight } from "@/assets";
+import { useAuth0 } from "@auth0/auth0-react";
+import UserDataContext from "@/context/UserDataContext";
+import { useContext, useEffect, useState } from "react";
 
 const Sidebar = () => {
+  const { user, isLoading } = useAuth0();
+  const { getUserRole }: any = useContext(UserDataContext);
+  const [isExecutive, setIsExecutive] = useState(false);
+
+  useEffect(() => {
+    user && (async () => {
+      const userRole = await getUserRole(user?.sub);
+      if (userRole == "Resident Education Assistant" || userRole == "Resident Education Coordinator") {
+        setIsExecutive(true);
+      }
+    })();
+  }, [user]);
+
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
+
   return (
     <div className="hidden border-r bg-muted/40 md:block">
       <div className="flex h-full max-h-screen flex-col gap-2">
@@ -38,20 +59,27 @@ const Sidebar = () => {
             <SidebarLink to="employees" Icon={BriefcaseBusiness}>
               Employees
             </SidebarLink>
+            {isExecutive && (
             <SidebarLink to="executivepage" Icon={CalendarPlus}>
               Executive Page
             </SidebarLink>
+            )}
             <SidebarLink to="co-workers" Icon={UsersRound}>
               Co-workers
             </SidebarLink>
             <SidebarLink to="availability" Icon={CalendarDays}>
-              Availability
+              {isExecutive ? "Shifts" : "Availability"}
             </SidebarLink>
+            {isExecutive && (
             <SidebarLink to="create-ra-account" Icon={UserRoundPlus}>
               Create RA Account
             </SidebarLink>
+            )}
             <SidebarLink to="#" Icon={MessageCircleMore}>
               Messages
+            </SidebarLink>
+            <SidebarLink to="settings" Icon={Settings}>
+              Settings
             </SidebarLink>
           </nav>
         </div>

@@ -6,6 +6,7 @@ import { HiCalendar, HiMiniInboxArrowDown } from "react-icons/hi2";
 import { MdSpaceDashboard } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import UserDataContext from "../context/UserDataContext";
+import React from "react";
 
 const Sidebar = () => {
   const { user, isLoading } = useAuth0();
@@ -30,7 +31,7 @@ const Sidebar = () => {
     return <h1>Loading...</h1>;
   }
   return (
-    <div className="bg-gray-50 w-64 border-r border-gray-300 flex flex-col gap-3">
+    <div className="!bg-gray-50 dark:!bg-slate-600 w-64 border-r border-gray-300 flex flex-col gap-3">
       <div className="flex flex-col p-3 gap-3">
         <Button
           leftIcon={
@@ -40,7 +41,7 @@ const Sidebar = () => {
               _groupHover={{ fill: "gray.600" }}
             />
           }
-          className="!bg-gray-50 hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
+          className="!bg-gray-50 dark:!bg-slate-600 !text-black dark:!text-white hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
           role="group"
           onClick={() => navigate("dashboard")}
         >
@@ -54,12 +55,13 @@ const Sidebar = () => {
               _groupHover={{ fill: "gray.600" }}
             />
           }
-          className="!bg-gray-50 hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
+          className="!bg-gray-50 dark:!bg-slate-600 !text-black dark:!text-white hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
           role="group"
           onClick={() => navigate("availability")}
         >
-          Availability
+           {displayCAButton ? "Shifts" : "Availability"}
         </Button>
+        {displayCAButton && (
         <Button
           leftIcon={
             <Icon
@@ -68,12 +70,13 @@ const Sidebar = () => {
               _groupHover={{ fill: "gray.600" }}
             />
           }
-          className="!bg-gray-50 hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
+          className="!bg-gray-50 dark:!bg-slate-600 !text-black dark:!text-white hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
           role="group"
           onClick={() => navigate("executivepage")}
         >
           Executive
         </Button>
+        )}
         <Button
           leftIcon={
             <Icon
@@ -82,7 +85,7 @@ const Sidebar = () => {
               _groupHover={{ fill: "gray.600" }}
             />
           }
-          className="!bg-gray-50 hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
+          className="!bg-gray-50 dark:!bg-slate-600 !text-black dark:!text-white hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
           role="group"
         >
           Messages
@@ -96,7 +99,7 @@ const Sidebar = () => {
                 _groupHover={{ fill: "gray.600" }}
               />
             }
-            className="!bg-gray-50 hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
+            className="!bg-gray-50 dark:!bg-slate-600 !text-black dark:!text-white hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
             role="group"
             onClick={() => navigate("create-ra-account")}
           >
@@ -115,7 +118,7 @@ const Sidebar = () => {
               _groupHover={{ fill: "gray.600" }}
             />
           }
-          className="!bg-gray-50 hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
+          className="!bg-gray-50 dark:!bg-slate-600 !text-black dark:!text-white hover:!bg-gray-200 focus:ring-4 !font-medium !text-base !px-3 !justify-start"
           role="group"
           onClick={() => navigate("settings")}
         >

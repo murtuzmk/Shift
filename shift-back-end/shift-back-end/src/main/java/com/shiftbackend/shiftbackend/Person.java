@@ -1,5 +1,9 @@
 package com.shiftbackend.shiftbackend;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
 public class Person {
 
@@ -97,6 +101,123 @@ public class Person {
      */
     public void disableAccount() {
         enabled = false;
+    }
+
+    public void addUser() {
+        boolean exists = false;
+        File accounts = new File(System.getProperty("user.dir") + "/test_database", "allAccounts.txt");
+        try {
+
+            Scanner reader = new Scanner(accounts);
+            StringBuffer buffer = new StringBuffer();
+            
+            while (reader.hasNextLine()) {
+                buffer.append(reader.nextLine() + "\n");
+            }
+ 
+            reader.close();
+
+            String [] fileStrings = buffer.toString().split("\n");
+
+            PrintWriter pw = new PrintWriter(new FileOutputStream(accounts, false));
+
+            for (String user : fileStrings) {
+                String [] userInformation = user.split("[|]");
+                if (userInformation.length == 5) {
+                    if (this.getId().equals(userInformation[2])) {
+                        exists = true;
+                        pw.println(this.getName() + "|" + this.getEmail() + "|" + this.getId() +"|" + this.getRole() + "|" + this.getHall());
+                    }
+                    else {
+                        pw.println(user);
+                    }
+                }
+            }
+
+            if (!exists) {
+                pw.println(this.getName() + "|" + this.getEmail() + "|" + this.getId() +"|" + this.getRole() + "|" + this.getHall());
+            }
+
+            pw.close();
+        } catch (Exception e) {
+            System.out.println("Error in Account Saving");
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteUser() {
+        File accounts = new File(System.getProperty("user.dir") + "/test_database", "allAccounts.txt");
+        try {
+            Scanner reader = new Scanner(accounts);
+            StringBuffer buffer = new StringBuffer();
+            
+            while (reader.hasNextLine()) {
+                buffer.append(reader.nextLine() + "\n");
+            }
+ 
+            reader.close();
+
+            String [] fileStrings = buffer.toString().split("\n");
+
+            
+
+            PrintWriter pw = new PrintWriter(new FileOutputStream(accounts, false));
+
+            for (String user : fileStrings) {
+                String [] userInformation = user.split("[|]");
+                if (!this.getId().equals(userInformation[2])) {
+                    pw.println(user);
+                }
+        
+            }
+
+            pw.close();
+        } catch (Exception e) {
+            System.out.println("Error in Global Account Deletion");
+            e.printStackTrace();
+        }
+    }
+
+    public String findInHall(String role, String hall)  {
+
+        File accounts = new File(System.getProperty("user.dir") + "/test_database", "allAccounts.txt");
+        String returnString = "Error Finding Related Hall Users";
+        try {
+            Scanner reader = new Scanner(accounts);
+            StringBuilder buffer = new StringBuilder();
+            String line = "";
+            boolean first = true;
+
+            buffer.append("\"");
+            while (reader.hasNextLine()) {
+                line = reader.nextLine();
+                String [] userInformation = line.split("[|]");
+
+                if (userInformation[3].equals(role) && userInformation[4].equals(hall)) {
+                    if (!first) {
+                        buffer.append("|");
+                    }
+                    else {
+                        first = false;
+                    }
+                    
+
+                    buffer.append(userInformation[2]);
+                }
+                
+            }
+            buffer.append("\"");
+
+            returnString = buffer.toString();
+            
+            reader.close();
+        
+        } catch (Exception e) {
+            System.out.println("Error in Find In Hall");
+            e.printStackTrace();
+        }
+
+        return returnString;
     }
 
     /*------------------------ GETTERS & SETTERS ------------------------*/

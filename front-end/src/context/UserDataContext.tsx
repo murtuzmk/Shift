@@ -160,6 +160,118 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     return [response.user_id, response.email];
   };
 
+  const getUsers = async () => {
+    const data = await fetch(
+      `https://dev-e7jyddja3xm6p30e.us.auth0.com/api/v2/users`,
+      {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Accept: "application/json",
+          authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const response = await data.json();
+    const users = await response.map((user: any) => {
+      return {
+        id: user.user_id,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+      };
+    });
+    return users;
+  };
+
+  const getUsersWithRole = async (roleId: string) => {
+    const data = await fetch(
+      `https://dev-e7jyddja3xm6p30e.us.auth0.com/api/v2/roles/${roleId}/users`,
+      {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Accept: "application/json",
+          authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const response = await data.json();
+    return response;
+  };
+
+  const getRAs = async () => {
+    const data = await fetch(
+      `https://dev-e7jyddja3xm6p30e.us.auth0.com/api/v2/roles/rol_B4q5MnHKp5bAK3GZ/users`,
+      {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Accept: "application/json",
+          authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const response = await data.json();
+    const users = await response.map((user: any) => {
+      return {
+        id: user.user_id,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+      };
+    });
+    return users;
+  };
+
+  const getREAs = async () => {
+    const data = await fetch(
+      `https://dev-e7jyddja3xm6p30e.us.auth0.com/api/v2/roles/rol_TEPNE600izWN97kg/users`,
+      {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Accept: "application/json",
+          authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const response = await data.json();
+    const users = await response.map((user: any) => {
+      return {
+        id: user.user_id,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+      };
+    });
+    return users;
+  };
+
+  const getRECs = async () => {
+    const data = await fetch(
+      `https://dev-e7jyddja3xm6p30e.us.auth0.com/api/v2/roles/rol_dThVMHLWvXU9omdm/users`,
+      {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Accept: "application/json",
+          authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const response = await data.json();
+    const users = await response.map((user: any) => {
+      return {
+        id: user.user_id,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+      };
+    });
+    return users;
+  };
+
   return (
     <UserDataContext.Provider
       value={{
@@ -171,6 +283,11 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         getUserRole,
         createPassChangeTicket,
         createNewUser,
+        getUsers,
+        getUsersWithRole,
+        getRAs,
+        getREAs,
+        getRECs,
       }}
     >
       {children}

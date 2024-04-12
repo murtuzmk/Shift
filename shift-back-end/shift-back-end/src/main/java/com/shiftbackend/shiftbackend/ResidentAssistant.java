@@ -16,6 +16,7 @@ public class ResidentAssistant extends Person{
     private Schedule schedule = null;
     private String reaId = null;
     private int[] typesOfShifts = {0, 0, 0};
+    private int reported = 0;
     private ArrayList<String> preferences = null;
     private ArrayList<String> shiftDropRequests = null;
     private ArrayList<String> chatIds = null;
@@ -77,8 +78,14 @@ public class ResidentAssistant extends Person{
             this.setName(personAttributes[0]);
             this.setEmail(personAttributes[1]);
             this.setId(userId);
-            this.setGender(Person.Gender.valueOf(personAttributes[2]));
-            this.setHall(Person.Hall.valueOf(personAttributes[3]));
+
+            if (!personAttributes[2].equals("null")) {
+                this.setGender(Person.Gender.valueOf(personAttributes[2]));
+            }
+            if (!personAttributes[3].equals("null")) {
+                this.setHall(Person.Hall.valueOf(personAttributes[3]));
+            }
+
             this.setEnabled(Boolean.parseBoolean(personAttributes[4]));
             this.setTimezone(Integer.parseInt(personAttributes[5]));
 
@@ -90,8 +97,10 @@ public class ResidentAssistant extends Person{
             typesOfShifts[0] = Integer.parseInt(raAttributes[3]);
             typesOfShifts[1] = Integer.parseInt(raAttributes[4]);
             typesOfShifts[2] = Integer.parseInt(raAttributes[5]);
+            reported = Integer.parseInt(raAttributes[6]);
 
             // Load Preferences
+            preferences.clear();
             for (String day : days) {
                 if (!day.equals("")) {
                     preferences.add(day);
@@ -104,6 +113,7 @@ public class ResidentAssistant extends Person{
             // Load Chats
 
             // Load Drops
+            shiftDropRequests.clear();
             for (String request : shiftDrops) {
                 if (!request.equals("")) {
                     shiftDropRequests.add(request);
@@ -129,7 +139,7 @@ public class ResidentAssistant extends Person{
             PrintWriter pw = new PrintWriter(new FileOutputStream(userInformation, false));
 
             pw.println(this.getName() + "|" + this.getEmail() + "|" + this.getGender() + "|" + this.getHall() + "|" + this.isEnabled() + "|" + this.getTimezone());
-            pw.println(floor + "|" + clockedIn + "|" + reaId + "|" + typesOfShifts[0] + "|" + typesOfShifts[1] + "|" + typesOfShifts[2]);
+            pw.println(floor + "|" + clockedIn + "|" + reaId + "|" + typesOfShifts[0] + "|" + typesOfShifts[1] + "|" + typesOfShifts[2] + "|" + reported);
 
             for (int i = 0; i < preferences.size(); i++) {
                 if (i != 0) {
@@ -170,8 +180,9 @@ public class ResidentAssistant extends Person{
 
     public boolean deleteAccountFile() {
         String fileName = this.getRole() + "_" + this.getId() + ".txt";
-        File userInformation = new File(System.getProperty("user.dir"), fileName);
-        return (userInformation.delete() && schedule.deleteAccountFile(this.getId()));
+        File userInformation = new File(System.getProperty("user.dir") + "/test_database", fileName);
+       
+        return userInformation.delete() && schedule.deleteAccountFile(this.getId());
     }
 
     /*
@@ -271,6 +282,33 @@ public class ResidentAssistant extends Person{
         return typesOfShifts[0] + typesOfShifts[1] + typesOfShifts[2];
     }
 
+    /*
+     * Increments the counter 'reported' indicating that
+     * this user has been reported
+     *
+     * @return boolean: If the user's account has been disabled
+     */
+
+    public boolean reportUser() {
+        reported++;
+        if (reported == 3) {
+            disableAccount();
+            return true;
+        }
+        return false;
+    }
+
+    public void falseReport() {
+        if (!isEnabled()) {
+            enableAccount();
+        }
+        reported--;
+    }
+
+    public void resetReports() {
+        reported = 0;
+    }
+
     /*------------------------ GETTERS & SETTERS ------------------------*/
 
     public String getReaId() {
@@ -295,6 +333,14 @@ public class ResidentAssistant extends Person{
 
     public void setClockedIn(boolean clockedIn) {
         this.clockedIn = clockedIn;
+    }
+
+    public int getReports() {
+        return reported;
+    }
+
+    public void setReported(int reported) {
+        this.reported = reported;
     }
 
     public Schedule getSchedule() {

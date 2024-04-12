@@ -32,6 +32,7 @@ public class Schedule {
             return false;
         }
         try {
+            events.clear();
             Scanner reader = new Scanner(userInformation);
 
             while (reader.hasNextLine()) {
@@ -207,10 +208,32 @@ public class Schedule {
                 buffer.append("\"\n");
                 buffer.append("\"description\": \"" + event.getDescription());
                 buffer.append("\"\n");
-                buffer.append("\"startTime\": \"" + event.getStart().toString());
+                
+                buffer.append("\"startHour\": \"" + event.getStart().toString());
                 buffer.append("\"\n");
-                buffer.append("\"endTime\": \"" + event.getEnd().toString());
-                buffer.append("\"}\n");
+                buffer.append("\"startMinute\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"startMonth\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"startDay\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"startYear\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"startTimezone\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                
+                buffer.append("\"endHour\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"endMinute\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"endMonth\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"endDay\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"endYear\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"endTimezone\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
             }
         }
 
@@ -230,10 +253,32 @@ public class Schedule {
                 buffer.append("\"\n");
                 buffer.append("\"dutyLevel\": \"" + event.getDutyLevel());
                 buffer.append("\"\n");
-                buffer.append("\"startTime\": \"" + event.getStart().toString());
+
+                buffer.append("\"startHour\": \"" + event.getStart().toString());
                 buffer.append("\"\n");
-                buffer.append("\"endTime\": \"" + event.getEnd().toString());
-                buffer.append("\"}\n");
+                buffer.append("\"startMinute\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"startMonth\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"startDay\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"startYear\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"startTimezone\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                
+                buffer.append("\"endHour\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"endMinute\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"endMonth\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"endDay\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"endYear\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
+                buffer.append("\"endTimezone\": \"" + event.getStart().toString());
+                buffer.append("\"\n");
             }
         }
 

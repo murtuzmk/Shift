@@ -26,10 +26,33 @@ public class ResidentEducationCoordinatorController {
     @GetMapping("/{id}/delete")
     public ResponseEntity<String> deleteREC(@PathVariable String id) {
         rec.loadAccountFile(id);
+        rec.deleteUser();
         rec.deleteAccountFile();
         rec.deleteUserInformation();
         rec = new ResidentEducationCoordinator();
         return new ResponseEntity<String>("Deleted User: " + id, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/delete-rea/{reaId}")
+    public ResponseEntity<String> deleteREA(@PathVariable String id, @PathVariable String reaId) {
+        ResidentEducationAssistant rea = new ResidentEducationAssistant();
+        rea.loadAccountFile(reaId);
+        rea.deleteUser();
+        rea.deleteAccountFile();
+        rea.deleteUserInformation();
+        rea = new ResidentEducationAssistant();
+        return new ResponseEntity<String>("Deleted User: " + reaId, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/delete-ra/{raId}")
+    public ResponseEntity<String> deleteRAinREC(@PathVariable String id, @PathVariable String raId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        ra.deleteUser();
+        ra.deleteAccountFile();
+        ra.deleteUserInformation();
+        ra = new ResidentAssistant();
+        return new ResponseEntity<String>("Deleted User: " + raId, HttpStatus.OK);
     }
 
     @PostMapping("/{id}/set-name")
@@ -37,6 +60,7 @@ public class ResidentEducationCoordinatorController {
         rec.loadAccountFile(id);
         rec.setName(input.get("name"));
         rec.saveAccountFile();
+        rec.addUser();
 
         return new ResponseEntity<String>("Name Edited", HttpStatus.CREATED);
     }
@@ -46,6 +70,7 @@ public class ResidentEducationCoordinatorController {
         rec.loadAccountFile(id);
         rec.setEmail(input.get("email"));
         rec.saveAccountFile();
+        rec.addUser();
 
         return new ResponseEntity<String>("Email Edited", HttpStatus.CREATED);
     }
@@ -64,6 +89,7 @@ public class ResidentEducationCoordinatorController {
         rec.loadAccountFile(id);
         rec.setHall(Person.Hall.valueOf(input.get("hall")));
         rec.saveAccountFile();
+        rec.addUser();
 
         return new ResponseEntity<String>("Hall Edited", HttpStatus.CREATED);
     }
@@ -115,7 +141,7 @@ public class ResidentEducationCoordinatorController {
     }
 
     @GetMapping("/{id}/disable-rea/{reaId}")
-    public ResponseEntity<String> diableREAFromREA(@PathVariable String id, @PathVariable String reaId) {
+    public ResponseEntity<String> disableREAFromREA(@PathVariable String id, @PathVariable String reaId) {
         ResidentEducationAssistant rea = new ResidentEducationAssistant();
         rea.loadAccountFile(reaId);
         rea.disableAccount();
@@ -125,9 +151,9 @@ public class ResidentEducationCoordinatorController {
     }
 
     @GetMapping("/{id}/disable-ra/{raId}")
-    public ResponseEntity<String> diableRAFromREA(@PathVariable String id) {
+    public ResponseEntity<String> disableRAFromREA(@PathVariable String id, @PathVariable String raId) {
         ResidentAssistant ra = new ResidentAssistant();
-        ra.loadAccountFile(id);
+        ra.loadAccountFile(raId);
         ra.disableAccount();
         ra.saveAccountFile();
 
@@ -154,8 +180,47 @@ public class ResidentEducationCoordinatorController {
         rec.setEnabled(Boolean.parseBoolean(input.get("enabled")));
         rec.setFloor(input.get("floor"));
         rec.saveAccountFile();
+        rec.addUser();
 
         return new ResponseEntity<String>("Basic Attributes Set", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{id}/create-account")
+    public ResponseEntity<String> createREC(@PathVariable String id, @RequestBody Map<String, String> input) {
+        rec.loadAccountFile(id);
+        rec.setName(input.get("name"));
+        rec.setEmail(input.get("email"));
+        rec.setId(input.get("inputId"));
+        rec.setEnabled(Boolean.parseBoolean(input.get("enabled")));
+        rec.saveAccountFile();
+        rec.addUser();
+
+        return new ResponseEntity<String>("New REA Account Created", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{id}/create-welcome-message")
+    public ResponseEntity<String> createWelcomeMessageREC(@PathVariable String id, @RequestBody Map<String, String> input) {
+        rec.loadAccountFile(id);
+        rec.createWelcomeMessage(input.get("message"));
+        rec.saveAccountFile();
+        
+        return new ResponseEntity<String>("Welcome Message Created", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/get-welcome-message")
+    public ResponseEntity<String> getWelcomeMessageREC(@PathVariable String id) {
+        rec.loadAccountFile(id);
+        
+        return new ResponseEntity<String>(rec.getWelcomeMessage(), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/delete-welcome-message")
+    public ResponseEntity<String> deleteWelcomeMessageREC(@PathVariable String id) {
+        rec.loadAccountFile(id);
+        rec.deleteWelcomeMessage();
+        rec.saveAccountFile();
+        
+        return new ResponseEntity<String>("Welcome Message Deleted", HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}/add-ra/{raId}")
@@ -472,6 +537,97 @@ public class ResidentEducationCoordinatorController {
         rec.getSchedule().deleteEventMonth(Integer.parseInt(input.get("month")), Integer.parseInt(input.get("year")), Integer.parseInt(input.get("timezone")));
         rec.saveAccountFile();
         return new ResponseEntity<String>("Deleted Month", HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/find-user-in-hall")
+    public ResponseEntity<String> findIdsInHallRA(@PathVariable String id, @RequestBody Map<String, String> input) {
+        
+        StringBuilder buffer = new StringBuilder();
+        buffer.append("{ \"raIds\" : ");
+        buffer.append(rec.findInHall("RA", input.get("hall")));
+        buffer.append("\n\"reaIds\" : ");
+        buffer.append(rec.findInHall("REA", input.get("hall")));
+        buffer.append("\n\"recIds\" : ");
+        buffer.append(rec.findInHall("REC", input.get("hall")));
+        buffer.append(" }");
+        
+        return new ResponseEntity<String>(buffer.toString(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/report-ra/{raId}")
+    public ResponseEntity<String> reportRAInREC(@PathVariable String id, @PathVariable String raId) {
+
+        ResidentEducationAssistant ra = new ResidentEducationAssistant();
+        ra.loadAccountFile(raId);
+        ra.reportUser();
+        ra.saveAccountFile();
+        
+        return new ResponseEntity<String>("RA Id: " + raId + " Reported", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/false-report-ra/{raId}")
+    public ResponseEntity<String> falseReportRAInREC(@PathVariable String id, @PathVariable String raId) {
+        
+        ResidentEducationAssistant ra = new ResidentEducationAssistant();
+        ra.loadAccountFile(raId);
+        ra.falseReport();
+        ra.saveAccountFile();
+        
+        return new ResponseEntity<String>(raId + " Report Nullified", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/clear-reports-ra/{raId}")
+    public ResponseEntity<String> clearReportsRAInREC(@PathVariable String id, @PathVariable String raId) {
+        
+        ResidentEducationAssistant ra = new ResidentEducationAssistant();
+        ra.loadAccountFile(raId);
+        ra.resetReports();
+        ra.saveAccountFile();
+        
+        return new ResponseEntity<String>(raId + " Reports Reset", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/report-rea/{reaId}")
+    public ResponseEntity<String> reportREAInREC(@PathVariable String id, @PathVariable String reaId) {
+        
+        ResidentEducationAssistant rea = new ResidentEducationAssistant();
+        rea.loadAccountFile(reaId);
+        rea.reportUser();
+        rea.saveAccountFile();
+        
+        return new ResponseEntity<String>("REA Id: " + reaId + " Reported", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/false-report-rea/{reaId}")
+    public ResponseEntity<String> falseReportREAInREC(@PathVariable String id, @PathVariable String reaId) {
+        
+        ResidentEducationAssistant rea = new ResidentEducationAssistant();
+        rea.loadAccountFile(reaId);
+        rea.falseReport();
+        rea.saveAccountFile();
+        
+        return new ResponseEntity<String>(reaId + " Report Nullified", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/clear-reports-rea/{reaId}")
+    public ResponseEntity<String> clearReportsREAInREC(@PathVariable String id, @PathVariable String reaId) {
+        
+        ResidentEducationAssistant rea = new ResidentEducationAssistant();
+        rea.loadAccountFile(reaId);
+        rea.resetReports();
+        rea.saveAccountFile();
+        
+        return new ResponseEntity<String>(reaId + " Reports Reset", HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/report-rec/{recId}")
+    public ResponseEntity<String> reportRECInREC(@PathVariable String id, @PathVariable String recId) {
+        
+        rec.loadAccountFile(recId);
+        rec.reportUser();
+        rec.saveAccountFile();
+        
+        return new ResponseEntity<String>("REC Id: " + recId + " Reported", HttpStatus.OK);
     }
 
 }

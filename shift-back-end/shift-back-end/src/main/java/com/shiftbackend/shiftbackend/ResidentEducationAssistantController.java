@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.shiftbackend.shiftbackend.Shift.DutyLevel;
+
 import java.util.Map;
 
 
@@ -90,6 +92,14 @@ public class ResidentEducationAssistantController {
         ra.loadAccountFile(raId);
         
         return new ResponseEntity<String>("" + ra.isClockedIn(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/is-ra-enabled/{raId}")
+    public ResponseEntity<String> isRAEnabledInREA(@PathVariable String id, @PathVariable String raId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+        
+        return new ResponseEntity<String>("" + ra.isEnabled(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/enable")
@@ -365,20 +375,20 @@ public class ResidentEducationAssistantController {
     }
 
     @PostMapping("/{id}/ra/{raId}/add-shift/{eventId}")
-    public ResponseEntity<String> addRAShiftREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> addRAShiftREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId) {
         rea.loadAccountFile(id);
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
-        String title = input.get("title");
-        String description = input.get("description");
-        TimeBlock startTime = new TimeBlock(Integer.parseInt(input.get("startHour")), Integer.parseInt(input.get("startMinute")),
-                                            Integer.parseInt(input.get("startMonth")), Integer.parseInt(input.get("startDay")),
-                                            Integer.parseInt(input.get("startYear")), Integer.parseInt(input.get("startTimezone")));
-        TimeBlock endTime = new TimeBlock(Integer.parseInt(input.get("endHour")), Integer.parseInt(input.get("endMinute")),
-                                          Integer.parseInt(input.get("endMonth")), Integer.parseInt(input.get("endDay")),
-                                          Integer.parseInt(input.get("endYear")), Integer.parseInt(input.get("endTimezone")));
-        ra.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, (input.get("dutyLevel").equals("null")) ? null :Shift.DutyLevel.valueOf(input.get("dutyLevel"))));
+        String title = rea.getSchedule().getEvent(eventId).getTitle();
+        String description = rea.getSchedule().getEvent(eventId).getDescription();
+        TimeBlock startTime = rea.getSchedule().getEvent(eventId).getStart();
+        TimeBlock endTime = rea.getSchedule().getEvent(eventId).getEnd();
+        DutyLevel dutyLevel = rea.getSchedule().getEvent(eventId).getDutyLevel();
+
+        rea.getSchedule().getEvent(eventId).incAvailability();
+
+        ra.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, dutyLevel));
         ra.saveAccountFile();
         return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
@@ -408,6 +418,9 @@ public class ResidentEducationAssistantController {
         ra.getSchedule().deleteShift(eventId);
         ra.deleteShiftDropRequest(eventId);
         ra.saveAccountFile();
+
+        rea.getSchedule().getEvent(eventId).decAvailability();
+
         return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
 
@@ -424,9 +437,30 @@ public class ResidentEducationAssistantController {
                                           Integer.parseInt(input.get("endYear")), Integer.parseInt(input.get("endzone")));
 
                                           
-        rea.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, Shift.DutyLevel.valueOf(input.get("dutyLevel"))));
+        rea.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, Shift.DutyLevel.valueOf(input.get("dutyLevel")), Integer.parseInt(input.get("availability"))));
         rea.saveAccountFile();
         return new ResponseEntity<String>(rea.getSchedule().getEvents(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/get-events")
+    public ResponseEntity<String> getEventsREA(@PathVariable String id) {
+        rea.loadAccountFile(id);
+
+        return new ResponseEntity<String>(rea.getSchedule().getEvents(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/get-shifts")
+    public ResponseEntity<String> getShiftsREA(@PathVariable String id) {
+        rea.loadAccountFile(id);
+
+        return new ResponseEntity<String>(rea.getSchedule().getShifts(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/get-availablity/{eventId}")
+    public ResponseEntity<String> getAvailabilityREA(@PathVariable String id, @PathVariable String eventId) {
+        rea.loadAccountFile(id);
+
+        return new ResponseEntity<String>("" + rea.getSchedule().getEvent(eventId).getAvailability(), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/create-event/{eventId}")

@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.shiftbackend.shiftbackend.Shift.DutyLevel;
+
 import java.util.Map;
 
 @RestController
@@ -262,17 +264,21 @@ public class ResidentAssistantController {
     }
 
     @PostMapping("/{id}/add-shift/{eventId}")
-    public ResponseEntity<String> addShiftRA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String> addShiftRA(@PathVariable String id, @PathVariable String eventId) {
         ra.loadAccountFile(id);
-        String title = input.get("title");
-        String description = input.get("description");
-        TimeBlock startTime = new TimeBlock(Integer.parseInt(input.get("startHour")), Integer.parseInt(input.get("startMinute")),
-                                            Integer.parseInt(input.get("startMonth")), Integer.parseInt(input.get("startDay")),
-                                            Integer.parseInt(input.get("startYear")), Integer.parseInt(input.get("startTimezone")));
-        TimeBlock endTime = new TimeBlock(Integer.parseInt(input.get("endHour")), Integer.parseInt(input.get("endMinute")),
-                                          Integer.parseInt(input.get("endMonth")), Integer.parseInt(input.get("endDay")),
-                                          Integer.parseInt(input.get("endYear")), Integer.parseInt(input.get("endTimezone")));
-        ra.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, (input.get("dutyLevel").equals("null")) ? null :Shift.DutyLevel.valueOf(input.get("dutyLevel"))));
+        ResidentEducationAssistant rea = new ResidentEducationAssistant();
+        rea.loadAccountFile(ra.getReaId());
+        
+
+        String title = rea.getSchedule().getEvent(eventId).getTitle();
+        String description = rea.getSchedule().getEvent(eventId).getDescription();
+        TimeBlock startTime = rea.getSchedule().getEvent(eventId).getStart();
+        TimeBlock endTime = rea.getSchedule().getEvent(eventId).getEnd();
+        DutyLevel dutyLevel = rea.getSchedule().getEvent(eventId).getDutyLevel();
+
+        rea.getSchedule().getEvent(eventId).incAvailability();
+
+        ra.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, dutyLevel));
         ra.saveAccountFile();
         return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }

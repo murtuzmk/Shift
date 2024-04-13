@@ -54,6 +54,7 @@ public class Schedule {
                 tempEvent.setTitle(eventAttributes[1]);
                 tempEvent.setDescription(eventAttributes[2]);
                 tempEvent.setDutyLevel(Shift.DutyLevel.valueOf(eventAttributes[3]));
+                tempEvent.setAvailability(Integer.parseInt(eventAttributes[4]));
                 tempEvent.setStart(startTime);
                 tempEvent.setEnd(endTime);
 
@@ -79,7 +80,7 @@ public class Schedule {
 
             if (events != null) {
                 for (Shift event : events) {
-                    pw.println(event.getId() + "|" + event.getTitle() + "|" + event.getDescription() + "|" + event.getDutyLevel());
+                    pw.println(event.getId() + "|" + event.getTitle() + "|" + event.getDescription() + "|" + event.getDutyLevel() + "|" + event.getAvailability());
                     pw.println(event.getStart().storageString());
                     pw.println(event.getEnd().storageString());
                 }
@@ -196,6 +197,16 @@ public class Schedule {
     }
 
     /*------------------------ GETTERS & SETTERS ------------------------*/
+
+    public Shift getEvent(String eventId) {
+        for (Shift event : events) {
+            if (eventId.equals(event.getId())) {
+                return event;
+            }
+        }
+        
+        return null;
+    }
 
     public String getEvents() {
         StringBuilder buffer = new StringBuilder();

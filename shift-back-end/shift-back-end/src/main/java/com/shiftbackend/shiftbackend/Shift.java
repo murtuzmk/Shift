@@ -19,9 +19,23 @@ public class Shift {
     private TimeBlock end = null;
     private DutyLevel dutyLevel = null;
 
+    // For REAs only
+
+    private int availability = 0;
+
     /* ------------------------ CONSTRUCTORS ------------------------ */
 
     public Shift() {}
+
+    public Shift(String id, String title, String description, TimeBlock start, TimeBlock end, DutyLevel dutyLevel, int availability) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.start = start;
+        this.end = end;
+        this.dutyLevel = dutyLevel;
+        this.availability = availability;
+    }
 
     public Shift(String id, String title, String description, TimeBlock start, TimeBlock end, DutyLevel dutyLevel) {
         this.id = id;
@@ -82,6 +96,22 @@ public class Shift {
 
     public void setDutyLevel(DutyLevel dutyLevel) {
         this.dutyLevel = dutyLevel;
+    }
+
+    public int getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(int availability) {
+        this.availability = availability;
+    }
+
+    public void incAvailability() {
+        availability++;
+    }
+
+    public void decAvailability() {
+        availability--;
     }
 
     /*------------------------ TOSTRING ------------------------*/

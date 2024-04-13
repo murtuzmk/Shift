@@ -1,39 +1,23 @@
-import React from 'react';
-import { Card, CardContent } from "@/components/ui/card"
-import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-  } from "@/components/ui/carousel"
+import React,  { useEffect, useState }  from 'react';
+import { ScrollArea } from "@/components/ui/scroll-area"
 
+const RAWelcome: React.FC = () => {
+    const [rules, setRules] = useState('');
 
-  const RAWelcome: React.FC = () => {
+    // fetch welcome message based on the rec that is in charge of the RA's place
+    // Additionally add functionality that will only display a path on sidebar if the user is a RA
     return (
-        <div className="flex justify-center items-center min-h-screen w-full">
-            <Carousel className="w-full max-w-xs">
-                <CarouselContent>
-                    <CarouselItem>
-                        <Card>
-                            <CardContent className="flex aspect-square items-center justify-center p-6">
-                                <span className="text-4xl font-semibold">{"WELCOME TO SHIFT RA!"}</span>
-                            </CardContent>
-                        </Card>
-                    </CarouselItem>
-                    <CarouselItem>
-                        <Card>
-                            <CardContent className="flex aspect-square items-center justify-center p-6">
-                                <span className="text-4xl font-semibold">{"The University Residences team welcomes you to their new workplace platform!"}</span>
-                            </CardContent>
-                        </Card>
-                    </CarouselItem>
-                </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
-            </Carousel>
-        </div>
+        //add a function that only renders this for RA's 
+      <div>
+        <img src="front-end/src/assets/shiftLogo.png" />
+        <h1>Residential Assistant Reminders! </h1>
+        <ScrollArea className="flex w-full rounded-md"> 
+          <div className="flex flex-col w-full">
+            // add list of rules of here
+            </div>
+            </ScrollArea>    
+      </div>
     );
-};
+  };
 
 export default RAWelcome;

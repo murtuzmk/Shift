@@ -20,6 +20,9 @@ interface Event {
   id: string;
   title: string;
 }
+interface Shift extends Event {
+  availability: boolean;
+}
 
 interface EventDialogProps {
   isOpen: boolean;
@@ -108,6 +111,17 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
     }
   }, []); 
 */
+  //TODO: Add a function to fetch shifts from the backend
+  const fetchShifts = () => {
+    // fetch shifts from the backend
+    //check if the shift is owned by the RA or No one, if it's neither it will not be added to the calendar
+    // make shift events
+    //add to the calendar
+    const shifts: Shift[] = []; //add shifts here
+    setEvents((prevEvents) => [...prevEvents, ...shifts]); // add shifts to the calendar
+  };
+
+  //TODO: Add eventStyleGetter to change the color of the events based on the availability of the RA in the shift
 
   const fetchEvents = () => {
     fetch("http://localhost:8080/ra/{id}/get-events")
@@ -155,6 +169,7 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
   /* obtain all saved events of the user */
   useEffect(() => {
     fetchEvents();
+    fetchShifts();
   }, []);
 
 /*  useEffect(() => {
@@ -166,7 +181,6 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
     console.log("importedEvents", importedEvents);
     return [...importedEvents, ...events];
   } , [importedEvents, events]);  
-  /* ask Murtuza idk what this does */
   useEffect(() => {
     onEventsChange(allevents);
   }, [allevents]);
@@ -234,6 +248,9 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
     editEvent(updatedEvent);
     setDialogOpen(false);
   };
+
+  // add function to compile array of conflicting events
+  // export conflicting events
 
   const handleDeleteEvent = () => {
     if (selectedEvent) {

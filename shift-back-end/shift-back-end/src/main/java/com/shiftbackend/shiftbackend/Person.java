@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class Person {
-
+    //RANDOM COMMENT FROM JENNA, IGNORE THIS
     /* ------------------------ ENUMS ------------------------ */
 
 

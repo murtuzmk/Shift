@@ -1,24 +1,40 @@
-import { useEffect, useState, useMemo} from "react";
+import { useEffect, useState, useMemo, MouseEventHandler} from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
-import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react";
+import { Button, Checkbox, CheckboxGroup, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack } from "@chakra-ui/react";
 import { Formik, Form, Field, FieldProps } from "formik";
 import { v4 as uuidv4 } from "uuid";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 const localizer = momentLocalizer(moment);
 import "./MyCalendar.css";
+import { set } from "react-hook-form";
 
 
 interface MyCalendarProps {
   importedEvents: Event[];
   onEventsChange: (events: Event[]) => void;
 }
+/* Debugging Example */
+const exampleEvent: Event = {
+  start: new Date(new Date().setHours(9, 0, 0, 0)), // Today at 9:00 AM
+  end: new Date(new Date().setHours(17, 0, 0, 0)), // Today at 5:00 PM
+  id: uuidv4(),
+  title: "Example Event",
+  isShift: true,
+};
 
+
+/* Added boolean isShift to Event interface, to determine whether an event is a shift or not
+ * This will be determined through the two different calls we do to read all events in using 
+ * get-events and get-shifts. When calling get events i will set the boolean to null so that
+ * when editing the event, if its a shift u can select drop
+ */
 interface Event {
   start: Date;
   end: Date;
   id: string;
   title: string;
+  isShift: boolean;
 }
 
 interface EventDialogProps {
@@ -28,6 +44,18 @@ interface EventDialogProps {
   onDelete: () => void;
   start: Date;
   end: Date;
+  event: Event | null;
+}
+
+interface EventDialogProps {
+  isOpen: boolean;
+  onSubmit: (event: Event) => void;
+  onCancel: () => void;
+  onDelete: () => void;
+  onDropRequest: (event? : Event) => void; // Add the onDropRequest property
+  start: Date;
+  end: Date;
+  event: Event | null;
 }
 
 const EventDialog = ({
@@ -37,56 +65,145 @@ const EventDialog = ({
   onDelete,
   start,
   end,
+  event,
 }: EventDialogProps) => {
+  // State variable for managing the drop request modal
+  const [isDropRequestModalOpen, setDropRequestModalOpen] = useState(false);
+  const [userResponse, setUserResponse] = useState("");
+
+  const handleDropRequestSubmit = () => {
+    setDropRequestModalOpen(false);  // Close
+    console.log("User Response:", userResponse);
+    setUserResponse("");  //Reset field
+    // FETHC REQUEST TO BACKEND LATER
+  };
+
+  const handleRequestDropClick = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    if (event && event.isShift) {
+      setDropRequestModalOpen(true); // Open the modal
+    } else {
+      onDelete(); 
+    }
+  };
+
   return (
-    <Modal isOpen={isOpen} onClose={onCancel}>
+    <>
+    {/* This Modal Is for when a user is dropping shift and needs to give reasoning */}
+    <Modal isOpen={isDropRequestModalOpen} onClose={() => setDropRequestModalOpen(false)}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Create Event</ModalHeader>
+        <ModalHeader>Drop Request</ModalHeader>
         <ModalCloseButton />
-        <Formik
-          initialValues={{ title: "" }}
-          onSubmit={(values, actions) => {
-            onSubmit({ start, end, title: values.title, id: uuidv4() });
-            actions.resetForm();
-          }}
-        >
-          {(props) => (
-            <Form>
-              <ModalBody>
-                <Field name="title">
-                  {({ field }: FieldProps) => (
-                    <FormControl>
-                      <FormLabel htmlFor="title">Title</FormLabel>
-                      <Input {...field} id="title" placeholder="Enter title" />
-                    </FormControl>
-                  )}
-                </Field>
-              </ModalBody>
-
-              <ModalFooter>
-                <Button colorScheme="blue" mr={3} type="submit">
-                Create
-                </Button>
-                <Button variant="ghost" onClick={onCancel}>
-                  Cancel
-                </Button>
-                <Button variant="ghost" onClick={onDelete}>
-                  Delete
-                </Button>
-              </ModalFooter>
-            </Form>
-          )}
-        </Formik>
+        <ModalBody>
+          <p>Select Reason</p>
+          <CheckboxGroup colorScheme="green">
+            <Stack spacing={4} direction="column">
+              <Checkbox value="I am sick">Sickness</Checkbox>
+              <Checkbox value="I have a personal emergency">Personal Emergency</Checkbox>
+              <Checkbox value="I want to take personal leave">Personal Leave</Checkbox>
+              <Checkbox value="Other">Other</Checkbox>
+            </Stack>
+            </CheckboxGroup>
+              <p>Additional Notes:</p>
+              <Input
+                value={userResponse}
+                onChange={(e) => setUserResponse(e.target.value)}
+                placeholder="Type your reason here"
+                mt={4}
+              />
+        </ModalBody>
+        <ModalFooter>
+          <Button colorScheme="blue" mr={3} onClick={handleDropRequestSubmit}>
+            Submit
+          </Button>
+          <Button variant="ghost" onClick={() => setDropRequestModalOpen(false)}>
+            Cancel
+          </Button>
+        </ModalFooter>
       </ModalContent>
     </Modal>
+
+    <Modal isOpen={isOpen} onClose={onCancel}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{event?.title ? "Edit Event" : "Create Event"}</ModalHeader>
+          <ModalCloseButton />
+          <Formik
+            initialValues={{ title: "" }}
+            onSubmit={(values, actions) => {
+              onSubmit({ start, end, title: values.title, id: uuidv4(), isShift: false });
+              actions.resetForm();
+            } }
+          >
+            {(props) => (
+              <Form>
+                <ModalBody>
+                  <Field name="title">
+                    {({ field }: FieldProps) => (
+                      <FormControl>
+                        <FormLabel htmlFor="title">Title</FormLabel>
+                        <Input {...field} id="title" placeholder="Enter title" />
+                      </FormControl>
+                    )}
+                  </Field>
+                </ModalBody>
+
+                <ModalFooter>
+                  <Button colorScheme="blue" mr={3} type="submit">
+                    {event && event.isShift ? "Confirm Edit" : "Create"}
+                  </Button>
+                  <Button variant="ghost" onClick={onCancel}>
+                    Cancel
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    colorScheme="red"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (event && event.isShift) {
+                        handleRequestDropClick(e); // Pass the event argument to onDropRequest
+                      } else {
+                        onDelete();
+                      }
+                    }}
+                  >
+                    {event && event.isShift ? "Request Drop" : "Delete"}
+                  </Button>
+                </ModalFooter>
+              </Form>
+            )}
+          </Formik>
+        </ModalContent>
+      </Modal>
+      </>
   );
 };
 
+
+
+
+
+
 const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
-  const [events, setEvents] = useState<Event[]>([]);
+  
+  const [events, setEvents] = useState<Event[]>([exampleEvent]);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+
+  
+
+  const eventStylerGetter = (event: Event) => {
+    const backgroundColor = event.isShift ? "orange" : '#007bff';
+    return {
+      style: {
+        backgroundColor,
+      }
+    };
+  };
+
+
 
 /*  useEffect(() => {
     const savedEvents = localStorage.getItem("events");
@@ -109,6 +226,30 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
   }, []); 
 */
 
+  const fetchShifts = () => {
+    fetch("http://localhost:8080/ra/{id}/get-shifts")
+    .then((response) => response.json())
+    .then((data) => {
+      const s = data.startTime;
+      /* s is a string in the format "HH:MM TZZ DD/MO/YYYY" */
+      const startTime = new Date(s.substring(16).parseInt(), s.substring(13, 15).parseInt(), s.substring(10, 12).parseInt(), s.substring(0, 2).parseInt(), s.substring(3, 5).parseInt());
+      
+      const e = data.endTime;
+      /* e is a string in the format "HH:MM TZZ DD/MO/YYYY" */
+      const endTime = new Date(e.substring(16).parseInt(), e.substring(13, 15).parseInt(), e.substring(10, 12).parseInt(), e.substring(0, 2).parseInt(), e.substring(3, 5).parseInt());
+      setEvents((prevEvents) => [
+        ...prevEvents,
+        {
+          start: startTime,
+          end: endTime,
+          title: data.title,
+          id: data.id,
+          isShift: true,
+        },
+      ]);
+    });
+  }; /* fetchShifts */
+    
   const fetchEvents = () => {
     fetch("http://localhost:8080/ra/{id}/get-events")
       .then((response) => response.json())
@@ -127,6 +268,7 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
             end: endTime,
             title: data.title,
             id: data.id,
+            isShift: false,
           },
         ]);
       });
@@ -155,6 +297,7 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
   /* obtain all saved events of the user */
   useEffect(() => {
     fetchEvents();
+    fetchShifts();
   }, []);
 
 /*  useEffect(() => {
@@ -173,7 +316,7 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
 
 
   const handleSelect = ({ start, end }: { start: Date; end: Date }) => {
-    setSelectedEvent({ start, end, title: "", id: "" });
+    setSelectedEvent({ start, end, title: "", id: "", isShift: false });
     setDialogOpen(true);
   };
 
@@ -243,7 +386,12 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
     }
   };
 
+  function onDropRequest(event?: Event | undefined): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
+    
     <div style={{ width: "800px", height: "450px" }}>
       <Calendar
         localizer={localizer}
@@ -254,6 +402,7 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
         onSelectSlot={handleSelect}
         onSelectEvent={handleSelectEvent}
         selectable={true}
+        eventPropGetter={eventStylerGetter}
       />
       {selectedEvent && (
         <EventDialog
@@ -263,6 +412,8 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
           onDelete={handleDeleteEvent}
           start={selectedEvent.start}
           end={selectedEvent.end}
+          event={selectedEvent} 
+          onDropRequest={onDropRequest} // Update the type of onDropRequest
         />
       )}
     </div>

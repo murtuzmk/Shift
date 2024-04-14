@@ -24,6 +24,7 @@ jobs:
       #run: npm install tailwindcss
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+      working-directory: front-end
     #- name: Start Vite
      # run: npx vite & sleep 5
     - name: Run Playwright tests

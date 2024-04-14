@@ -12,6 +12,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     return token;
   };
 
+  // Get the number of times a user has logged in
   const getLoginCount = async (userId: any) => {
     const data = await fetch(
       `https://dev-e7jyddja3xm6p30e.us.auth0.com/api/v2/users/${userId}?fields=logins_count`,

@@ -28,7 +28,7 @@ const SearchBar: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { user, isLoading } = useAuth0();
+    const { user } = useAuth0();
     const userid = (user && user.sub ? user.sub.split("|")[1] : null);
 
 

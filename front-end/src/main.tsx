@@ -5,7 +5,6 @@ import {
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
-import Landing from "./pages/Landing.tsx";
 import App from "./App.tsx";
 
 import { Auth0Provider } from "@auth0/auth0-react";
@@ -17,11 +16,12 @@ import { MyAvailability } from "./pages/MyAvailability.tsx";
 import ErrorPage from "./pages/ErrorPage.tsx";
 import { UserProvider } from "./context/UserDataContext.tsx";
 import CreateRAAccount from "./components/CreateRAAccount.tsx";
-import  RAWelcome  from "./pages/RAWelcome.tsx";
+import RAWelcome from "./pages/RAWelcome.tsx";
 import Coworkers from "./pages/Coworkers/index.tsx";
 import Employees from "./pages/Employees/index.tsx";
 import "./index.css";
 import Dashboard from "./pages/Dashboard.tsx";
+import { Landing } from "./pages/landing/landing.tsx";
 
 const router = createBrowserRouter([
   {
@@ -43,7 +43,7 @@ const router = createBrowserRouter([
       { path: "co-workers", element: <Coworkers /> },
       { path: "availability", element: <MyAvailability /> },
       { path: "create-ra-account", element: <CreateRAAccount /> },
-      { path: "ra-welcome", element: <RAWelcome />},
+      { path: "ra-welcome", element: <RAWelcome /> },
       { path: "settings", element: <Settings /> },
     ],
   },
@@ -62,5 +62,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <RouterProvider router={router} />
       </Auth0Provider>
     </UserProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

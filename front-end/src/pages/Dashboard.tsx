@@ -13,6 +13,7 @@ interface Event {
   end: Date;
   title: string;
   id: string;
+  isShift: boolean;
 }
 
 const Dashboard = () => {
@@ -89,6 +90,7 @@ const Dashboard = () => {
                 end: icalEvent.endDate.toJSDate(),
                 title: icalEvent.summary,
                 id: icalEvent.uid, // Assuming UID is available in .ics file
+                
               };
             });
 

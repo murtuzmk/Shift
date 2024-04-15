@@ -4,3 +4,7 @@ front_end/node_modules
 front_end/src/.DS_Store
 node_modules
 node_modules
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

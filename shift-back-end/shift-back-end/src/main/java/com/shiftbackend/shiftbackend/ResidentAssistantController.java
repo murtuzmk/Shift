@@ -109,7 +109,7 @@ public class ResidentAssistantController {
         ra.loadAccountFile(id);
         ra.setName(input.get("name"));
         ra.setEmail(input.get("email"));
-        ra.setId(input.get("inputId"));
+        ra.setId(input.get(id));
         ra.setGender(Person.Gender.valueOf(input.get("gender")));
         ra.setHall(Person.Hall.valueOf(input.get("hall")));
         ra.setEnabled(Boolean.parseBoolean(input.get("enabled")));
@@ -125,7 +125,7 @@ public class ResidentAssistantController {
         ra.loadAccountFile(id);
         ra.setName(input.get("name"));
         ra.setEmail(input.get("email"));
-        ra.setId(input.get("inputId"));
+        ra.setId(input.get(id));
         ra.setEnabled(Boolean.parseBoolean(input.get("enabled")));
         ra.saveAccountFile();
         ra.addUser();
@@ -147,6 +147,16 @@ public class ResidentAssistantController {
         ra.clockOut();
         ra.saveAccountFile();
         return new ResponseEntity<String>("Clocked Out", HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/set-timezone")
+    public ResponseEntity<String> setTimezoneRA(@PathVariable String id, @RequestBody Map<String, String> input) {
+        ra.loadAccountFile(id);
+        ra.setTimezone(Integer.parseInt(input.get("timezone")));
+        ra.saveAccountFile();
+        ra.addUser();
+
+        return new ResponseEntity<String>("Timezone Edited", HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}/clear-preferences")

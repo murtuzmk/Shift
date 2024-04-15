@@ -149,12 +149,22 @@ public class ResidentEducationAssistantController {
         return new ResponseEntity<String>("Floor Edited", HttpStatus.CREATED);
     }
 
+    @PostMapping("/{id}/set-timezone")
+    public ResponseEntity<String> setTimezoneREA(@PathVariable String id, @RequestBody Map<String, String> input) {
+        rea.loadAccountFile(id);
+        rea.setTimezone(Integer.parseInt(input.get("timezone")));
+        rea.saveAccountFile();
+        rea.addUser();
+
+        return new ResponseEntity<String>("Timezone Edited", HttpStatus.CREATED);
+    }
+
     @PostMapping("/{id}/set-all")
     public ResponseEntity<String> setInputREA(@PathVariable String id, @RequestBody Map<String, String> input) {
         rea.loadAccountFile(id);
         rea.setName(input.get("name"));
         rea.setEmail(input.get("email"));
-        rea.setId(input.get("inputId"));
+        rea.setId(input.get(id));
         rea.setGender(Person.Gender.valueOf(input.get("gender")));
         rea.setHall(Person.Hall.valueOf(input.get("hall")));
         rea.setEnabled(Boolean.parseBoolean(input.get("enabled")));
@@ -203,7 +213,6 @@ public class ResidentEducationAssistantController {
         return new ResponseEntity<String>("Welcome Message Deleted", HttpStatus.CREATED);
     }
     
-
     @GetMapping("/{id}/add-ra/{raId}")
     public ResponseEntity<String> addRAInREA(@PathVariable String id, @PathVariable String raId) {
         rea.loadAccountFile(id);

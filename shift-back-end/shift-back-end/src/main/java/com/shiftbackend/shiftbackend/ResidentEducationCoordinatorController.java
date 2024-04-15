@@ -171,12 +171,22 @@ public class ResidentEducationCoordinatorController {
         return new ResponseEntity<String>("Floor Edited", HttpStatus.CREATED);
     }
 
+    @PostMapping("/{id}/set-timezone")
+    public ResponseEntity<String> setTimezoneREC(@PathVariable String id, @RequestBody Map<String, String> input) {
+        rec.loadAccountFile(id);
+        rec.setTimezone(Integer.parseInt(input.get("timezone")));
+        rec.saveAccountFile();
+        rec.addUser();
+
+        return new ResponseEntity<String>("Timezone Edited", HttpStatus.CREATED);
+    }
+
     @PostMapping("/{id}/set-all")
     public ResponseEntity<String> setInputREC(@PathVariable String id, @RequestBody Map<String, String> input) {
         rec.loadAccountFile(id);
         rec.setName(input.get("name"));
         rec.setEmail(input.get("email"));
-        rec.setId(input.get("inputId"));
+        rec.setId(input.get(id));
         rec.setGender(Person.Gender.valueOf(input.get("gender")));
         rec.setHall(Person.Hall.valueOf(input.get("hall")));
         rec.setEnabled(Boolean.parseBoolean(input.get("enabled")));

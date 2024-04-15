@@ -337,19 +337,19 @@ public class ResidentEducationCoordinatorController {
     }
 
     @GetMapping("/{id}/ra/{raId}/get-events")
-    public ResponseEntity<String> getRAEventsREC(@PathVariable String id, @PathVariable String raId) {
+    public ResponseEntity<String[]> getRAEventsREC(@PathVariable String id, @PathVariable String raId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
-        return new ResponseEntity<String>(ra.getSchedule().getEvents(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(ra.getSchedule().getEvents(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/ra/{raId}/get-shifts")
-    public ResponseEntity<String> getRAShiftsREC(@PathVariable String id, @PathVariable String raId) {
+    public ResponseEntity<String[]> getRAShiftsREC(@PathVariable String id, @PathVariable String raId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
-        return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/ra/{raId}/delete-event/{eventId}")
@@ -420,7 +420,7 @@ public class ResidentEducationCoordinatorController {
     }
 
     @PostMapping("/{id}/ra/{raId}/add-event/{eventId}")
-    public ResponseEntity<String> addRAEventREC(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String[]> addRAEventREC(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
@@ -434,11 +434,11 @@ public class ResidentEducationCoordinatorController {
                                           Integer.parseInt(input.get("endYear")), Integer.parseInt(input.get("endTimezone")));
         ra.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, (input.get("dutyLevel").equals("null")) ? null :Shift.DutyLevel.valueOf(input.get("dutyLevel"))));
         ra.saveAccountFile();
-        return new ResponseEntity<String>(ra.getSchedule().getEvents(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(ra.getSchedule().getEvents(), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/ra/{raId}/add-shift/{eventId}")
-    public ResponseEntity<String> addRAShiftREC(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String[]> addRAShiftREC(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         rec.loadAccountFile(id);
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
@@ -453,7 +453,7 @@ public class ResidentEducationCoordinatorController {
 
         ra.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, dutyLevel));
         ra.saveAccountFile();
-        return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/ra/{raId}/view-drop-requests")
@@ -474,7 +474,7 @@ public class ResidentEducationCoordinatorController {
     }
 
     @GetMapping("/{id}/ra/{raId}/delete-shift/{eventId}")
-    public ResponseEntity<String> deleteRAShiftREC(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId) {
+    public ResponseEntity<String[]> deleteRAShiftREC(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
@@ -484,11 +484,11 @@ public class ResidentEducationCoordinatorController {
         rec.getSchedule().getEvent(eventId).decAvailability();
 
 
-        return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/create-shift/{eventId}")
-    public ResponseEntity<String> createShiftREC(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String[]> createShiftREC(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         rec.loadAccountFile(id);
         String title = input.get("title");
         String description = input.get("description");
@@ -502,21 +502,21 @@ public class ResidentEducationCoordinatorController {
                                           
         rec.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, Shift.DutyLevel.valueOf(input.get("dutyLevel")), Integer.parseInt(input.get("availability"))));
         rec.saveAccountFile();
-        return new ResponseEntity<String>(rec.getSchedule().getEvents(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(rec.getSchedule().getEvents(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/get-events")
-    public ResponseEntity<String> getEventsREC(@PathVariable String id) {
+    public ResponseEntity<String[]> getEventsREC(@PathVariable String id) {
         rec.loadAccountFile(id);
 
-        return new ResponseEntity<String>(rec.getSchedule().getEvents(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(rec.getSchedule().getEvents(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/get-shifts")
-    public ResponseEntity<String> getShiftsREC(@PathVariable String id) {
+    public ResponseEntity<String[]> getShiftsREC(@PathVariable String id) {
         rec.loadAccountFile(id);
 
-        return new ResponseEntity<String>(rec.getSchedule().getShifts(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(rec.getSchedule().getShifts(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/get-availability/{eventId}")
@@ -527,7 +527,7 @@ public class ResidentEducationCoordinatorController {
     }
 
     @PostMapping("/{id}/create-event/{eventId}")
-    public ResponseEntity<String> createEventREC(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String[]> createEventREC(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         rec.loadAccountFile(id);
 
         String title = input.get("title");
@@ -540,7 +540,7 @@ public class ResidentEducationCoordinatorController {
                                           Integer.parseInt(input.get("endYear")), Integer.parseInt(input.get("endTimezone")));
         rec.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, (input.get("dutyLevel").equals("null")) ? null :Shift.DutyLevel.valueOf(input.get("dutyLevel"))));
         rec.saveAccountFile();
-        return new ResponseEntity<String>(rec.getSchedule().getEvents(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(rec.getSchedule().getEvents(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/delete-event/{eventId}")

@@ -208,92 +208,74 @@ public class Schedule {
         return null;
     }
 
-    public String getEvents() {
-        StringBuilder buffer = new StringBuilder();
+    public String[] getEvents() {
+        ArrayList<Shift> temp = new ArrayList<Shift>();
 
         for (Shift event : events) {
             if (event.getDutyLevel() == null) {
-                buffer.append("{\"eventId\": \"" + event.getId());
-                buffer.append("\"\n");
-                buffer.append("\"title\": \"" + event.getTitle());
-                buffer.append("\"\n");
-                buffer.append("\"description\": \"" + event.getDescription());
-                buffer.append("\"\n");
-                
-                buffer.append("\"startHour\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"startMinute\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"startMonth\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"startDay\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"startYear\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"startTimezone\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                
-                buffer.append("\"endHour\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"endMinute\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"endMonth\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"endDay\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"endYear\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"endTimezone\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
+                temp.add(event);
             }
         }
 
-        return buffer.toString();
+        return stringArrayShift(temp);
     }
 
-    public String getShifts() {
-        StringBuilder buffer = new StringBuilder();
+    public String[] getShifts() {
+        ArrayList<Shift> temp = new ArrayList<Shift>();
 
         for (Shift event : events) {
             if (event.getDutyLevel() != null) {
-                buffer.append("{\"shifttId\": \"" + event.getId());
-                buffer.append("\"\n");
-                buffer.append("\"title\": \"" + event.getTitle());
-                buffer.append("\"\n");
-                buffer.append("\"description\": \"" + event.getDescription());
-                buffer.append("\"\n");
-                buffer.append("\"dutyLevel\": \"" + event.getDutyLevel());
-                buffer.append("\"\n");
-
-                buffer.append("\"startHour\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"startMinute\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"startMonth\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"startDay\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"startYear\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"startTimezone\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                
-                buffer.append("\"endHour\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"endMinute\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"endMonth\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"endDay\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"endYear\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
-                buffer.append("\"endTimezone\": \"" + event.getStart().toString());
-                buffer.append("\"\n");
+                temp.add(event);
             }
         }
 
-        return buffer.toString();
+        return stringArrayShift(temp);
+    }
+
+    public String[] stringArrayShift(ArrayList<Shift> temp) { 
+
+        String[] array = new String[temp.size()];
+        StringBuilder buffer = new StringBuilder();
+
+        for (int i = 0; i < temp.size(); i++) {
+            buffer.append("{\"eventId\": \"" + temp.get(i).getId());
+            buffer.append("\",\n");
+            buffer.append("\"title\": \"" + temp.get(i).getTitle());
+            buffer.append("\",\n");
+            buffer.append("\"description\": \"" + temp.get(i).getDescription());
+            buffer.append("\",\n");
+            
+            buffer.append("\"startHour\": \"" + temp.get(i).getStart().toString());
+            buffer.append("\",\n");
+            buffer.append("\"startMinute\": \"" + temp.get(i).getStart().toString());
+            buffer.append("\",\n");
+            buffer.append("\"startMonth\": \"" + temp.get(i).getStart().toString());
+            buffer.append("\",\n");
+            buffer.append("\"startDay\": \"" + temp.get(i).getStart().toString());
+            buffer.append("\",\n");
+            buffer.append("\"startYear\": \"" + temp.get(i).getStart().toString());
+            buffer.append("\",\n");
+            buffer.append("\"startTimezone\": \"" + temp.get(i).getStart().toString());
+            buffer.append("\",\n");
+            
+            buffer.append("\"endHour\": \"" + temp.get(i).getStart().toString());
+            buffer.append("\",\n");
+            buffer.append("\"endMinute\": \"" + temp.get(i).getStart().toString());
+            buffer.append("\",\n");
+            buffer.append("\"endMonth\": \"" + temp.get(i).getStart().toString());
+            buffer.append("\",\n");
+            buffer.append("\"endDay\": \"" + temp.get(i).getStart().toString());
+            buffer.append("\",\n");
+            buffer.append("\"endYear\": \"" + temp.get(i).getStart().toString());
+            buffer.append("\",\n");
+            buffer.append("\"endTimezone\": \"" + temp.get(i).getStart().toString());
+            buffer.append("\"}");
+
+            array[i] = buffer.toString();
+            buffer = new StringBuilder();
+        }
+
+        return array;
     }
 
 

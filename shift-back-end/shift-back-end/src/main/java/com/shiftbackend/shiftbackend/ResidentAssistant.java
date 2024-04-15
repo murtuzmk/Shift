@@ -355,20 +355,14 @@ public class ResidentAssistant extends Person{
         return preferences;
     }
 
-    public String preferencesString() {
-        StringBuilder buffer = new StringBuilder();
+    public String[] preferencesString() {
+        String[] array = new String[preferences.size()];
 
-        buffer.append("{\"preferences\": \"");
         for (int i = 0; i < preferences.size(); i++) {
-            if (i != 0) {
-                buffer.append("|");
-            }
-            buffer.append(preferences.get(i));
-            
+            array[i] = "{\"preference\": \"" + preferences.get(i) + "\"}";            
         }
-        buffer.append("\"}");
 
-        return buffer.toString();
+        return array;
     }
 
     public String getShiftDropRequests() {

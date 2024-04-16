@@ -8,6 +8,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 const localizer = momentLocalizer(moment);
 import "./MyCalendar.css";
 import { set } from "react-hook-form";
+import { useEventFilter } from "@/context/EventFilterContext";
 
 
 interface MyCalendarProps {
@@ -47,16 +48,6 @@ interface EventDialogProps {
   event: Event | null;
 }
 
-interface EventDialogProps {
-  isOpen: boolean;
-  onSubmit: (event: Event) => void;
-  onCancel: () => void;
-  onDelete: () => void;
-  onDropRequest: (event? : Event) => void; // Add the onDropRequest property
-  start: Date;
-  end: Date;
-  event: Event | null;
-}
 
 const EventDialog = ({
   isOpen,
@@ -75,7 +66,7 @@ const EventDialog = ({
     setDropRequestModalOpen(false);  // Close
     console.log("User Response:", userResponse);
     setUserResponse("");  //Reset field
-    // FETHC REQUEST TO BACKEND LATER
+    // FETCH REQUEST TO BACKEND LATER
   };
 
   const handleRequestDropClick = (e: { preventDefault: () => void; }) => {
@@ -99,10 +90,10 @@ const EventDialog = ({
           <p>Select Reason</p>
           <CheckboxGroup colorScheme="green">
             <Stack spacing={4} direction="column">
-              <Checkbox value="I am sick">Sickness</Checkbox>
-              <Checkbox value="I have a personal emergency">Personal Emergency</Checkbox>
-              <Checkbox value="I want to take personal leave">Personal Leave</Checkbox>
-              <Checkbox value="Other">Other</Checkbox>
+              <Checkbox value="sick">Sickness</Checkbox>
+              <Checkbox value="emergency">Personal Emergency</Checkbox>
+              <Checkbox value="leave">Personal Leave</Checkbox>
+              <Checkbox value="other">Other</Checkbox>
             </Stack>
             </CheckboxGroup>
               <p>Additional Notes:</p>
@@ -125,7 +116,7 @@ const EventDialog = ({
     </Modal>
 
     <Modal isOpen={isOpen} onClose={onCancel}>
-        <ModalOverlay />
+        <ModalOverlay/>
         <ModalContent>
           <ModalHeader>{event?.title ? "Edit Event" : "Create Event"}</ModalHeader>
           <ModalCloseButton />
@@ -136,7 +127,7 @@ const EventDialog = ({
               actions.resetForm();
             } }
           >
-            {(props) => (
+            {() => (
               <Form>
                 <ModalBody>
                   <Field name="title">
@@ -191,7 +182,7 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
   const [events, setEvents] = useState<Event[]>([exampleEvent]);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-
+  const {showShifts} = useEventFilter();
   
 
   const eventStylerGetter = (event: Event) => {
@@ -203,28 +194,22 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
     };
   };
 
-
-
-/*  useEffect(() => {
-    const savedEvents = localStorage.getItem("events");
-    if (savedEvents) {
-      const parsedEvents: Event[] = JSON.parse(savedEvents);
-      const eventsWithDates: Event[] = parsedEvents.map((event) => ({
-        ...event,
-        start: new Date(event.start),
-        end: new Date(event.end),
-      }));
-      setEvents(eventsWithDates);
-    }
+  /* obtain all saved events of the user */
+  useEffect(() => {
+    fetchEvents();
+    fetchShifts();
   }, []);
-*/
-/*  useEffect(() => {
-    const savedEvents = localStorage.getItem("events");
-    if (savedEvents) {
-      setEvents(JSON.parse(savedEvents));
-    }
-  }, []); 
-*/
+
+  /* Filter events based on the showShifts boolean */
+  const filteredEvents = useMemo(() => {
+    console.log("Show shifts", showShifts); /* Debugging */
+    const allEvents = [...importedEvents, ...events];
+    return showShifts ? allEvents.filter(event => event.isShift) : allEvents;
+  }, [importedEvents, events, showShifts]);
+
+  useEffect(() => {
+    onEventsChange(filteredEvents); /* Update the parent component with the filtered events */
+  }, [filteredEvents, onEventsChange]);
 
   const fetchShifts = () => {
     fetch("http://localhost:8080/ra/{id}/get-shifts")
@@ -294,27 +279,6 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
     })  
   };
 
-  /* obtain all saved events of the user */
-  useEffect(() => {
-    fetchEvents();
-    fetchShifts();
-  }, []);
-
-/*  useEffect(() => {
-    localStorage.setItem("events", JSON.stringify(events));
-  }, [events]);
-
-*/
- const allevents = useMemo(() => {
-    console.log("importedEvents", importedEvents);
-    return [...importedEvents, ...events];
-  } , [importedEvents, events]);  
-  /* ask Murtuza idk what this does */
-  useEffect(() => {
-    onEventsChange(allevents);
-  }, [allevents]);
-
-
   const handleSelect = ({ start, end }: { start: Date; end: Date }) => {
     setSelectedEvent({ start, end, title: "", id: "", isShift: false });
     setDialogOpen(true);
@@ -365,6 +329,7 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
       })
     })  
   };
+
   const handleUpdateEvent = (updatedEvent: Event) => {
     //want to find some way to only call editEvent if the title has been changed
     setEvents((prevEvents) => 
@@ -386,16 +351,13 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
     }
   };
 
-  function onDropRequest(event?: Event | undefined): void {
-    throw new Error("Function not implemented.");
-  }
 
   return (
     
     <div style={{ width: "800px", height: "450px" }}>
       <Calendar
         localizer={localizer}
-        events={allevents}
+        events={filteredEvents}
         startAccessor="start"
         endAccessor="end"
         titleAccessor="title"
@@ -413,7 +375,7 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
           start={selectedEvent.start}
           end={selectedEvent.end}
           event={selectedEvent} 
-          onDropRequest={onDropRequest} // Update the type of onDropRequest
+          // Update the type of onDropRequest
         />
       )}
     </div>

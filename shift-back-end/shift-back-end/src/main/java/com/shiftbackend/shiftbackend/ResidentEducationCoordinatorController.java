@@ -10,6 +10,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/rec")
+@CrossOrigin(origins = "*")
 public class ResidentEducationCoordinatorController {
     ResidentEducationCoordinator rec = new ResidentEducationCoordinator();
 

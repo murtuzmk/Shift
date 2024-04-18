@@ -2,13 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import ExecutivePage from "../pages/ExecutivePage";
-import { useUser } from "../hooks/useUser";
 import { useAuth0 } from "@auth0/auth0-react";
 
 import UserDataContext from "../context/UserDataContext";
 import Dropdown from "../pages/ExecutiveUserPage/DropDown";
 
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/components/ui/use-toast";
 import { Button } from "./ui/button";
 
 interface TileClassNameArgs {
@@ -19,22 +18,25 @@ interface TileClassNameArgs {
 /*
  * AvailabilityCalendar component is a calendar that allows the user to select their availability.
  * It is used from two mediums: The Executive Page and the the Availability/Shifts Page.
- * 
+ *
  * Executive Page: From the executive page it is used to view the RA schedules for approval and assignment.
  *  For this reason, we have props to pass in so that the id of the RA can be passed in and their schedule will be fetched
- * 
+ *
  * Availability/Shifts Page: From the availability/shifts page it is used to allow the RA to select their availability. And then
  *  in the perspective of the executive, they can select an "availability" but its actually just shifts that will pop up as shifst to
  *  pick up
  */
 
-const AvailabilityCalendar: React.FC<{ id: string | null, accFrmExec : boolean | null}> =({id, accFrmExec}) => {
+const AvailabilityCalendar: React.FC<{
+  id: string | null;
+  accFrmExec: boolean | null;
+}> = ({ id, accFrmExec }) => {
   // Explicitly type freeDays as an array of strings
   const [freeDays, setFreeDays] = useState<string[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [view, setView] = useState<"month">("month");
-  const {user} = useAuth0();
-  const {getUserRole} : any = useContext(UserDataContext);
+  const { user } = useAuth0();
+  const { getUserRole }: any = useContext(UserDataContext);
   const [isExec, setIsExec] = useState(false);
 
   /* Get the id for the user and potentially the executive because the availability calendar is on both pages */
@@ -59,67 +61,61 @@ const AvailabilityCalendar: React.FC<{ id: string | null, accFrmExec : boolean |
   }, [user]);
   const { toast } = useToast();
 
-
-
   /* Fetch the free days from the REST API */
   const fetchFreeDays = () => {
     // Update the freeDays state with the fetched data
     fetch("http://localhost:8080/ra/${userid}/get-preferences")
-    .then((response) => response.json())
-    .then((data) => {
-      const dateStr: string= new Date(data).toISOString().split("T")[0];
-      setFreeDays([dateStr]);
-    });
-  }
+      .then((response) => response.json())
+      .then((data) => {
+        const dateStr: string = new Date(data).toISOString().split("T")[0];
+        setFreeDays([dateStr]);
+      });
+  };
 
   /* This is for when submit is enacted, tells us which days are left to be saved */
-  const setSavedFreeDays = (dates : string[]) => {
+  const setSavedFreeDays = (dates: string[]) => {
     fetch("http://localhost:8080/ra/${userid}/add-preference", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         dates: dates,
       }),
     })
-    .then((response) => response.json())
-    .then((data) => {
-      // Assuming you have a state variable 'freeDays' and a setter function 'setFreeDays'
-      setFreeDays([...freeDays, ...dates]); // Append the new dates to the existing ones
-    });
-  }
-  
-
+      .then((response) => response.json())
+      .then((data) => {
+        // Assuming you have a state variable 'freeDays' and a setter function 'setFreeDays'
+        setFreeDays([...freeDays, ...dates]); // Append the new dates to the existing ones
+      });
+  };
 
   /* useEffect will call on fetch free days once, when the component is mounted */
   useEffect(() => {
     fetchFreeDays();
   }, []);
 
-  const addFreeDays = (dates : string[]) => {
+  const addFreeDays = (dates: string[]) => {
     fetch("http://localhost:8080/root/${userid}/add-preference", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         dates: dates,
       }),
     })
-    .then((response) => response.json())
-    .then((data) => {
-      // Assuming you have a state variable 'freeDays' and a setter function 'setFreeDays'
-      setFreeDays([...freeDays, ...dates]); // Append the new dates to the existing ones
-    });
-  }
-
+      .then((response) => response.json())
+      .then((data) => {
+        // Assuming you have a state variable 'freeDays' and a setter function 'setFreeDays'
+        setFreeDays([...freeDays, ...dates]); // Append the new dates to the existing ones
+      });
+  };
 
   /* useEffect will call on fetch free days once, when the component is mounted */
   useEffect(() => {
     fetchFreeDays();
   }, []);
-
 
   const minDaysRequired = parseInt(
     localStorage.getItem("currentValue") || "10"
@@ -194,9 +190,9 @@ const AvailabilityCalendar: React.FC<{ id: string | null, accFrmExec : boolean |
         return;
       }
 
-      if(userConfirmation) {
+      if (userConfirmation) {
         window.alert("Availability Successfully Sent Out");
-      };
+      }
     }
 
     /* Send the freeDays array to the local storage */
@@ -218,13 +214,12 @@ const AvailabilityCalendar: React.FC<{ id: string | null, accFrmExec : boolean |
     return null; // Return null if no specific class should be applied
   };
 
-
   /* Checkboxes */
   const [isChecked1, setIsChecked1] = useState(false);
   const [isChecked2, setIsChecked2] = useState(false);
   const [isChecked3, setIsChecked3] = useState(false);
   const [isChecked4, setIsChecked4] = useState(false);
-  const [dropdownValue, setDropdownValue] = useState('');
+  const [dropdownValue, setDropdownValue] = useState("");
 
   const handleCheckboxChange = (checkboxNumber: number) => {
     if (checkboxNumber === 1) {
@@ -252,10 +247,12 @@ const AvailabilityCalendar: React.FC<{ id: string | null, accFrmExec : boolean |
     } else if (checkboxNumber === 4) {
       setIsChecked4(!isChecked4);
     }
-  }
-  const handleDropdownChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  };
+  const handleDropdownChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     setDropdownValue(event.target.value);
-  }
+  };
 
   return (
     <div
@@ -265,40 +262,43 @@ const AvailabilityCalendar: React.FC<{ id: string | null, accFrmExec : boolean |
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
-      }}
-    >
-      {(isExec && !execAccess) &&  (
-      <div className="flex flex-row justify-center w-9/12 space-x-10"
-      style={{ backgroundColor: 'lightgray', padding: '20px' }}>
-      <div className = "flex flex-row">
-        <div className = "mr-20">
-          <input
-            type="checkbox"
-            checked={isChecked1}
-            onChange={() => handleCheckboxChange(1)}
-          /> Male
-        </div>
-        <div className = "mr-20">
-          <input
-            type="checkbox"
-            checked={isChecked2}
-            onChange={() => handleCheckboxChange(2)}
-          /> Female
-        </div>
-      </div>
-      <div className = "flex flex-row">
-        <div className = "mr-20">
-          <input
-            type="checkbox"
-            checked={isChecked3}
-            onChange={() => handleCheckboxChange(3)}
-          /> Co-ed
-        </div>
-        <div>
-           Floor: 
-          <Dropdown
+      }}>
+      {isExec && !execAccess && (
+        <div
+          className="flex flex-row justify-center w-9/12 space-x-10"
+          style={{ backgroundColor: "lightgray", padding: "20px" }}>
+          <div className="flex flex-row">
+            <div className="mr-20">
+              <input
+                type="checkbox"
+                checked={isChecked1}
+                onChange={() => handleCheckboxChange(1)}
+              />{" "}
+              Male
+            </div>
+            <div className="mr-20">
+              <input
+                type="checkbox"
+                checked={isChecked2}
+                onChange={() => handleCheckboxChange(2)}
+              />{" "}
+              Female
+            </div>
+          </div>
+          <div className="flex flex-row">
+            <div className="mr-20">
+              <input
+                type="checkbox"
+                checked={isChecked3}
+                onChange={() => handleCheckboxChange(3)}
+              />{" "}
+              Co-ed
+            </div>
+            <div>
+              Floor:
+              <Dropdown
                 options={[
-                  { label: "Any", value: 0},
+                  { label: "Any", value: 0 },
                   { label: "Floor 1", value: 1 },
                   { label: "Floor 2", value: 2 },
                   { label: "Floor 3", value: 3 },
@@ -309,37 +309,32 @@ const AvailabilityCalendar: React.FC<{ id: string | null, accFrmExec : boolean |
                   { label: "Floor 8", value: 8 },
                 ]}
                 onSelect={handleDropdownChange}
-          />
+              />
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    )}
+      )}
       <Calendar
         onChange={(value, event) => onChange(value as Date, event)}
         onActiveStartDateChange={onActiveStartDateChange}
         value={new Date()} // Convert each free day back to a Date object
         view="month"
         tileClassName={tileClassName}
-        
       />
-      
       <div className="flex w-full justify-center px-4 relative">
         {!execAccess && (
-        <div className="flex space-x-10">
-          <Button
-            onClick={clearCurrentMonthSelections}
-            className="w-32 bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded text-xs"
-          >
-            Clear
-          </Button>
-          <Button
-            onClick={onSubmit}
-            className="w-32 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-xs"
-          >
-            Submit Schedule
-          </Button>
-        </div>
-
+          <div className="flex space-x-10">
+            <Button
+              onClick={clearCurrentMonthSelections}
+              className="w-32 bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded text-xs">
+              Clear
+            </Button>
+            <Button
+              onClick={onSubmit}
+              className="w-32 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-xs">
+              Submit Schedule
+            </Button>
+          </div>
         )}
         {/* Conditional message positioned to the right */}
         {!execAccess && !isExec && numDaysNeeded > 0 && (
@@ -349,12 +344,9 @@ const AvailabilityCalendar: React.FC<{ id: string | null, accFrmExec : boolean |
             </span>
           </div>
         )}
-        
-        
       </div>
-      
       {!isExec && (
-      <style>{`
+        <style>{`
       .react-calendar {
         width: 80%; /* Adjust this value to make the calendar wider */
         max-width: none; /* Remove any maximum width restrictions */
@@ -377,10 +369,10 @@ const AvailabilityCalendar: React.FC<{ id: string | null, accFrmExec : boolean |
         color: white;
       }
     `}</style>
-    )}
-    ||
-    {isExec && ( 
-      <style>{`
+      )}
+      ||
+      {isExec && (
+        <style>{`
       .react-calendar {
         width: 50%; /* Adjust this value to make the calendar wider */
         max-width: none; /* Remove any maximum width restrictions */
@@ -403,8 +395,7 @@ const AvailabilityCalendar: React.FC<{ id: string | null, accFrmExec : boolean |
         color: white;
       }
     `}</style>
-
-    )}
+      )}
     </div>
   );
 };

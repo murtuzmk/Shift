@@ -1,4 +1,4 @@
-Bob|bobert@gmail.com|MALE|CARY|true|0
+Bob|bobert@gmail.com|MALE|EARHART|true|0
 1A|false|0|0
 
 

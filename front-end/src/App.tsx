@@ -30,7 +30,7 @@ import CreateRAAccount from "./components/CreateRAAccount";
 import { MyAvailability } from "./pages/MyAvailability";
 import Coworkers from "./pages/Coworkers";
 import ExecutivePage from "./pages/ExecutivePage";
-import { Employees } from "./pages/employees";
+import { Employees } from "./pages/Employees/employees";
 
 function App() {
   const { isLoading, authProvider } = useAuthProvider();

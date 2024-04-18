@@ -30,7 +30,7 @@ test('Theme', async ({ page }) => {
     page.waitForLoadState(),
     page.getByRole('button', { name: 'Continue', exact: true }).click(),
   ]);
-  await page.getByLabel('Close').click();
+  //await page.getByLabel('Close').click();
   await page.getByRole('button', { name: 'Toggle theme' }).click();
   await page.getByRole('menuitem', { name: 'Light' }).click();
   await page.getByRole('button', { name: 'Toggle theme' }).click();

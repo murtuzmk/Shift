@@ -395,10 +395,11 @@ public class ResidentEducationAssistantController {
         TimeBlock endTime = rea.getSchedule().getEvent(eventId).getEnd();
         DutyLevel dutyLevel = rea.getSchedule().getEvent(eventId).getDutyLevel();
 
-        rea.getSchedule().getEvent(eventId).incAvailability();
+        rea.getSchedule().getEvent(eventId).decAvailability();
 
         ra.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, dutyLevel));
         ra.saveAccountFile();
+        rea.saveAccountFile();
         return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
 
@@ -416,6 +417,10 @@ public class ResidentEducationAssistantController {
         ra.loadAccountFile(id);
         ra.deleteShiftDropRequest(eventId);
         ra.saveAccountFile();
+
+        rea.getSchedule().getEvent(eventId).decAvailability();
+
+        rea.saveAccountFile();
         return new ResponseEntity<String>("Drop Denied for Event: " + eventId, HttpStatus.OK);
     }
 
@@ -428,7 +433,9 @@ public class ResidentEducationAssistantController {
         ra.deleteShiftDropRequest(eventId);
         ra.saveAccountFile();
 
-        rea.getSchedule().getEvent(eventId).decAvailability();
+        rea.getSchedule().getEvent(eventId).incAvailability();
+
+        rea.saveAccountFile();
 
         return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
@@ -437,13 +444,18 @@ public class ResidentEducationAssistantController {
     public ResponseEntity<String[]> createShiftREA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         rea.loadAccountFile(id);
         String title = input.get("title");
-        String description = input.get("description");
         TimeBlock startTime = new TimeBlock(Integer.parseInt(input.get("startHour")), Integer.parseInt(input.get("startMinute")),
                                             Integer.parseInt(input.get("startMonth")), Integer.parseInt(input.get("startDay")),
                                             Integer.parseInt(input.get("startYear")), Integer.parseInt(input.get("startTimezone")));
         TimeBlock endTime = new TimeBlock(Integer.parseInt(input.get("endHour")), Integer.parseInt(input.get("endMinute")),
                                           Integer.parseInt(input.get("endMonth")), Integer.parseInt(input.get("endDay")),
                                           Integer.parseInt(input.get("endYear")), Integer.parseInt(input.get("endzone")));
+
+
+        String description = "Weekday";
+        if (startTime.dayOfWeek().equals("Sunday") || startTime.dayOfWeek().equals("Saturday")) {
+            description = "Weekend";
+        }
 
                                           
         rea.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, Shift.DutyLevel.valueOf(input.get("dutyLevel")), Integer.parseInt(input.get("availability"))));

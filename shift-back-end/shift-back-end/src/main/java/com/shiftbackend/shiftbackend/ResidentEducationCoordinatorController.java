@@ -667,7 +667,7 @@ public class ResidentEducationCoordinatorController {
         return new ResponseEntity<String>("REC Id: " + recId + " Reported", HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/false-report-rea/{reaId}")
+    @GetMapping("/{id}/false-report-rec/{recId}")
     public ResponseEntity<String> falseReportRECInREC(@PathVariable String id, @PathVariable String recId) {
         
         rec.loadAccountFile(recId);
@@ -677,7 +677,7 @@ public class ResidentEducationCoordinatorController {
         return new ResponseEntity<String>(recId + " Report Nullified", HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/clear-reports-rea/{reaId}")
+    @GetMapping("/{id}/clear-reports-rec/{recId}")
     public ResponseEntity<String> clearReportsRECInREC(@PathVariable String id, @PathVariable String recId) {
         
         rec.loadAccountFile(recId);

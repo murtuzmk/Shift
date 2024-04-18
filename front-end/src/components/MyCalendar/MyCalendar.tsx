@@ -9,7 +9,7 @@ const localizer = momentLocalizer(moment);
 import "./MyCalendar.css";
 import { set } from "react-hook-form";
 import { useEventFilter } from "@/context/EventFilterContext";
-
+import { useUser } from "@/hooks/useUser";
 
 interface MyCalendarProps {
   importedEvents: Event[];
@@ -183,7 +183,8 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const {showShifts} = useEventFilter();
-  
+  const { user } = useUser();
+  const id = (user && user.sub ? user.sub.split("|")[1] : null);
 
   const eventStylerGetter = (event: Event) => {
     const backgroundColor = event.isShift ? "orange" : '#007bff';
@@ -212,7 +213,8 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
   }, [filteredEvents, onEventsChange]);
 
   const fetchShifts = () => {
-    fetch("http://localhost:8080/ra/{id}/get-shifts")
+    console.log("Fetching shifts from the backend and id is " + id);
+    fetch("http://localhost:8080/ra/"+id +"/get-shifts")
     .then((response) => response.json())
     .then((data) => {
       const s = data.startTime;
@@ -236,7 +238,8 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
   }; /* fetchShifts */
     
   const fetchEvents = () => {
-    fetch("http://localhost:8080/ra/{id}/get-events")
+    console.log("Fetching events from the backend and id is" + id);
+    fetch("http://localhost:8080/ra/"+id+"/get-events")
       .then((response) => response.json())
       .then((data) => {
         const s = data.startTime;
@@ -260,7 +263,9 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
   }; /* fetchEvents */
 
   const addEvents = (event: Event) => {
-      fetch('http://localhost:8080/ra/{id}/add-event/{eventid}', {
+      console.log("Adding event to the backend and id is " + event.id);
+      console.log("Event is " + event.title + " " + event.start + " " + event.end + " " + event.id);
+      fetch('http://localhost:8080/ra/'+id+ '/add-event/{eventid}', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

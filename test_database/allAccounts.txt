@@ -2,3 +2,4 @@ Alex|alecks@gmail.com|123|RA|CARY
 Bob|bobert@gmail.com|456|REA|CARY
 Cab|taxi@gmail.com|789|REC|WINDSOR
 johndoe1@gmail.com|johndoe1@gmail.com|65e0f45587056fc1215fa36d|RA|CARY
+rea2@gmail.com|rea2@gmail.com|65e1ea42541eaa2cf2c63edf|REA|SHREVE

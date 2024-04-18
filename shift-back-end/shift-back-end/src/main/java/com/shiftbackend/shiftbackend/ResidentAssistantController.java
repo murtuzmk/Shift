@@ -279,9 +279,10 @@ public class ResidentAssistantController {
         TimeBlock endTime = rea.getSchedule().getEvent(eventId).getEnd();
         DutyLevel dutyLevel = rea.getSchedule().getEvent(eventId).getDutyLevel();
 
-        rea.getSchedule().getEvent(eventId).incAvailability();
+        rea.getSchedule().getEvent(eventId).decAvailability();
 
         ra.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, dutyLevel));
+        rea.saveAccountFile();
         ra.saveAccountFile();
         return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
@@ -289,6 +290,12 @@ public class ResidentAssistantController {
     @PostMapping("/{id}/request-drop/{eventId}")
     public ResponseEntity<String[]> requestShiftDropRA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         ra.loadAccountFile(id);
+        ResidentEducationAssistant rea = new ResidentEducationAssistant();
+        rea.loadAccountFile(ra.getReaId());
+
+        rea.getSchedule().getEvent(eventId).incAvailability();
+
+        rea.saveAccountFile();
         ra.addShiftDropRequest(eventId);
         ra.saveAccountFile();
         return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
@@ -297,6 +304,12 @@ public class ResidentAssistantController {
     @PostMapping("/{id}/request-drop-delete/{eventId}")
     public ResponseEntity<String[]> requestShiftDropDeleteRA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         ra.loadAccountFile(id);
+        ResidentEducationAssistant rea = new ResidentEducationAssistant();
+        rea.loadAccountFile(ra.getReaId());
+
+        rea.getSchedule().getEvent(eventId).incAvailability();
+
+        rea.saveAccountFile();
         ra.deleteShiftDropRequest(eventId);
         ra.saveAccountFile();
         return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);

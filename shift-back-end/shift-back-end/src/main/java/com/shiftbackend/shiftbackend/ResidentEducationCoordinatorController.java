@@ -450,10 +450,11 @@ public class ResidentEducationCoordinatorController {
         TimeBlock endTime = rec.getSchedule().getEvent(eventId).getEnd();
         DutyLevel dutyLevel = rec.getSchedule().getEvent(eventId).getDutyLevel();
 
-        rec.getSchedule().getEvent(eventId).incAvailability();
+        rec.getSchedule().getEvent(eventId).decAvailability();
 
         ra.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, dutyLevel));
         ra.saveAccountFile();
+        rec.saveAccountFile();
         return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
 
@@ -471,6 +472,10 @@ public class ResidentEducationCoordinatorController {
         ra.loadAccountFile(id);
         ra.deleteShiftDropRequest(eventId);
         ra.saveAccountFile();
+
+        rec.getSchedule().getEvent(eventId).decAvailability();
+
+        rec.saveAccountFile();
         return new ResponseEntity<String>("Drop Denied for Event: " + eventId, HttpStatus.OK);
     }
 
@@ -482,8 +487,9 @@ public class ResidentEducationCoordinatorController {
         ra.getSchedule().deleteShift(eventId);
         ra.saveAccountFile();
 
-        rec.getSchedule().getEvent(eventId).decAvailability();
+        rec.getSchedule().getEvent(eventId).incAvailability();
 
+        rec.saveAccountFile();
 
         return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
@@ -492,7 +498,6 @@ public class ResidentEducationCoordinatorController {
     public ResponseEntity<String[]> createShiftREC(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         rec.loadAccountFile(id);
         String title = input.get("title");
-        String description = input.get("description");
         TimeBlock startTime = new TimeBlock(Integer.parseInt(input.get("startHour")), Integer.parseInt(input.get("startMinute")),
                                             Integer.parseInt(input.get("startMonth")), Integer.parseInt(input.get("startDay")),
                                             Integer.parseInt(input.get("startYear")), Integer.parseInt(input.get("startTimezone")));
@@ -500,6 +505,10 @@ public class ResidentEducationCoordinatorController {
                                           Integer.parseInt(input.get("endMonth")), Integer.parseInt(input.get("endDay")),
                                           Integer.parseInt(input.get("endYear")), Integer.parseInt(input.get("endzone")));
 
+        String description = "Weekday";
+        if (startTime.dayOfWeek().equals("Sunday") || startTime.dayOfWeek().equals("Saturday")) {
+            description = "Weekend";
+        }
                                           
         rec.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, Shift.DutyLevel.valueOf(input.get("dutyLevel")), Integer.parseInt(input.get("availability"))));
         rec.saveAccountFile();

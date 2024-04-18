@@ -27,7 +27,7 @@ public class Schedule {
 
     public boolean loadScheduleFile(String id) {
         String fileName = "Schedule_" + id +  ".txt";
-        File userInformation = new File(System.getProperty("user.dir"), fileName);
+        File userInformation = new File(System.getProperty("user.dir") + "/test_database", fileName);
         if (!userInformation.exists()) {
             return false;
         }
@@ -53,7 +53,14 @@ public class Schedule {
                 tempEvent.setId(eventAttributes[0]);
                 tempEvent.setTitle(eventAttributes[1]);
                 tempEvent.setDescription(eventAttributes[2]);
-                tempEvent.setDutyLevel(Shift.DutyLevel.valueOf(eventAttributes[3]));
+                
+                if (eventAttributes[3].equals("null")) {
+                    tempEvent.setDutyLevel(null);
+                }
+                else {
+                    tempEvent.setDutyLevel(Shift.DutyLevel.valueOf(eventAttributes[3]));
+                }
+                
                 tempEvent.setAvailability(Integer.parseInt(eventAttributes[4]));
                 tempEvent.setStart(startTime);
                 tempEvent.setEnd(endTime);

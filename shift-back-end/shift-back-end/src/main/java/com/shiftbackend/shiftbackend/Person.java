@@ -126,9 +126,11 @@ public class Person {
                 if (userInformation.length == 5) {
                     if (this.getId().equals(userInformation[2])) {
                         exists = true;
+                        pw.println(this.getName() + "|" + this.getEmail() + "|" + this.getId() +"|" + this.getRole() + "|" + this.getHall());
                     }
-                    pw.println(user);
-                    
+                    else {
+                        pw.println(user);
+                    }
                 }
             }
 

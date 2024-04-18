@@ -36,7 +36,10 @@ const AvailabilityCalendar: React.FC<{ id: string | null, accFrmExec : boolean |
   const {user} = useAuth0();
   const {getUserRole} : any = useContext(UserDataContext);
   const [isExec, setIsExec] = useState(false);
-  const userid = id || (user && user.sub ? user.sub.split("|")[1] : null);
+
+  /* Get the id for the user and potentially the executive because the availability calendar is on both pages */
+  const execid = id || (user && user.sub ? user.sub.split("|")[1] : null);
+  const userid = (user && user.sub ? user.sub.split("|")[1] : null);
   const execAccess = accFrmExec || false;
   /* Check if user is an executive */
 

@@ -61,9 +61,9 @@ const Settings = () => {
               <Select
                 placeholder="Select Option"
                 className="text-gray-900 !text-sm !bg-gray-50 !border !border-gray-300 focus:!ring-4">
-                <option value="1 Week">1 Week Prior</option>
-                <option value="3 Days">3 Days Prior</option>
-                <option value="1 Day">1 Day Prior</option>
+                  <option value="1 Day">1 Day Prior</option>
+                  <option value="3 Days">3 Days Prior</option>
+                  <option value="1 Week">1 Week Prior</option>  
               </Select>
             </FormControl>
           </div>

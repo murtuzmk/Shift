@@ -77,7 +77,7 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
             this.setFloor(raAttributes[0]);
             this.setClockedIn(Boolean.parseBoolean(raAttributes[1]));
             this.setReaId(raAttributes[2]);
-            this.setReported(Integer.parseInt(personAttributes[3]));
+            this.setReported(Integer.parseInt(raAttributes[3]));
 
 
             // Load Preferences

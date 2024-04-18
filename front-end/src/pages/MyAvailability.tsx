@@ -1,16 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
 import AvailabilityCalendar from "../components/AvailabilityCalendar";
 import MyCalendar from "../components/MyCalendar/MyCalendar";
-import {useAuth0} from "@auth0/auth0-react";
-import { useUser } from "../hooks/useUser";
 import UserDataContext from "../context/UserDataContext";
+import { useGetIdentity } from "@refinedev/core";
+import { VerifiedUser } from "@/types";
 
 export const MyAvailability = () => {
-  const { user } = useAuth0();
-  const {getUserRole} : any = useContext(UserDataContext);
+  const { data: userData } = useGetIdentity();
+  const [user, setUser] = useState<VerifiedUser | null>(null);
+  const { getUserRole }: any = useContext(UserDataContext);
   const [isExec, setIsExec] = useState(false);
-  
+
   useEffect(() => {
+    if (userData) {
+      setUser(userData as VerifiedUser);
+    }
     user &&
       (async () => {
         const userRole = await getUserRole(user?.sub);
@@ -22,12 +26,13 @@ export const MyAvailability = () => {
           console.log("User is an exec" + userRole);
         }
       })();
-  }, [user]);
-  
+  }, [user, userData]);
+
   return (
     <div className="space-y-5">
       <h1 className="text-center font-bold">
-        {isExec ? "Shifts" : "Availability"}</h1>
+        {isExec ? "Shifts" : "Availability"}
+      </h1>
       <div>
         <AvailabilityCalendar id={null} accFrmExec={false} />
       </div>

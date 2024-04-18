@@ -8,9 +8,9 @@ import com.shiftbackend.shiftbackend.Shift.DutyLevel;
 
 import java.util.Map;
 
-
 @RestController
 @RequestMapping("/rea")
+@CrossOrigin(origins = "*")
 public class ResidentEducationAssistantController {
     ResidentEducationAssistant rea = new ResidentEducationAssistant();
 

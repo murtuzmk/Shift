@@ -10,6 +10,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/ra")
+@CrossOrigin(origins = "*")
 public class ResidentAssistantController {
 
     ResidentAssistant ra = new ResidentAssistant();

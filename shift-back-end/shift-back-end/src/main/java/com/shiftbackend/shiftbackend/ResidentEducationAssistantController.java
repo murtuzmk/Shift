@@ -149,12 +149,22 @@ public class ResidentEducationAssistantController {
         return new ResponseEntity<String>("Floor Edited", HttpStatus.CREATED);
     }
 
+    @PostMapping("/{id}/set-timezone")
+    public ResponseEntity<String> setTimezoneREA(@PathVariable String id, @RequestBody Map<String, String> input) {
+        rea.loadAccountFile(id);
+        rea.setTimezone(Integer.parseInt(input.get("timezone")));
+        rea.saveAccountFile();
+        rea.addUser();
+
+        return new ResponseEntity<String>("Timezone Edited", HttpStatus.CREATED);
+    }
+
     @PostMapping("/{id}/set-all")
     public ResponseEntity<String> setInputREA(@PathVariable String id, @RequestBody Map<String, String> input) {
         rea.loadAccountFile(id);
         rea.setName(input.get("name"));
         rea.setEmail(input.get("email"));
-        rea.setId(input.get("inputId"));
+        rea.setId(id);
         rea.setGender(Person.Gender.valueOf(input.get("gender")));
         rea.setHall(Person.Hall.valueOf(input.get("hall")));
         rea.setEnabled(Boolean.parseBoolean(input.get("enabled")));
@@ -170,7 +180,7 @@ public class ResidentEducationAssistantController {
         rea.loadAccountFile(id);
         rea.setName(input.get("name"));
         rea.setEmail(input.get("email"));
-        rea.setId(input.get("inputId"));
+        rea.setId(id);
         rea.setEnabled(Boolean.parseBoolean(input.get("enabled")));
         rea.saveAccountFile();
         rea.addUser();
@@ -203,7 +213,6 @@ public class ResidentEducationAssistantController {
         return new ResponseEntity<String>("Welcome Message Deleted", HttpStatus.CREATED);
     }
     
-
     @GetMapping("/{id}/add-ra/{raId}")
     public ResponseEntity<String> addRAInREA(@PathVariable String id, @PathVariable String raId) {
         rea.loadAccountFile(id);
@@ -274,19 +283,19 @@ public class ResidentEducationAssistantController {
     }
 
     @GetMapping("/{id}/ra/{raId}/get-events")
-    public ResponseEntity<String> getRAEventsREA(@PathVariable String id, @PathVariable String raId) {
+    public ResponseEntity<String[]> getRAEventsREA(@PathVariable String id, @PathVariable String raId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
-        return new ResponseEntity<String>(ra.getSchedule().getEvents(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(ra.getSchedule().getEvents(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/ra/{raId}/get-shifts")
-    public ResponseEntity<String> getRAShiftsREA(@PathVariable String id, @PathVariable String raId) {
+    public ResponseEntity<String[]> getRAShiftsREA(@PathVariable String id, @PathVariable String raId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
-        return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/ra/{raId}/delete-event/{eventId}")
@@ -357,7 +366,7 @@ public class ResidentEducationAssistantController {
     }
 
     @PostMapping("/{id}/ra/{raId}/add-event/{eventId}")
-    public ResponseEntity<String> addRAEventREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String[]> addRAEventREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
@@ -371,11 +380,11 @@ public class ResidentEducationAssistantController {
                                           Integer.parseInt(input.get("endYear")), Integer.parseInt(input.get("endTimezone")));
         ra.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, (input.get("dutyLevel").equals("null")) ? null :Shift.DutyLevel.valueOf(input.get("dutyLevel"))));
         ra.saveAccountFile();
-        return new ResponseEntity<String>(ra.getSchedule().getEvents(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(ra.getSchedule().getEvents(), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/ra/{raId}/add-shift/{eventId}")
-    public ResponseEntity<String> addRAShiftREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId) {
+    public ResponseEntity<String[]> addRAShiftREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId) {
         rea.loadAccountFile(id);
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
@@ -390,11 +399,11 @@ public class ResidentEducationAssistantController {
 
         ra.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, dutyLevel));
         ra.saveAccountFile();
-        return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/ra/{raId}/view-drop-requests/{eventId}")
-    public ResponseEntity<String> viewRAShiftDropsREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId) {
+    @GetMapping("/{id}/ra/{raId}/view-drop-requests")
+    public ResponseEntity<String> viewRAShiftDropsREA(@PathVariable String id, @PathVariable String raId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
         ra.saveAccountFile();
@@ -411,7 +420,7 @@ public class ResidentEducationAssistantController {
     }
 
     @GetMapping("/{id}/ra/{raId}/delete-shift/{eventId}")
-    public ResponseEntity<String> deleteRAShiftREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId) {
+    public ResponseEntity<String[]> deleteRAShiftREA(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
 
@@ -421,11 +430,11 @@ public class ResidentEducationAssistantController {
 
         rea.getSchedule().getEvent(eventId).decAvailability();
 
-        return new ResponseEntity<String>(ra.getSchedule().getShifts(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/create-shift/{eventId}")
-    public ResponseEntity<String> createRAShiftREA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String[]> createShiftREA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         rea.loadAccountFile(id);
         String title = input.get("title");
         String description = input.get("description");
@@ -439,24 +448,24 @@ public class ResidentEducationAssistantController {
                                           
         rea.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, Shift.DutyLevel.valueOf(input.get("dutyLevel")), Integer.parseInt(input.get("availability"))));
         rea.saveAccountFile();
-        return new ResponseEntity<String>(rea.getSchedule().getEvents(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(rea.getSchedule().getEvents(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/get-events")
-    public ResponseEntity<String> getEventsREA(@PathVariable String id) {
+    public ResponseEntity<String[]> getEventsREA(@PathVariable String id) {
         rea.loadAccountFile(id);
 
-        return new ResponseEntity<String>(rea.getSchedule().getEvents(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(rea.getSchedule().getEvents(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/get-shifts")
-    public ResponseEntity<String> getShiftsREA(@PathVariable String id) {
+    public ResponseEntity<String[]> getShiftsREA(@PathVariable String id) {
         rea.loadAccountFile(id);
 
-        return new ResponseEntity<String>(rea.getSchedule().getShifts(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(rea.getSchedule().getShifts(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/get-availablity/{eventId}")
+    @GetMapping("/{id}/get-availability/{eventId}")
     public ResponseEntity<String> getAvailabilityREA(@PathVariable String id, @PathVariable String eventId) {
         rea.loadAccountFile(id);
 
@@ -464,7 +473,7 @@ public class ResidentEducationAssistantController {
     }
 
     @PostMapping("/{id}/create-event/{eventId}")
-    public ResponseEntity<String> createEventREA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+    public ResponseEntity<String[]> createEventREA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
         rea.loadAccountFile(id);
 
         String title = input.get("title");
@@ -477,7 +486,7 @@ public class ResidentEducationAssistantController {
                                           Integer.parseInt(input.get("endYear")), Integer.parseInt(input.get("endTimezone")));
         rea.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, (input.get("dutyLevel").equals("null")) ? null :Shift.DutyLevel.valueOf(input.get("dutyLevel"))));
         rea.saveAccountFile();
-        return new ResponseEntity<String>(rea.getSchedule().getEvents(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(rea.getSchedule().getEvents(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/delete-event/{eventId}")

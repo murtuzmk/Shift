@@ -6,8 +6,9 @@ import { ThemeProvider, useTheme } from "@/components/themes/theme-provider";
 import * as ICAL from "ical.js";
 import { ModeToggle } from "@/components/themes/mode-toggle";
 import jsPDF from "jspdf";
-import ToggleSwitch from "@/components/themes/ToggleSwitch";
+import ToggleSwitch from "@/components/ToggleSwitch";
 import { ClassNames } from "@emotion/react";
+import { EventFilterProvider } from "@/context/EventFilterContext";
 interface Event {
   start: Date;
   end: Date;
@@ -161,6 +162,7 @@ const Dashboard = () => {
         <div className=" bg-gray-50 dark:bg-slate-600 text-black dark:text-white rounded-lg border-dashed border-2 border-gray-300 col-span-2 row-span-1">
           Statistic 4
         </div>
+        <EventFilterProvider>
         <div className="bg-gray-50 dark:bg-slate-600 text-black dark:text-white rounded-lg border-dashed border-2 border-gray-300 col-span-6 row-span-4 p-6 flex flex-col gap-3">
           
           <h1 className="text-xl font-extrabold">General Information</h1>
@@ -198,21 +200,20 @@ const Dashboard = () => {
             <div style={{ transform: 'scale(0.75)' }} className="flex items-center gap-2">
             <h3 className="text-xl font-extrabold"> Show Shifts Only</h3>
             <ToggleSwitch 
-              checked={shiftsOnly}
-              onChange={() => setShiftsOnly(prev=>!prev)}
               id="shiftToggle"
+              toggleType="shifts"
              />
             </div>
             <div style={{ transform: 'scale(0.75)' }} className="flex items-center gap-2">
             <h3 className="text-xl font-extrabold"> Show Conflicting</h3>
             <ToggleSwitch
-              checked={conflicting}
-              onChange={() => setConflicting(prev=>!prev)}
-              id="conflictingToggle"
+              id="conflictToggle"
+              toggleType="conflicts"
              />
             </div>
           </div>
         </div>
+        </EventFilterProvider>
         <div className="bg-gray-100 dark:bg-slate-600 text-black dark:text-white rounded-lg border-dashed border-2 =border-gray-300 col-span-3 row-span-3">
           Co-workers
         </div>

@@ -1,6 +1,6 @@
 import { avatar1, avatar2, avatar3, avatar4 } from "@/assets";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { EmployeeColumns } from "@/pages/Employees";
+import { EmployeeColumns } from "@/pages/employees";
 import React from "react";
 
 export const employees: EmployeeColumns[] = [

@@ -109,7 +109,7 @@ public class ResidentAssistantController {
         ra.loadAccountFile(id);
         ra.setName(input.get("name"));
         ra.setEmail(input.get("email"));
-        ra.setId(input.get(id));
+        ra.setId(id);
         ra.setGender(Person.Gender.valueOf(input.get("gender")));
         ra.setHall(Person.Hall.valueOf(input.get("hall")));
         ra.setEnabled(Boolean.parseBoolean(input.get("enabled")));
@@ -125,7 +125,7 @@ public class ResidentAssistantController {
         ra.loadAccountFile(id);
         ra.setName(input.get("name"));
         ra.setEmail(input.get("email"));
-        ra.setId(input.get(id));
+        ra.setId(id);
         ra.setEnabled(Boolean.parseBoolean(input.get("enabled")));
         ra.saveAccountFile();
         ra.addUser();

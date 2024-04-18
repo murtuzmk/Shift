@@ -164,7 +164,7 @@ public class ResidentEducationAssistantController {
         rea.loadAccountFile(id);
         rea.setName(input.get("name"));
         rea.setEmail(input.get("email"));
-        rea.setId(input.get(id));
+        rea.setId(id);
         rea.setGender(Person.Gender.valueOf(input.get("gender")));
         rea.setHall(Person.Hall.valueOf(input.get("hall")));
         rea.setEnabled(Boolean.parseBoolean(input.get("enabled")));
@@ -180,7 +180,7 @@ public class ResidentEducationAssistantController {
         rea.loadAccountFile(id);
         rea.setName(input.get("name"));
         rea.setEmail(input.get("email"));
-        rea.setId(input.get("inputId"));
+        rea.setId(id);
         rea.setEnabled(Boolean.parseBoolean(input.get("enabled")));
         rea.saveAccountFile();
         rea.addUser();

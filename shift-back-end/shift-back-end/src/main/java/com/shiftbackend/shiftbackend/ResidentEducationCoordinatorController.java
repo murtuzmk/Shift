@@ -186,7 +186,7 @@ public class ResidentEducationCoordinatorController {
         rec.loadAccountFile(id);
         rec.setName(input.get("name"));
         rec.setEmail(input.get("email"));
-        rec.setId(input.get(id));
+        rec.setId(id);
         rec.setGender(Person.Gender.valueOf(input.get("gender")));
         rec.setHall(Person.Hall.valueOf(input.get("hall")));
         rec.setEnabled(Boolean.parseBoolean(input.get("enabled")));
@@ -202,7 +202,7 @@ public class ResidentEducationCoordinatorController {
         rec.loadAccountFile(id);
         rec.setName(input.get("name"));
         rec.setEmail(input.get("email"));
-        rec.setId(input.get("inputId"));
+        rec.setId(id);
         rec.setEnabled(Boolean.parseBoolean(input.get("enabled")));
         rec.saveAccountFile();
         rec.addUser();

@@ -14,8 +14,8 @@ test('onboarding-acc-creation', async ({ page }) => {
   await page.getByRole('link', { name: 'Sign up' }).click();
   await expect(page.getByText('Already have an account? Log')).toBeVisible();
   await page.getByLabel('Email address*').click();
-  //make sure to change number for each test, current number used is 7
-  await page.getByLabel('Email address*').fill('newaccount7@gmail.com');
+  //make sure to change number for each test, current number used is 8
+  await page.getByLabel('Email address*').fill('newaccount8@gmail.com');
   await page.getByLabel('Password*').click();
   await page.getByLabel('Password*').fill('newaccount@gmail.com');
   await expect(page.getByText('Your password must contain: At least 8 characters At least 3 of the following:')).toBeVisible();
@@ -36,7 +36,7 @@ test('onboarding-acc-creation', async ({ page }) => {
   await page.getByLabel('Password*').fill('Newaccount@gmail.com');
   await page.getByLabel('Password*').press('ArrowRight');
   await page.getByLabel('Password*').press('ArrowRight');
-  await page.getByLabel('Password*').fill('New1account7@gmail.com');
+  await page.getByLabel('Password*').fill('New1account8@gmail.com');
   await expect(page.getByText('Your password must contain: At least 8 characters At least 3 of the following:')).toBeVisible();
   await page.getByRole('button', { name: 'Continue', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Authorize App' })).toBeVisible();
@@ -301,7 +301,27 @@ test('generate-report', async ({ page }) => {
   await page.getByRole('button', { name: 'Generate' }).click();
 });
 
-
+//User story from sprint 2: 11, 12, 13, 14
+test('calendar-filters', async ({ page }) => {
+  await page.goto('http://localhost:5173/');
+  await page.getByRole('button', { name: 'Get Started' }).click();
+  await page.getByLabel('Email address*').fill('rea2@gmail.com');
+  await page.getByLabel('Password*').click();
+  await page.getByLabel('Password*').fill('rea2@gmail.com');
+  await page.getByLabel('Password*').press('Enter');
+  await page.getByRole('button', { name: 'Import' }).click();
+  await page.locator('.rbc-row-segment').first().click();
+  await page.getByPlaceholder('Enter title').click();
+  await page.getByPlaceholder('Enter title').fill('example');
+  await page.getByRole('button', { name: 'Create' }).click();
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export' }).click();
+  const download = await downloadPromise;
+  const download1Promise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download' }).click();
+  const download1 = await download1Promise;
+  await page.locator('label').nth(1).click();
+});
 
 //User story from sprint 2: 15
 test('rules', async ({ page }) => {

@@ -7,7 +7,7 @@ import { Button } from "../ui/button";
 import { Bell } from "lucide-react";
 import { logo } from "@/assets";
 import { ModeToggle } from "../mode-toggle";
-
+import EmergencyChat from "../EmergencyChat";
 export const Sidebar = () => {
   const { mutate, isLoading } = useLogout();
   const { menuItems } = useMenu();
@@ -42,6 +42,7 @@ export const Sidebar = () => {
             )}
           </nav>
         </div>
+        <EmergencyChat />
         <ModeToggle />
         <button type="button" disabled={isLoading} onClick={() => mutate()}>
           Delete Account

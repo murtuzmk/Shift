@@ -7,7 +7,8 @@ public class Shift {
     public enum DutyLevel {
         PRIMARY,
         SECONDARY,
-        TERTIARY
+        TERTIARY,
+        MEETING
     }
 
     /* ------------------------ VARIABLES ------------------------ */

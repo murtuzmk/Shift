@@ -250,6 +250,50 @@ public class ResidentEducationAssistantController {
         return new ResponseEntity<String>(rea.getRAs(), HttpStatus.CREATED);
     }
 
+    @GetMapping("/{id}/assign-shifts")
+    public ResponseEntity<String> assignShiftsREA(@PathVariable String id) {
+        rea.loadAccountFile(id);
+
+        rea.assignShifts();
+
+        rea.saveAccountFile();
+
+        return new ResponseEntity<String>("Shifts Assigned", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/assign-shifts-randomly")
+    public ResponseEntity<String> assignShiftsRandomlyREA(@PathVariable String id) {
+        rea.loadAccountFile(id);
+
+        rea.randomlyAssignShifts();
+
+        rea.saveAccountFile();
+
+        return new ResponseEntity<String>("Shifts Assigned", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/assign-shifts-automatically")
+    public ResponseEntity<String> assignShiftsAutomaticallyREA(@PathVariable String id) {
+        rea.loadAccountFile(id);
+
+        rea.automaticallyAssignShifts();
+
+        rea.saveAccountFile();
+
+        return new ResponseEntity<String>("Shifts Assigned", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{id}/shift-complete/{raId}")
+    public ResponseEntity<String> raShiftCompleteREA(@PathVariable String id, @PathVariable String raId, @RequestBody Map<String, String> input) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+
+        ra.addCompletedShift((input.get("dutyLevel").equals("null")) ? null : Shift.DutyLevel.valueOf(input.get("dutyLevel")));
+
+        ra.saveAccountFile();
+        return new ResponseEntity<String>("Added Complete Shift to " + raId, HttpStatus.CREATED);
+    }
+
     @GetMapping("/{id}/ra-primary/{raId}")
     public ResponseEntity<String> completedRAprimaryShiftsREA(@PathVariable String id, @PathVariable String raId) {
         ResidentAssistant ra = new ResidentAssistant();
@@ -296,6 +340,14 @@ public class ResidentEducationAssistantController {
         ra.loadAccountFile(raId);
 
         return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/ra/{raId}/get-meetings")
+    public ResponseEntity<String[]> getRAMeetingsREA(@PathVariable String id, @PathVariable String raId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+
+        return new ResponseEntity<String[]>(ra.getSchedule().getMeetings(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/ra/{raId}/delete-event/{eventId}")
@@ -449,7 +501,7 @@ public class ResidentEducationAssistantController {
                                             Integer.parseInt(input.get("startYear")), Integer.parseInt(input.get("startTimezone")));
         TimeBlock endTime = new TimeBlock(Integer.parseInt(input.get("endHour")), Integer.parseInt(input.get("endMinute")),
                                           Integer.parseInt(input.get("endMonth")), Integer.parseInt(input.get("endDay")),
-                                          Integer.parseInt(input.get("endYear")), Integer.parseInt(input.get("endzone")));
+                                          Integer.parseInt(input.get("endYear")), Integer.parseInt(input.get("endTimezone")));
 
 
         String description = "Weekday";
@@ -460,7 +512,7 @@ public class ResidentEducationAssistantController {
                                           
         rea.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, Shift.DutyLevel.valueOf(input.get("dutyLevel")), Integer.parseInt(input.get("availability"))));
         rea.saveAccountFile();
-        return new ResponseEntity<String[]>(rea.getSchedule().getEvents(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(rea.getSchedule().getShifts(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/get-events")
@@ -475,6 +527,13 @@ public class ResidentEducationAssistantController {
         rea.loadAccountFile(id);
 
         return new ResponseEntity<String[]>(rea.getSchedule().getShifts(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/get-meetings")
+    public ResponseEntity<String[]> getMeetingsREA(@PathVariable String id) {
+        rea.loadAccountFile(id);
+
+        return new ResponseEntity<String[]>(rea.getSchedule().getMeetings(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/get-availability/{eventId}")
@@ -532,6 +591,59 @@ public class ResidentEducationAssistantController {
         rea.getSchedule().deleteEventMonth(Integer.parseInt(input.get("month")), Integer.parseInt(input.get("year")), Integer.parseInt(input.get("timezone")));
         rea.saveAccountFile();
         return new ResponseEntity<String>("Deleted Month", HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/ra/{raId}/add-meeting/{meetingId}")
+    public ResponseEntity<String[]> addRAMeetingREA(@PathVariable String id, @PathVariable String raId, @PathVariable String meetingId) {
+        rea.loadAccountFile(id);
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+
+        String title = rea.getSchedule().getEvent(meetingId).getTitle();
+        String description = rea.getSchedule().getEvent(meetingId).getDescription();
+        TimeBlock startTime = rea.getSchedule().getEvent(meetingId).getStart();
+        TimeBlock endTime = rea.getSchedule().getEvent(meetingId).getEnd();
+        DutyLevel dutyLevel = rea.getSchedule().getEvent(meetingId).getDutyLevel();
+
+        rea.getSchedule().getEvent(meetingId).decAvailability();
+
+        ra.getSchedule().addEvent(new Shift (meetingId, title, description, startTime, endTime, dutyLevel));
+        ra.saveAccountFile();
+        rea.saveAccountFile();
+        return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/ra/{raId}/delete-meeting/{meetingId}")
+    public ResponseEntity<String[]> deleteRAMeetingREA(@PathVariable String id, @PathVariable String raId, @PathVariable String meetingId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+
+        ra.getSchedule().deleteShift(meetingId);
+        ra.deleteShiftDropRequest(meetingId);
+        ra.saveAccountFile();
+
+        rea.getSchedule().getEvent(meetingId).incAvailability();
+
+        rea.saveAccountFile();
+
+        return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/create-meeting/{meetingId}")
+    public ResponseEntity<String[]> createMeetingREA(@PathVariable String id, @PathVariable String meetingId, @RequestBody Map<String, String> input) {
+        rea.loadAccountFile(id);
+        String title = input.get("title");
+        String description = input.get("description");
+        TimeBlock startTime = new TimeBlock(Integer.parseInt(input.get("startHour")), Integer.parseInt(input.get("startMinute")),
+                                            Integer.parseInt(input.get("startMonth")), Integer.parseInt(input.get("startDay")),
+                                            Integer.parseInt(input.get("startYear")), Integer.parseInt(input.get("startTimezone")));
+        TimeBlock endTime = new TimeBlock(Integer.parseInt(input.get("endHour")), Integer.parseInt(input.get("endMinute")),
+                                          Integer.parseInt(input.get("endMonth")), Integer.parseInt(input.get("endDay")),
+                                          Integer.parseInt(input.get("endYear")), Integer.parseInt(input.get("endTimezone")));
+                                          
+        rea.getSchedule().addEvent(new Shift (meetingId, title, description, startTime, endTime, Shift.DutyLevel.valueOf("MEETING"), Integer.parseInt(input.get("availability"))));
+        rea.saveAccountFile();
+        return new ResponseEntity<String[]>(rea.getSchedule().getShifts(), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/find-user-in-hall")

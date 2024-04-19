@@ -196,20 +196,15 @@ public class ResidentEducationAssistant extends ResidentAssistant{
         raAccounts.remove(raId);
     }
 
-    public String getRAs() {
-        StringBuilder buffer = new StringBuilder();
+    public String[] getRAs() {
+        String[] array = new String[raAccounts.size()];
 
-        buffer.append("{\"raIds\": \"");
         for (int i = 0; i < raAccounts.size(); i++) {
-            if (i != 0) {
-                buffer.append("|");
-            }
-            buffer.append(raAccounts.get(i));
+            array[i] = "{\"raId\": \"" + raAccounts.get(i) + "\"}";
             
         }
-        buffer.append("\"}");
 
-        return buffer.toString();
+        return array;
     }
 
     public void createWelcomeMessage(String input) {

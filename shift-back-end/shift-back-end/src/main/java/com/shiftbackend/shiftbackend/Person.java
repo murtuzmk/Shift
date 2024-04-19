@@ -3,6 +3,7 @@ package com.shiftbackend.shiftbackend;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Person {
@@ -178,10 +179,10 @@ public class Person {
         }
     }
 
-    public String findInHall(String role, String hall)  {
+    public String[] findInHall(String role, String hall)  {
 
         File accounts = new File(System.getProperty("user.dir") + "/test_database", "allAccounts.txt");
-        String returnString = "Error Finding Related Hall Users";
+        ArrayList<String> temp = new ArrayList<String>();
         try {
             Scanner reader = new Scanner(accounts);
             StringBuilder buffer = new StringBuilder();
@@ -202,13 +203,10 @@ public class Person {
                     }
                     
 
-                    buffer.append(userInformation[2]);
+                    temp.add(userInformation[2]);
                 }
                 
             }
-            buffer.append("\"");
-
-            returnString = buffer.toString();
             
             reader.close();
         
@@ -217,7 +215,7 @@ public class Person {
             e.printStackTrace();
         }
 
-        return returnString;
+        return temp.toArray(new String[0]);
     }
 
     /*------------------------ GETTERS & SETTERS ------------------------*/

@@ -244,10 +244,10 @@ public class ResidentEducationAssistantController {
     }
 
     @GetMapping("/{id}/get-ras")
-    public ResponseEntity<String> getRAsInREA(@PathVariable String id) {
+    public ResponseEntity<String[]> getRAsInREA(@PathVariable String id) {
         rea.loadAccountFile(id);
 
-        return new ResponseEntity<String>(rea.getRAs(), HttpStatus.CREATED);
+        return new ResponseEntity<String[]>(rea.getRAs(), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}/assign-shifts")
@@ -646,19 +646,43 @@ public class ResidentEducationAssistantController {
         return new ResponseEntity<String[]>(rea.getSchedule().getShifts(), HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/find-user-in-hall")
-    public ResponseEntity<String> findIdsInHallRA(@PathVariable String id, @RequestBody Map<String, String> input) {
+    @PostMapping("/{id}/find-ra-in-hall")
+    public ResponseEntity<String[]> findRAsInHallRA(@PathVariable String id, @RequestBody Map<String, String> input) {
         
-        StringBuilder buffer = new StringBuilder();
-        buffer.append("{ \"raIds\" : ");
-        buffer.append(rea.findInHall("RA", input.get("hall")));
-        buffer.append("\n\"reaIds\" : ");
-        buffer.append(rea.findInHall("REA", input.get("hall")));
-        buffer.append("\n\"recIds\" : ");
-        buffer.append(rea.findInHall("REC", input.get("hall")));
-        buffer.append(" }");
         
-        return new ResponseEntity<String>(buffer.toString(), HttpStatus.OK);
+        String[] array = rea.findInHall("RA", input.get("hall"));
+
+        for (int i = 0; i < array.length; i++) {
+            array[i] = "{\"raId\": \"" + array[i] + "\"}";
+        }
+        
+        return new ResponseEntity<String[]>(array, HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/find-rea-in-hall")
+    public ResponseEntity<String[]> findREAsInHallRA(@PathVariable String id, @RequestBody Map<String, String> input) {
+        
+        
+        String[] array = rea.findInHall("REA", input.get("hall"));
+
+        for (int i = 0; i < array.length; i++) {
+            array[i] = "{\"reaId\": \"" + array[i] + "\"}";
+        }
+        
+        return new ResponseEntity<String[]>(array, HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/find-rec-in-hall")
+    public ResponseEntity<String[]> findRECsInHallRA(@PathVariable String id, @RequestBody Map<String, String> input) {
+        
+        
+        String[] array = rea.findInHall("REC", input.get("hall"));
+
+        for (int i = 0; i < array.length; i++) {
+            array[i] = "{\"recId\": \"" + array[i] + "\"}";
+        }
+        
+        return new ResponseEntity<String[]>(array, HttpStatus.OK);
     }
 
     @GetMapping("/{id}/report-ra/{raId}")

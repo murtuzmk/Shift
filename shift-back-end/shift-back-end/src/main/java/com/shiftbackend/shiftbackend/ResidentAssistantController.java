@@ -194,6 +194,13 @@ public class ResidentAssistantController {
         return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/get-meetings")
+    public ResponseEntity<String[]> getMeetingsRA(@PathVariable String id) {
+        ra.loadAccountFile(id);
+
+        return new ResponseEntity<String[]>(ra.getSchedule().getMeetings(), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}/delete-event/{eventId}")
     public ResponseEntity<String> deleteEventRA(@PathVariable String id, @PathVariable String eventId) {
         ra.loadAccountFile(id);

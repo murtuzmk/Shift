@@ -14,7 +14,11 @@ test('Login', async ({ page }) => {
     page.getByRole('button', { name: 'Get Started', exact: true }).click(),
   ]);
   //await page.getByRole('button', { name: 'Get Started' }).click();
-  await page.getByLabel('Email address*').fill('rea2@gmail.com');
+  const [response2] = await Promise.all([
+    page.waitForNavigation(),
+    page.getByLabel('Email address*').fill('rea2@gmail.com'),
+  ]);
+  //await page.getByLabel('Email address*').fill('rea2@gmail.com');
   await page.getByLabel('Password*').click();
   await page.getByLabel('Password*').fill('rea2@gmail.com');
   await page.getByRole('button', { name: 'Continue', exact: true }).click();

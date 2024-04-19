@@ -1,5 +1,8 @@
 import { ReactNode, createContext, useState } from "react";
-import { token } from ".";
+import fetchWrapper from "./fetch-wrapper";
+import { MAN_API_URL } from "./auth-man";
+import { VerifiedUser } from "@/types";
+// import { token } from ".";
 
 interface UserMeta {
   onboarded?: boolean;
@@ -8,6 +11,7 @@ interface UserMeta {
 const UserDataContext = createContext({});
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
+  const token = localStorage.getItem("man_auth");
   const getAccessToken = () => {
     return token;
   };
@@ -101,18 +105,30 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const getUserRole = async (userId: any) => {
-    const data = await fetch(
-      `https://dev-e7jyddja3xm6p30e.us.auth0.com/api/v2/users/${userId}/roles`,
-      {
-        method: "GET",
-        headers: {
-          "content-type": "application/json",
-          authorization: `Bearer ${token}`,
-        },
-      }
+    const options = {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await fetchWrapper(
+      `${MAN_API_URL}/users/${userId}`,
+      options
     );
-    const response = await data.json();
-    return response[0].name;
+    // const data = await fetch(
+    //   `https://dev-e7jyddja3xm6p30e.us.auth0.com/api/v2/users/${userId}/roles`,
+    //   {
+    //     method: "GET",
+    //     headers: {
+    //       "content-type": "application/json",
+    //       authorization: `Bearer ${token}`,
+    //     },
+    //   }
+    // );
+    const data = await response.json();
+    const user = data as VerifiedUser;
+    return user.user_metadata.role;
   };
 
   const createPassChangeTicket = async (userId: any) => {
@@ -288,8 +304,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         getRAs,
         getREAs,
         getRECs,
-      }}
-    >
+      }}>
       {children}
     </UserDataContext.Provider>
   );

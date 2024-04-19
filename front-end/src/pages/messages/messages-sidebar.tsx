@@ -11,29 +11,27 @@ import { Message } from "./sample-data";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
+import { ChannelPreviewProps } from "stream-chat-react";
 
-type MessagesSidebarProps = {
-  isCollapsed: boolean;
+type MessagesSidebarProps = ChannelPreviewProps & {
   links: {
     name: string;
     messages: Message[];
     avatar: string;
     variant: "secondary" | "ghost";
   }[];
-  onClick?: () => void;
   isMobile: boolean;
 };
 
-export function MessagesSidebar({
-  links,
-  isCollapsed,
-  isMobile,
-}: MessagesSidebarProps) {
+export function MessagesSidebar(props: MessagesSidebarProps) {
+  const { channel, setActiveChannel, links, isMobile } = props;
+  const { messages } = channel.state;
+  const messagePreview = messages[messages.length - 1]?.text?.slice(0, 30);
   return (
     <div
-      data-collapsed={isCollapsed}
+      data-collapsed={isMobile}
       className="relative group flex flex-col h-full gap-4 p-2 data-[collapsed=true]:p-2 ">
-      {!isCollapsed && (
+      {!isMobile && (
         <div className="flex justify-between px-4 pt-9">
           <div className="flex space-x-3 items-center">
             <p className="text-lg font-medium">Messages</p>
@@ -50,7 +48,7 @@ export function MessagesSidebar({
       )}
       <nav className="grid group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
         {links.map((link, index) =>
-          isCollapsed ? (
+          isMobile ? (
             <TooltipProvider key={index}>
               <Tooltip key={index} delayDuration={0}>
                 <TooltipTrigger asChild>

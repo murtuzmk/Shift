@@ -24,9 +24,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useDelete, useGetIdentity, useList, useUpdate } from "@refinedev/core";
+import {
+  useCreate,
+  useDelete,
+  useGetIdentity,
+  useList,
+  useUpdate,
+} from "@refinedev/core";
 import { VerifiedUser } from "@/types";
 import { useOnboardContext } from "@/context/justOnboarded";
+import fetchWrapper from "@/context/fetch-wrapper";
 
 const residenceHalls = [
   "Meredith",
@@ -85,6 +92,7 @@ export const Onboarding = () => {
     },
   });
   const { mutate: updateData, isLoading: isUpdating } = useUpdate();
+  const { mutate: createData } = useCreate();
   const { data: userData } = useGetIdentity();
   const [user, setUser] = useState<VerifiedUser | null>(null);
   const { data: usersRoles } = useList({
@@ -96,6 +104,24 @@ export const Onboarding = () => {
   const navigate = useNavigate();
   async function onOnboardingSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    const options = {
+      method: "POST",
+      headers: {
+        "PRIVATE-KEY": "0e59da6a-ca0d-4f13-884e-c87675cd0880",
+      },
+      body: JSON.stringify({
+        username: user!.email,
+        secret: user!.email,
+        email: user!.email,
+        first_name: values.name,
+      }),
+    };
+    const response = await fetchWrapper(
+      "https://api.chatengine.io/users/",
+      options
+    );
+    const data = await response.json();
+    console.log(data);
     updateData(
       {
         resource: "users",

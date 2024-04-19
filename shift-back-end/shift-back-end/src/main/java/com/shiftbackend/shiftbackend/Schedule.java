@@ -290,6 +290,44 @@ public class Schedule {
         return array;
     }
 
+    public String[] getMeetings() {
+        ArrayList<Shift> temp = new ArrayList<Shift>();
+
+        for (Shift event : events) {
+            if (event.getDutyLevel() == DutyLevel.MEETING) {
+                temp.add(event);
+            }
+        }
+
+        return stringArrayShift(temp);
+    }
+
+    public int countMeetings() {
+        int count = 0;
+
+        for (Shift event : events) {
+            if (event.getDutyLevel() == DutyLevel.MEETING) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    public Shift[] meetingsArray() {
+        Shift[] array = new Shift[countMeetings()];
+        int i = 0;
+
+        for (Shift event : events) {
+            if (event.getDutyLevel() == DutyLevel.MEETING) {
+                array[i] = event;
+                i++;
+            }
+        }
+
+        return array;
+    }
+
     public String[] stringArrayShift(ArrayList<Shift> temp) { 
 
         String[] array = new String[temp.size()];

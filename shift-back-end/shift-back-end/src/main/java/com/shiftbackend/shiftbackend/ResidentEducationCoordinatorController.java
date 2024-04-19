@@ -397,6 +397,14 @@ public class ResidentEducationCoordinatorController {
         return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/ra/{raId}/get-meetings")
+    public ResponseEntity<String[]> getRAMeetingsREA(@PathVariable String id, @PathVariable String raId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+
+        return new ResponseEntity<String[]>(ra.getSchedule().getMeetings(), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}/ra/{raId}/delete-event/{eventId}")
     public ResponseEntity<String> deleteRAEventREC(@PathVariable String id, @PathVariable String raId, @PathVariable String eventId) {
         ResidentAssistant ra = new ResidentAssistant();
@@ -573,6 +581,13 @@ public class ResidentEducationCoordinatorController {
         return new ResponseEntity<String[]>(rec.getSchedule().getShifts(), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/get-meetings")
+    public ResponseEntity<String[]> getMeetingsREA(@PathVariable String id) {
+        rec.loadAccountFile(id);
+
+        return new ResponseEntity<String[]>(rec.getSchedule().getMeetings(), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}/get-availability/{eventId}")
     public ResponseEntity<String> getAvailabilityREC(@PathVariable String id, @PathVariable String eventId) {
         rec.loadAccountFile(id);
@@ -628,6 +643,59 @@ public class ResidentEducationCoordinatorController {
         rec.getSchedule().deleteEventMonth(Integer.parseInt(input.get("month")), Integer.parseInt(input.get("year")), Integer.parseInt(input.get("timezone")));
         rec.saveAccountFile();
         return new ResponseEntity<String>("Deleted Month", HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/ra/{raId}/add-meeting/{meetingId}")
+    public ResponseEntity<String[]> addRAMeetingREA(@PathVariable String id, @PathVariable String raId, @PathVariable String meetingId) {
+        rec.loadAccountFile(id);
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+
+        String title = rec.getSchedule().getEvent(meetingId).getTitle();
+        String description = rec.getSchedule().getEvent(meetingId).getDescription();
+        TimeBlock startTime = rec.getSchedule().getEvent(meetingId).getStart();
+        TimeBlock endTime = rec.getSchedule().getEvent(meetingId).getEnd();
+        DutyLevel dutyLevel = rec.getSchedule().getEvent(meetingId).getDutyLevel();
+
+        rec.getSchedule().getEvent(meetingId).decAvailability();
+
+        ra.getSchedule().addEvent(new Shift (meetingId, title, description, startTime, endTime, dutyLevel));
+        ra.saveAccountFile();
+        rec.saveAccountFile();
+        return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/ra/{raId}/delete-meeting/{meetingId}")
+    public ResponseEntity<String[]> deleteRAMeetingREA(@PathVariable String id, @PathVariable String raId, @PathVariable String meetingId) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+
+        ra.getSchedule().deleteShift(meetingId);
+        ra.deleteShiftDropRequest(meetingId);
+        ra.saveAccountFile();
+
+        rec.getSchedule().getEvent(meetingId).incAvailability();
+
+        rec.saveAccountFile();
+
+        return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/create-meeting/{meetingId}")
+    public ResponseEntity<String[]> createMeetingREA(@PathVariable String id, @PathVariable String meetingId, @RequestBody Map<String, String> input) {
+        rec.loadAccountFile(id);
+        String title = input.get("title");
+        String description = input.get("description");
+        TimeBlock startTime = new TimeBlock(Integer.parseInt(input.get("startHour")), Integer.parseInt(input.get("startMinute")),
+                                            Integer.parseInt(input.get("startMonth")), Integer.parseInt(input.get("startDay")),
+                                            Integer.parseInt(input.get("startYear")), Integer.parseInt(input.get("startTimezone")));
+        TimeBlock endTime = new TimeBlock(Integer.parseInt(input.get("endHour")), Integer.parseInt(input.get("endMinute")),
+                                          Integer.parseInt(input.get("endMonth")), Integer.parseInt(input.get("endDay")),
+                                          Integer.parseInt(input.get("endYear")), Integer.parseInt(input.get("endTimezone")));
+                                          
+        rec.getSchedule().addEvent(new Shift (meetingId, title, description, startTime, endTime, Shift.DutyLevel.valueOf("MEETING"), Integer.parseInt(input.get("availability"))));
+        rec.saveAccountFile();
+        return new ResponseEntity<String[]>(rec.getSchedule().getShifts(), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/find-user-in-hall")

@@ -1,11 +1,14 @@
 import React, {useState, ChangeEvent, FormEvent, useRef, useEffect}from "react";
+import { set } from "react-hook-form";
 
 /* Emergency Chat Component on Sidebar Visible on all pages */
 const EmergencyChat = () => {
     const [messages, setMessages] = useState<string[]>([]);
     const [newMessage, setNewMessage] = useState("");
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const [numMessage, setNumMessage] = useState(0);
 
+    const maxCount = 6;
     const handleSend = (e : FormEvent<HTMLFormElement>) => {
         e.preventDefault(); // Stop refresh
         /* Way to clear the chat box - Change later*/
@@ -15,6 +18,17 @@ const EmergencyChat = () => {
         }
         /* Dont add empty messages*/
         if (newMessage.trim() !== "") {
+            setNumMessage(numMessage + 1);
+            /* spamming */
+            if (numMessage >= maxCount) {
+                // Remove the first message
+                window.alert("You are sending too many messages!");
+                return;
+            } else {
+                setTimeout(() => {
+                    setNumMessage(numMessage - 1);
+                }, 30000);
+            }
             // Adding that new message to the feed basically
             setMessages([...messages, newMessage]);
             setNewMessage("");

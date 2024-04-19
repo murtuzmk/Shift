@@ -44,7 +44,7 @@ export const Sidebar = () => {
         </div>
         <ModeToggle />
         <button type="button" disabled={isLoading} onClick={() => mutate()}>
-          Logout
+          Delete Account
         </button>
       </div>
     </nav>

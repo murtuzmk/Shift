@@ -10,6 +10,8 @@ import "./MyCalendar.css";
 import { set } from "react-hook-form";
 import { useEventFilter } from "@/context/EventFilterContext";
 import { useUser } from "@/hooks/useUser";
+import { VerifiedUser } from "@/types";
+import { useGetIdentity } from "@refinedev/core";
 
 interface MyCalendarProps {
   importedEvents: Event[];
@@ -183,7 +185,8 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const {showShifts} = useEventFilter();
-  const { user } = useUser();
+  const { data: userData } = useGetIdentity();
+  const [user, setUser] = useState<VerifiedUser | null>(null);
   const id = (user && user.sub ? user.sub.split("|")[1] : null);
 
   const eventStylerGetter = (event: Event) => {
@@ -200,6 +203,11 @@ const MyCalendar = ({ importedEvents, onEventsChange  }: MyCalendarProps) => {
     fetchEvents();
     fetchShifts();
   }, []);
+  useEffect(() => {
+    if (userData) {
+      setUser(userData as VerifiedUser);
+    }
+  }, [userData]);
 
   /* Filter events based on the showShifts boolean */
   const filteredEvents = useMemo(() => {

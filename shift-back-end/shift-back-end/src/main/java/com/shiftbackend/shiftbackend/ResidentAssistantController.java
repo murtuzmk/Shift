@@ -194,6 +194,13 @@ public class ResidentAssistantController {
         return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/get-meetings")
+    public ResponseEntity<String[]> getMeetingsRA(@PathVariable String id) {
+        ra.loadAccountFile(id);
+
+        return new ResponseEntity<String[]>(ra.getSchedule().getMeetings(), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}/delete-event/{eventId}")
     public ResponseEntity<String> deleteEventRA(@PathVariable String id, @PathVariable String eventId) {
         ra.loadAccountFile(id);
@@ -287,8 +294,8 @@ public class ResidentAssistantController {
         return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/request-drop/{eventId}")
-    public ResponseEntity<String[]> requestShiftDropRA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+    @GetMapping("/{id}/request-drop/{eventId}")
+    public ResponseEntity<String[]> requestShiftDropRA(@PathVariable String id, @PathVariable String eventId) {
         ra.loadAccountFile(id);
         ResidentEducationAssistant rea = new ResidentEducationAssistant();
         rea.loadAccountFile(ra.getReaId());
@@ -301,8 +308,8 @@ public class ResidentAssistantController {
         return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/request-drop-delete/{eventId}")
-    public ResponseEntity<String[]> requestShiftDropDeleteRA(@PathVariable String id, @PathVariable String eventId, @RequestBody Map<String, String> input) {
+    @GetMapping("/{id}/request-drop-delete/{eventId}")
+    public ResponseEntity<String[]> requestShiftDropDeleteRA(@PathVariable String id, @PathVariable String eventId) {
         ra.loadAccountFile(id);
         ResidentEducationAssistant rea = new ResidentEducationAssistant();
         rea.loadAccountFile(ra.getReaId());
@@ -315,19 +322,43 @@ public class ResidentAssistantController {
         return new ResponseEntity<String[]>(ra.getSchedule().getShifts(), HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/find-user-in-hall")
-    public ResponseEntity<String> findIdsInHallRA(@PathVariable String id, @RequestBody Map<String, String> input) {
+    @PostMapping("/{id}/find-ra-in-hall")
+    public ResponseEntity<String[]> findRAsInHallRA(@PathVariable String id, @RequestBody Map<String, String> input) {
         
-        StringBuilder buffer = new StringBuilder();
-        buffer.append("{ \"raIds\" : ");
-        buffer.append(ra.findInHall("RA", input.get("hall")));
-        buffer.append("\n\"reaIds\" : ");
-        buffer.append(ra.findInHall("REA", input.get("hall")));
-        buffer.append("\n\"recIds\" : ");
-        buffer.append(ra.findInHall("REC", input.get("hall")));
-        buffer.append(" }");
         
-        return new ResponseEntity<String>(buffer.toString(), HttpStatus.OK);
+        String[] array = ra.findInHall("RA", input.get("hall"));
+
+        for (int i = 0; i < array.length; i++) {
+            array[i] = "{\"raId\": \"" + array[i] + "\"}";
+        }
+        
+        return new ResponseEntity<String[]>(array, HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/find-rea-in-hall")
+    public ResponseEntity<String[]> findREAsInHallRA(@PathVariable String id, @RequestBody Map<String, String> input) {
+        
+        
+        String[] array = ra.findInHall("REA", input.get("hall"));
+
+        for (int i = 0; i < array.length; i++) {
+            array[i] = "{\"reaId\": \"" + array[i] + "\"}";
+        }
+        
+        return new ResponseEntity<String[]>(array, HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/find-rec-in-hall")
+    public ResponseEntity<String[]> findRECsInHallRA(@PathVariable String id, @RequestBody Map<String, String> input) {
+        
+        
+        String[] array = ra.findInHall("REC", input.get("hall"));
+
+        for (int i = 0; i < array.length; i++) {
+            array[i] = "{\"recId\": \"" + array[i] + "\"}";
+        }
+        
+        return new ResponseEntity<String[]>(array, HttpStatus.OK);
     }
 
     @GetMapping("/{id}/report-ra/{raId}")

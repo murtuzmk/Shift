@@ -281,6 +281,7 @@ const MyCalendar = ({ importedEvents, onEventsChange }: MyCalendarProps) => {
   const [events, setEvents] = useState<Event[]>([exampleEvent]);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [searchRequest, setSearchRequest] = useState<string>("");
   const { showShifts } = useEventFilter();
   const { data: userData } = useGetIdentity();
   const [user, setUser] = useState<VerifiedUser | null>(null);
@@ -332,8 +333,22 @@ const MyCalendar = ({ importedEvents, onEventsChange }: MyCalendarProps) => {
   const filteredEvents = useMemo(() => {
     console.log("Show shifts", showShifts); /* Debugging */
     const allEvents = [...importedEvents, ...events];
-    return showShifts ? allEvents.filter((event) => event.isShift) : allEvents;
-  }, [importedEvents, events, showShifts]);
+    return allEvents.filter (event => {
+      
+      const isShiftFilter = showShifts ? event.isShift : true;
+      if (!searchRequest.trim()) {
+        // If the search input is empty, ignore the title filter
+        return isShiftFilter;
+      }
+      const title = event.title.toLowerCase();
+      const search = searchRequest.toLowerCase();
+      const isSearchFilter = title.includes(search);
+      return isShiftFilter && isSearchFilter;
+    }
+      
+    )
+    //return showShifts ? allEvents.filter((event) => event.isShift) : allEvents;
+  }, [importedEvents, events, showShifts,searchRequest]);
 
   useEffect(() => {
     onEventsChange(
@@ -523,6 +538,15 @@ const MyCalendar = ({ importedEvents, onEventsChange }: MyCalendarProps) => {
   return (
     <>
     <div style={{ width: "800px", height: "450px" }}>
+      <div className="flex justify-end items-center mb-4"> 
+        <Input
+          placeholder="Search for events"
+          type="text"
+          value={searchRequest}
+          onChange={(e) => setSearchRequest(e.target.value)}
+        />
+      </div>
+     
       <Calendar
         localizer={localizer}
         events={filteredEvents}

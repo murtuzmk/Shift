@@ -14,8 +14,8 @@ test('onboarding-acc-creation', async ({ page }) => {
   await page.getByRole('link', { name: 'Sign up' }).click();
   await expect(page.getByText('Already have an account? Log')).toBeVisible();
   await page.getByLabel('Email address*').click();
-  //make sure to change number for each test, current number used is 5
-  await page.getByLabel('Email address*').fill('newaccount5@gmail.com');
+  //make sure to change number for each test, current number used is 8
+  await page.getByLabel('Email address*').fill('newaccount8@gmail.com');
   await page.getByLabel('Password*').click();
   await page.getByLabel('Password*').fill('newaccount@gmail.com');
   await expect(page.getByText('Your password must contain: At least 8 characters At least 3 of the following:')).toBeVisible();
@@ -36,7 +36,7 @@ test('onboarding-acc-creation', async ({ page }) => {
   await page.getByLabel('Password*').fill('Newaccount@gmail.com');
   await page.getByLabel('Password*').press('ArrowRight');
   await page.getByLabel('Password*').press('ArrowRight');
-  await page.getByLabel('Password*').fill('New1account5@gmail.com');
+  await page.getByLabel('Password*').fill('New1account8@gmail.com');
   await expect(page.getByText('Your password must contain: At least 8 characters At least 3 of the following:')).toBeVisible();
   await page.getByRole('button', { name: 'Continue', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Authorize App' })).toBeVisible();

@@ -196,10 +196,10 @@ export const Employees = () => {
         </div>
         <Dialog>
           <DialogTrigger asChild>
-            <Button size={"sm"}>
+            {/* <Button size={"sm"}>
               <Plus className="h-4 w-4 mr-1" />
               Add Employee
-            </Button>
+            </Button> */}
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>

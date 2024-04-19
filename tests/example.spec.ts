@@ -77,7 +77,7 @@ test('reset-password', async ({ page }) => {
 });
 
 //User story from sprint 1: 4
-test('Logout', async ({ page }) => {
+test('delete', async ({ page }) => {
   await page.goto('http://localhost:5173/');
   await page.getByRole('button', { name: 'Get Started' }).click();
   await page.getByLabel('Email address*').fill('rea2@gmail.com');

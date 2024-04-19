@@ -262,6 +262,8 @@ public class ResidentAssistant extends Person{
                 case Shift.DutyLevel.TERTIARY:
                     typesOfShifts[2]++;
                     break;
+                case Shift.DutyLevel.MEETING:
+                    break;
             }
         }
     }

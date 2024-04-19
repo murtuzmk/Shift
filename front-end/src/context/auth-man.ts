@@ -5,7 +5,7 @@ const DOMAIN = import.meta.env.VITE_AUTH0_DOMAIN;
 const CLIENT_ID = import.meta.env.VITE_AUTH0_CLIENT_ID_API;
 const CLIENT_SECRET = import.meta.env.VITE_AUTH0_CLIENT_SECRET_API;
 
-const MAN_API_URL = `https://${DOMAIN}/api/v2`;
+export const MAN_API_URL = `https://${DOMAIN}/api/v2`;
 const TOKEN_URL = `https://${DOMAIN}/oauth/token`;
 
 type tokenResponse = {

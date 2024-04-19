@@ -1,0 +1,55 @@
+@import "stream-chat-react/dist/css/v2/index.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+}
+
+.str-chat {
+  --str-chat__primary-color: theme(colors.primary.DEFAULT);
+  /* --str-chat__primary-overlay-color: rgba(theme(colors.primary.DEFAULT), 0.6); */
+  /* --str-chat__primary-color-low-emphasis: rgba(
+    theme(colors.primary.DEFAULT),
+    0.6
+  ); */
+  /* --str-chat__active-primary-color: red; */
+  --str-chat__on-primary-color: theme(colors.primary.foreground);
+  --str-chat__background-color: theme(colors.background);
+  --str-chat__secondary-background-color: theme(colors.background);
+  --str-chat__primary-surface-color: theme(colors.muted.DEFAULT);
+  /* --str-chat__primary-surface-color-low-emphasis */
+  --str-chat__surface-color: theme(colors.muted.DEFAULT);
+  --str-chat__secondary-surface-color: theme(colors.accent.DEFAULT);
+  /* --str-chat__tertiary-surface-color: theme(colors.muted.DEFAULT); */
+  --str-chat__text-color: theme(colors.foreground);
+  /* --str-chat__text-low-emphasis-color */
+  --str-chat__disabled-color: theme(colors.muted.foreground);
+  /* --str-chat__on-disabled-color */
+  --str-chat__danger-color: theme(colors.destructive.DEFAULT);
+  /* --str-chat__message-highlight-color */
+  --str-chat__unread-badge-color: theme(colors.destructive.DEFAULT);
+  /* --str-chat__on-unread-badge-color */
+  /* --str-chat__overlay-color: red; */
+  /* --str-chat__secondary-overlay-color: red; */
+  /* --str-chat__secondary-overlay-text-color */
+  /* --str-chat__opaque-surface-background-color */
+  --str-chat__opaque-surface-text-color: theme(colors.foreground);
+  /* --str-chat__box-shadow-color: red; */
+  /* --str-chat__info-color */
+}
+
+body {
+  margin: 0;
+}
+
+.str-chat__channel-list {
+  width: 30%;
+}
+.str-chat__channel {
+  width: 100%;
+}
+.str-chat__thread {
+  width: 45%;
+}

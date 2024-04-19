@@ -7,15 +7,15 @@ test('has title', async ({ page }) => {
   await expect(page).toHaveTitle(/Shift/);
 });
 
-//User story from sprint 1: 1, 5,
+//User story from sprint 1: 1, 5; sprint 2: 1
 test('onboarding-acc-creation', async ({ page }) => {
   await page.goto('http://localhost:5173/');
   await page.getByRole('button', { name: 'Get Started' }).click();
   await page.getByRole('link', { name: 'Sign up' }).click();
   await expect(page.getByText('Already have an account? Log')).toBeVisible();
   await page.getByLabel('Email address*').click();
-  //make sure to change number for each test, current number used is 3
-  await page.getByLabel('Email address*').fill('newaccount3@gmail.com');
+  //make sure to change number for each test, current number used is 4
+  await page.getByLabel('Email address*').fill('newaccount4@gmail.com');
   await page.getByLabel('Password*').click();
   await page.getByLabel('Password*').fill('newaccount@gmail.com');
   await expect(page.getByText('Your password must contain: At least 8 characters At least 3 of the following:')).toBeVisible();
@@ -36,7 +36,7 @@ test('onboarding-acc-creation', async ({ page }) => {
   await page.getByLabel('Password*').fill('Newaccount@gmail.com');
   await page.getByLabel('Password*').press('ArrowRight');
   await page.getByLabel('Password*').press('ArrowRight');
-  await page.getByLabel('Password*').fill('New1account3@gmail.com');
+  await page.getByLabel('Password*').fill('New1account4@gmail.com');
   await expect(page.getByText('Your password must contain: At least 8 characters At least 3 of the following:')).toBeVisible();
   await page.getByRole('button', { name: 'Continue', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Authorize App' })).toBeVisible();
@@ -74,6 +74,21 @@ test('reset-password', async ({ page }) => {
   await page.getByLabel('Email address*').fill('rea2@gmail.com');
   await page.getByRole('button', { name: 'Continue' }).click();
   await expect(page.getByRole('heading', { name: 'Check Your Email' })).toBeVisible();
+});
+
+//User story from sprint 1: 4
+test('Logout', async ({ page }) => {
+  await page.goto('http://localhost:5173/');
+  await page.getByRole('button', { name: 'Get Started' }).click();
+  await page.getByLabel('Email address*').fill('rea2@gmail.com');
+  await page.getByLabel('Password*').click();
+  await page.getByLabel('Password*').fill('rea2@gmail.com');
+  await page.getByLabel('Password*').press('Enter');
+  await page.getByRole('button', { name: 'Toggle theme' }).nth(1).click();
+  await page.getByRole('menuitem', { name: 'Light' }).click();
+  await expect(page.locator('div').filter({ hasText: 'DashboardEmployeesExecutive' }).nth(4)).toBeVisible();
+  await page.getByRole('button', { name: 'Delete Account' }).click();
+  await expect(page.getByRole('button', { name: 'Get Started' })).toBeVisible();
 });
 
 //User story from sprint 1: 6
@@ -191,6 +206,7 @@ test('min-shifts', async ({ page }) => {
   await expect(page.getByText('Need 15 more days')).toBeVisible();
 });
 
+//User story from sprint 1: 17, 18
 test('edit-approve-ra-schedule', async ({ page }) => {
   await page.goto('http://localhost:5173/');
   await page.getByRole('button', { name: 'Get Started' }).click();
@@ -203,7 +219,7 @@ test('edit-approve-ra-schedule', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Assign this Schedule' })).toBeVisible();
 });
 
-//User story
+//User story from sprint 2: 5
 test('Theme', async ({ page }) => {
   await page.goto('http://localhost:5173/');
   await page.getByRole('button', { name: 'Toggle theme' }).click();
@@ -214,20 +230,119 @@ test('Theme', async ({ page }) => {
   await page.getByRole('menuitem', { name: 'System' }).click();
 });
 
-//User story
-test('Logout', async ({ page }) => {
+//User story from sprint 2: 6
+test('welcome-page', async ({ page }) => {
   await page.goto('http://localhost:5173/');
   await page.getByRole('button', { name: 'Get Started' }).click();
   await page.getByLabel('Email address*').fill('rea2@gmail.com');
   await page.getByLabel('Password*').click();
   await page.getByLabel('Password*').fill('rea2@gmail.com');
   await page.getByLabel('Password*').press('Enter');
-  await page.getByRole('button', { name: 'Toggle theme' }).nth(1).click();
-  await page.getByRole('menuitem', { name: 'Light' }).click();
-  await expect(page.locator('div').filter({ hasText: 'DashboardEmployeesExecutive' }).nth(4)).toBeVisible();
-  await page.getByRole('button', { name: 'Logout' }).click();
-  await expect(page.getByRole('button', { name: 'Get Started' })).toBeVisible();
+  await page.getByRole('link', { name: 'RA welcome' }).click();
+  await expect(page.getByText('WELCOME TO SHIFT RA!')).toBeVisible();
+  await page.getByRole('button', { name: 'Next slide' }).click();
+  await expect(page.getByText('The University Residences')).toBeVisible();
 });
 
+//User story from sprint 2: 9
+test('manual-assignment', async ({ page }) => {
+  await page.goto('http://localhost:5173/');
+  await page.getByRole('button', { name: 'Get Started' }).click();
+  await page.getByLabel('Email address*').fill('rea2@gmail.com');
+  await page.getByLabel('Password*').click();
+  await page.getByLabel('Password*').fill('rea2@gmail.com');
+  await page.getByLabel('Password*').press('Enter');
+  await page.getByRole('link', { name: 'Executive Page' }).click();
+  await page.getByRole('button', { name: 'April 20,' }).click();
+  await page.getByRole('button', { name: 'April 19,' }).click();
+  await page.getByRole('button', { name: 'Assign this Schedule' }).click();
+});
 
+//User story from sprint 2: 10
+test('generate-report', async ({ page }) => {
+  await page.goto('http://localhost:5173/');
+  await page.getByRole('button', { name: 'Get Started' }).click();
+  await page.getByLabel('Email address*').fill('rea2@gmail.com');
+  await page.getByLabel('Password*').click();
+  await page.getByLabel('Password*').fill('rea2@gmail.com');
+  await page.getByLabel('Password*').press('Enter');
+  await page.getByRole('link', { name: 'Executive Page' }).click();
+  await page.locator('div').filter({ hasText: /^GenerateDAILYWEEKLYMONTHLY$/ }).getByRole('combobox').selectOption('1');
+  await page.locator('div').filter({ hasText: /^GenerateDAILYWEEKLYMONTHLY$/ }).getByRole('combobox').selectOption('2');
+  await page.getByRole('button', { name: 'Generate' }).click();
+});
 
+//User story from sprint 2: 11, 12, 13, 14
+test('calendar-filters', async ({ page }) => {
+  await page.goto('http://localhost:5173/');
+  await page.getByRole('button', { name: 'Get Started' }).click();
+  await page.getByLabel('Email address*').fill('rea2@gmail.com');
+  await page.getByLabel('Password*').click();
+  await page.getByLabel('Password*').fill('rea2@gmail.com');
+  await page.getByLabel('Password*').press('Enter');
+  await page.getByRole('button', { name: 'Import' }).click();
+  await page.locator('.rbc-row-segment').first().click();
+  await page.getByPlaceholder('Enter title').click();
+  await page.getByPlaceholder('Enter title').fill('example');
+  await page.getByRole('button', { name: 'Create' }).click();
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export' }).click();
+  const download = await downloadPromise;
+  const download1Promise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download' }).click();
+  const download1 = await download1Promise;
+  await page.locator('label').nth(1).click();
+});
+
+//User story from sprint 2: 15
+test('rules', async ({ page }) => {
+  await page.goto('http://localhost:5173/');
+  await page.getByRole('button', { name: 'Get Started' }).click();
+  await page.getByLabel('Email address*').fill('rea2@gmail.com');
+  await page.getByLabel('Password*').click();
+  await page.getByLabel('Password*').fill('rea2@gmail.com');
+  await page.getByLabel('Password*').press('Enter');
+  await page.getByRole('link', { name: 'Executive Page' }).click();
+  await page.locator('textarea').click();
+  await page.locator('textarea').fill('Add sample rule here!');
+  await page.getByRole('button', { name: 'Save' }).click();
+  await expect(page.getByText('Add sample rule here!')).toBeVisible();
+  await page.getByRole('button', { name: 'Edit' }).click();
+  await page.getByText('Add sample rule here!').click();
+  await page.getByText('Add sample rule here!').press('ArrowLeft');
+  await page.getByText('Add sample rule here!').press('ArrowLeft');
+  await page.getByText('Add sample rule here!').press('ArrowLeft');
+  await page.getByText('Add sample rule here!').press('ArrowLeft');
+  await page.getByText('Add sample rule here!').press('ArrowLeft');
+  await page.getByText('Add sample rule here!').press('ArrowLeft');
+  await page.getByText('Add sample rule here!').press('ArrowLeft');
+  await page.getByText('Add sample rule here!').press('ArrowLeft');
+  await page.getByText('Add sample rule here!').press('ArrowLeft');
+  await page.getByText('Add sample rule here!').press('ArrowLeft');
+  await page.getByText('Add sample rule here!').press('ArrowLeft');
+  await page.getByText('Add sample rule here!').press('ArrowLeft');
+  await page.getByText('Add sample rule here!').press('ArrowLeft');
+  await page.getByText('Add sample rule here!').press('ArrowLeft');
+  await page.getByText('Add sample rule here!').press('ArrowLeft');
+  await page.getByText('Add sample rule here!').fill('Add edited sample rule here!');
+  await page.getByRole('button', { name: 'Save' }).click();
+  await expect(page.getByText('Add edited sample rule here!')).toBeVisible();
+});
+
+//User story from sprint 2: 17, 18
+test('notifs', async ({ page }) => {
+  await page.goto('http://localhost:5173/');
+  await page.getByRole('button', { name: 'Get Started' }).click();
+  await page.getByLabel('Email address*').fill('rea2@gmail.com');
+  await page.getByLabel('Password*').click();
+  await page.getByLabel('Password*').fill('rea2@gmail.com');
+  await page.getByLabel('Password*').press('Enter');
+  await page.getByRole('link', { name: 'Settings' }).click();
+  await page.getByLabel('Notification Preference').selectOption('email');
+  await expect(page.getByLabel('Notification Preference')).toBeVisible();
+  await page.locator('div').filter({ hasText: /^Select OptionEmailSMSBoth$/ }).click();
+  await page.getByLabel('Notification Preference').selectOption('sms');
+  await page.getByLabel('Notification Preference').selectOption('both');
+  await page.getByLabel('Notification Times').selectOption('3 Days');
+  await page.getByRole('button', { name: 'Save changes' }).click();
+});

@@ -1,4 +1,3 @@
-import JustOnboardedContext from "@/context/justOnboarded";
 import { LoadingCard } from "@/components/ui/loading-card";
 import {
   getManagementAccessToken,

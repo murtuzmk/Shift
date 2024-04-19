@@ -1,27 +1,40 @@
-import { Button, FormControl, FormLabel, Image, Input, Select } from "@chakra-ui/react";
-import { useUser } from "../hooks/useUser";
+import {
+  Button,
+  ChakraProvider,
+  FormControl,
+  FormLabel,
+  Image,
+  Input,
+  Select,
+} from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import UserDataContext from "../context/UserDataContext";
+import { useGetIdentity } from "@refinedev/core";
+import { VerifiedUser } from "@/types";
 
 const Settings = () => {
-  const { user } = useUser();
+  const { data: userData } = useGetIdentity();
+  const [user, setUser] = useState<VerifiedUser | null>(null);
   const { getUserRole }: any = useContext(UserDataContext);
   const [userRole, setUserRole] = useState("Loading...");
 
   useEffect(() => {
+    if (userData) {
+      setUser(userData as VerifiedUser);
+    }
     user &&
       (async () => {
         setUserRole(await getUserRole(user?.sub));
       })();
-  }, [user]);
+  }, [user, userData]);
 
   return (
     <div className="flex-1">
-      <h1 className="text-2xl font-bold px-4 pt-4 bg-gray-100">
+      <h1 className="text-2xl font-bold px-4 pt-4 text-foreground">
         User Settings
       </h1>
-      <div className="bg-gray-100 p-4 grid grid-cols-8 grid-rows-6 gap-4">
-        <div className="bg-gray-50 rounded-lg col-span-3 row-span-1 p-6 flex gap-4 shadow-sm shadow-gray-300">
+      <div className="bg-background p-4 grid grid-cols-8 grid-rows-6 gap-4">
+        <div className="bg-background rounded-lg col-span-3 row-span-1 p-6 flex gap-4 shadow-sm shadow-secondary">
           <Image
             objectFit="cover"
             src={user?.picture}
@@ -33,7 +46,7 @@ const Settings = () => {
             <p className="text-gray-500">{userRole}</p>
           </div>
         </div>
-        <div className="bg-gray-50 rounded-lg shadow-sm shadow-gray-300 col-span-5 row-span-3 p-6 flex flex-col justify-between gap-3">
+        <div className="bg-background rounded-lg shadow-sm shadow-secondary col-span-5 row-span-3 p-6 flex flex-col justify-between gap-3">
           <h1 className="text-xl font-extrabold">General Information</h1>
           <div className="grid grid-cols-2 gap-6 flex-1">
             <FormControl>
@@ -41,7 +54,7 @@ const Settings = () => {
               <Input
                 type="text"
                 placeholder={user?.name}
-                className="text-gray-900 !text-sm !bg-gray-50 !border !border-gray-300 focus:!ring-4"
+                className="text-foreground !text-sm !bg-gray-50 !border !border-gray-300 focus:!ring-4"
               />
             </FormControl>
 
@@ -56,14 +69,14 @@ const Settings = () => {
               </Select>
             </FormControl>
 
-              <FormControl>
+            <FormControl>
               <FormLabel>Notification Times</FormLabel>
               <Select
                 placeholder="Select Option"
                 className="text-gray-900 !text-sm !bg-gray-50 !border !border-gray-300 focus:!ring-4">
-                  <option value="1 Day">1 Day Prior</option>
-                  <option value="3 Days">3 Days Prior</option>
-                  <option value="1 Week">1 Week Prior</option>  
+                <option value="1 Day">1 Day Prior</option>
+                <option value="3 Days">3 Days Prior</option>
+                <option value="1 Week">1 Week Prior</option>
               </Select>
             </FormControl>
           </div>

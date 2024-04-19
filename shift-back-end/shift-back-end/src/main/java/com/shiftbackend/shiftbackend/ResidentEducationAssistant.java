@@ -5,7 +5,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
+
+import com.shiftbackend.shiftbackend.Shift.DutyLevel;
 
 public class ResidentEducationAssistant extends ResidentAssistant{
 
@@ -178,7 +181,9 @@ public class ResidentEducationAssistant extends ResidentAssistant{
      * @param ra: Resident assistant to be added
      */
     public void addRaAccount(String raId) {
-        raAccounts.add(raId);
+        if (!raAccounts.contains(raId)) {
+            raAccounts.add(raId);
+        }
     }
 
     /*
@@ -255,6 +260,148 @@ public class ResidentEducationAssistant extends ResidentAssistant{
         return welcomeMessage.delete();
     }
 
+    public void assignShifts() {
+        Shift[] shifts = this.getSchedule().shiftsArray();
+        ResidentAssistant ra = new ResidentAssistant();
+        String raId;
+        int j = 0;
+        for (int i = 0; (i < shifts.length && j < raAccounts.size()); ) {
+            if (shifts[i].getAvailability() > 0) {
+                this.getSchedule().getEvent(shifts[i].getId()).decAvailability();
+
+                raId = raAccounts.get(j);
+                ra.loadAccountFile(raId);
+
+                ra.getSchedule().addEvent(new Shift (shifts[i].getId(), shifts[i].getTitle(), shifts[i].getDescription(), shifts[i].getStart(), shifts[i].getEnd(), shifts[i].getDutyLevel()));
+                ra.saveAccountFile();
+                j++;
+            }
+            else {
+                i++;
+            }
+        }
+    }
+
+    public void randomlyAssignShifts() {
+        Shift[] shifts = this.getSchedule().shiftsArray();
+        
+        // Shuffle RA Accounts
+        Collections.shuffle(raAccounts);
+        
+        ResidentAssistant ra = new ResidentAssistant();
+        String raId;
+        int j = 0;
+        for (int i = 0; (i < shifts.length && j < raAccounts.size());) {
+            if (shifts[i].getAvailability() > 0) {
+                this.getSchedule().getEvent(shifts[i].getId()).decAvailability();
+
+                raId = raAccounts.get(j);
+                ra.loadAccountFile(raId);
+
+                ra.getSchedule().addEvent(new Shift (shifts[i].getId(), shifts[i].getTitle(), shifts[i].getDescription(), shifts[i].getStart(), shifts[i].getEnd(), shifts[i].getDutyLevel()));
+                ra.saveAccountFile();
+                j++;
+            }
+            else {
+                i++;
+            }
+        }
+    }
+
+    public void automaticallyAssignShifts() {
+        Shift[] shifts = this.getSchedule().shiftsArray();
+
+        ArrayList<String> ras = (ArrayList<String>) raAccounts.clone();
+        
+        ResidentAssistant ra = new ResidentAssistant();
+        String raId;
+        for (int i = 0; (i < shifts.length && ras.size() > 0);) {
+            if (shifts[i].getAvailability() > 0) {
+                sortArrayList(ras, shifts[i].getDutyLevel());
+
+                this.getSchedule().getEvent(shifts[i].getId()).decAvailability();
+
+                raId = ras.get(0);
+                ra.loadAccountFile(raId);
+
+                ra.getSchedule().addEvent(new Shift (shifts[i].getId(), shifts[i].getTitle(), shifts[i].getDescription(), shifts[i].getStart(), shifts[i].getEnd(), shifts[i].getDutyLevel()));
+                ra.saveAccountFile();
+
+                ras.remove(raId);
+            }
+            else {
+                i++;
+            }
+        }
+    }
+
+    public void sortArrayList(ArrayList<String> ras, DutyLevel level) {
+        String a;
+        String b;
+        ResidentAssistant raA = new ResidentAssistant();
+        ResidentAssistant raB = new ResidentAssistant();
+
+        for (int i = ras.size() - 1; i > 0; i--) {
+            for (int j = 0; j < i; j++) {
+                a = ras.get(j);
+                b = ras.get(j + 1);
+
+                raA.loadAccountFile(a);
+                raB.loadAccountFile(b);
+
+                switch(level) {
+                    case PRIMARY:
+                        if (raA.primaryShiftsCompleted() > raB.primaryShiftsCompleted()) {
+                            ras.set(j, b);
+                            ras.set(j + 1, a);
+                        }
+                        else if (raA.primaryShiftsCompleted() == raB.primaryShiftsCompleted()) {
+                            if (raA.totalShiftsCompleted() > raB.totalShiftsCompleted()) {
+                                ras.set(j, b);
+                                ras.set(j + 1, a);
+                            }
+                        }
+                        break;
+                    case SECONDARY:
+                        if (raA.secondaryShiftsCompleted() > raB.secondaryShiftsCompleted()) {
+                            ras.set(j, b);
+                            ras.set(j + 1, a);
+                        }
+                        else if (raA.secondaryShiftsCompleted() == raB.secondaryShiftsCompleted()) {
+                            if (raA.totalShiftsCompleted() > raB.totalShiftsCompleted()) {
+                                ras.set(j, b);
+                                ras.set(j + 1, a);
+                            }
+                        }
+                        break;
+                    case TERTIARY:
+                    if (raA.tertiaryShiftsCompleted() > raB.tertiaryShiftsCompleted()) {
+                        ras.set(j, b);
+                        ras.set(j + 1, a);
+                    }
+                    else if (raA.tertiaryShiftsCompleted() == raB.tertiaryShiftsCompleted()) {
+                        if (raA.totalShiftsCompleted() > raB.totalShiftsCompleted()) {
+                            ras.set(j, b);
+                            ras.set(j + 1, a);
+                        }
+                    }
+                        break;
+                    default:
+                        if (raA.primaryShiftsCompleted() > raB.primaryShiftsCompleted()) {
+                            ras.set(j, b);
+                            ras.set(j + 1, a);
+                        }
+                        else if (raA.primaryShiftsCompleted() == raB.primaryShiftsCompleted()) {
+                            if (raA.totalShiftsCompleted() > raB.totalShiftsCompleted()) {
+                                ras.set(j, b);
+                                ras.set(j + 1, a);
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+    }
 
     /*------------------------ GETTERS & SETTERS ------------------------*/
 

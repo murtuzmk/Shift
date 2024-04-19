@@ -49,7 +49,7 @@ public class TimeBlock {
     /* ------------------------ FUNCTIONS ------------------------ */
 
     public String storageString() {
-        return hour  + "|" + minute + "|" + timezone + "|" + day + "|" + month + "|" + year;
+        return hour  + "|" + minute + "|" + timezone + "|" + month + "|" + day + "|" + year;
     }
 
     /*

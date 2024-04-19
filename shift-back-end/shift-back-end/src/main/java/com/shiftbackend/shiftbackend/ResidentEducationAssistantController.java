@@ -250,6 +250,50 @@ public class ResidentEducationAssistantController {
         return new ResponseEntity<String>(rea.getRAs(), HttpStatus.CREATED);
     }
 
+    @GetMapping("/{id}/assign-shifts")
+    public ResponseEntity<String> assignShiftsREA(@PathVariable String id) {
+        rea.loadAccountFile(id);
+
+        rea.assignShifts();
+
+        rea.saveAccountFile();
+
+        return new ResponseEntity<String>("Shifts Assigned", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/assign-shifts-randomly")
+    public ResponseEntity<String> assignShiftsRandomlyREA(@PathVariable String id) {
+        rea.loadAccountFile(id);
+
+        rea.randomlyAssignShifts();
+
+        rea.saveAccountFile();
+
+        return new ResponseEntity<String>("Shifts Assigned", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/assign-shifts-automatically")
+    public ResponseEntity<String> assignShiftsAutomaticallyREA(@PathVariable String id) {
+        rea.loadAccountFile(id);
+
+        rea.automaticallyAssignShifts();
+
+        rea.saveAccountFile();
+
+        return new ResponseEntity<String>("Shifts Assigned", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{id}/shift-complete/{raId}")
+    public ResponseEntity<String> raShiftCompleteREA(@PathVariable String id, @PathVariable String raId, @RequestBody Map<String, String> input) {
+        ResidentAssistant ra = new ResidentAssistant();
+        ra.loadAccountFile(raId);
+
+        ra.addCompletedShift((input.get("dutyLevel").equals("null")) ? null : Shift.DutyLevel.valueOf(input.get("dutyLevel")));
+
+        ra.saveAccountFile();
+        return new ResponseEntity<String>("Added Complete Shift to " + raId, HttpStatus.CREATED);
+    }
+
     @GetMapping("/{id}/ra-primary/{raId}")
     public ResponseEntity<String> completedRAprimaryShiftsREA(@PathVariable String id, @PathVariable String raId) {
         ResidentAssistant ra = new ResidentAssistant();
@@ -449,7 +493,7 @@ public class ResidentEducationAssistantController {
                                             Integer.parseInt(input.get("startYear")), Integer.parseInt(input.get("startTimezone")));
         TimeBlock endTime = new TimeBlock(Integer.parseInt(input.get("endHour")), Integer.parseInt(input.get("endMinute")),
                                           Integer.parseInt(input.get("endMonth")), Integer.parseInt(input.get("endDay")),
-                                          Integer.parseInt(input.get("endYear")), Integer.parseInt(input.get("endzone")));
+                                          Integer.parseInt(input.get("endYear")), Integer.parseInt(input.get("endTimezone")));
 
 
         String description = "Weekday";
@@ -460,7 +504,7 @@ public class ResidentEducationAssistantController {
                                           
         rea.getSchedule().addEvent(new Shift (eventId, title, description, startTime, endTime, Shift.DutyLevel.valueOf(input.get("dutyLevel")), Integer.parseInt(input.get("availability"))));
         rea.saveAccountFile();
-        return new ResponseEntity<String[]>(rea.getSchedule().getEvents(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(rea.getSchedule().getShifts(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/get-events")

@@ -227,6 +227,31 @@ public class Schedule {
         return stringArrayShift(temp);
     }
 
+    public int countEvents() {
+        int count = 0;
+
+        for (Shift event : events) {
+            if (event.getDutyLevel() == null) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+    public Shift[] eventsArray() {
+        Shift[] array = new Shift[countEvents()];
+        int i = 0;
+
+        for (Shift event : events) {
+            if (event.getDutyLevel() == null) {
+                array[i] = event;
+                i++;
+            }
+        }
+
+        return array;
+    }
+
     public String[] getShifts() {
         ArrayList<Shift> temp = new ArrayList<Shift>();
 
@@ -237,6 +262,32 @@ public class Schedule {
         }
 
         return stringArrayShift(temp);
+    }
+
+    public int countShifts() {
+        int count = 0;
+
+        for (Shift event : events) {
+            if (event.getDutyLevel() != null) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    public Shift[] shiftsArray() {
+        Shift[] array = new Shift[countShifts()];
+        int i = 0;
+
+        for (Shift event : events) {
+            if (event.getDutyLevel() != null) {
+                array[i] = event;
+                i++;
+            }
+        }
+
+        return array;
     }
 
     public String[] stringArrayShift(ArrayList<Shift> temp) { 

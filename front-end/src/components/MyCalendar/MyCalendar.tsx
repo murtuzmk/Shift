@@ -1,23 +1,13 @@
-import { useEffect, useState, useMemo, MouseEventHandler } from "react";
+import { useEffect, useState, useMemo, MouseEventHandler, useContext, SetStateAction } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
-import {
-  Button,
-  Checkbox,
-  CheckboxGroup,
-  FormControl,
-  FormLabel,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Stack,
-} from "@chakra-ui/react";
+import { Button, Checkbox, CheckboxGroup, FormControl, FormLabel, FormHelperText, FormErrorMessage, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack } from "@chakra-ui/react";
 import { Formik, Form, Field, FieldProps } from "formik";
+import UserDataContext from "../../context/UserDataContext";
+import {Calendar as DatePicker} from "@/components/ui/calendar";
+import { Select } from '@chakra-ui/react'
+import { Radio, RadioGroup } from '@chakra-ui/react'
+import { useDisclosure } from "@chakra-ui/react";
 import { v4 as uuidv4 } from "uuid";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 const localizer = momentLocalizer(moment);
@@ -27,6 +17,17 @@ import { useEventFilter } from "@/context/EventFilterContext";
 import { useUser } from "@/hooks/useUser";
 import { VerifiedUser } from "@/types";
 import { useGetIdentity } from "@refinedev/core";
+import { Button as Butt} from "@/components/ui/button"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 interface MyCalendarProps {
   importedEvents: Event[];
@@ -39,7 +40,9 @@ const exampleEvent: Event = {
   id: uuidv4(),
   title: "Example Event",
   isShift: true,
+  isMeeting: false
 };
+const exampleWorker: employee = {name:"John Doe", id:"003452122"};
 
 /* Added boolean isShift to Event interface, to determine whether an event is a shift or not
  * This will be determined through the two different calls we do to read all events in using
@@ -52,7 +55,78 @@ interface Event {
   id: string;
   title: string;
   isShift: boolean;
+  isMeeting: boolean;
 }
+interface employee {
+  name: string;
+  id: string;
+}
+interface MeetingDialogProps {
+  isOpen: boolean;
+  onSubmit: (event: Event) => void;
+  onClose: () => void;
+  workers: employee[];
+}
+const AssignSorM = ({ isOpen, onSubmit, onClose, workers }: MeetingDialogProps) => {
+  const [date, setDate] = useState<Date | undefined>(new Date()) 
+  const [title, setTitle] = useState<string>("");
+  const [isShift, setisShift] = useState(true);
+  const handleRChange = (value: string) => {
+    if (value === "shift") {
+      setisShift(true);
+    } else {
+      setisShift(false);
+    }
+  };
+  const handleInputChange = (e: { target: { value: SetStateAction<string>; }; }) => setTitle(e.target.value);
+  const isError = title === ''
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Assign Shift or Meeting</ModalHeader>
+        <FormControl>
+        <FormLabel>Title</FormLabel>
+              <Input value={title} onChange={handleInputChange} placeholder='Title' />
+              {!isError ? (
+                <FormHelperText>
+                    Enter the email you'd like to receive the newsletter on.
+                  </FormHelperText>
+                ) : (
+                  <FormErrorMessage>Email is required.</FormErrorMessage>
+                )}
+        </FormControl>
+        <DatePicker
+          mode="single"
+          selected={date}
+          onSelect={setDate}
+          disabled={{
+            before: new Date(),
+          }}
+        ></DatePicker>
+        <RadioGroup defaultValue="shift" onChange={handleRChange} value={isShift ? "shift" : "meeting"}>
+          <Stack direction="row">
+            <Radio value="shift">Shift</Radio>
+            <Radio value="meeting">Meeting</Radio>
+          </Stack>
+          </RadioGroup>
+        <Select placeholder="Who is this for?">
+          {workers.map((worker, index) => (
+          <option key={index} value={worker.name}>
+                {worker.name}
+              </option>
+            ))}
+        </Select>
+        <Button onClick={() => {
+          if (date) {
+            onSubmit({start:date, end:date, title:title, id:uuidv4(), isShift: isShift, isMeeting: !isShift});
+          }
+        }}>
+             Create a meeting! </Button>
+        </ModalContent>
+    </Modal>
+  );
+};
 
 interface EventDialogProps {
   isOpen: boolean;
@@ -133,7 +207,7 @@ const EventDialog = ({
           </ModalFooter>
         </ModalContent>
       </Modal>
-
+      <div className= "flex justify-center items-center">
       <Modal isOpen={isOpen} onClose={onCancel}>
         <ModalOverlay />
         <ModalContent>
@@ -150,6 +224,7 @@ const EventDialog = ({
                 title: values.title,
                 id: uuidv4(),
                 isShift: false,
+                isMeeting: false
               });
               actions.resetForm();
             }}>
@@ -197,6 +272,7 @@ const EventDialog = ({
           </Formik>
         </ModalContent>
       </Modal>
+      </div>
     </>
   );
 };
@@ -205,11 +281,30 @@ const MyCalendar = ({ importedEvents, onEventsChange }: MyCalendarProps) => {
   const [events, setEvents] = useState<Event[]>([exampleEvent]);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [searchRequest, setSearchRequest] = useState<string>("");
   const { showShifts } = useEventFilter();
   const { data: userData } = useGetIdentity();
   const [user, setUser] = useState<VerifiedUser | null>(null);
+  const [userRole, setUserRole] = useState("");
   const id = user && user.sub ? user.sub.split("|")[1] : null;
+  const { isOpen: isSorMopen, onOpen: openSorM, onClose: closeSorM } = useDisclosure();
+  const { getUserRole }: any = useContext(UserDataContext);
+  const [workers, setWorkers] = useState<employee[]>([exampleWorker]);
+  const [DisplaySorM, setDisplaySorM] = useState(false);
 
+
+  const handleCreateMeetingorShift = (meeting: Event) => {
+      // send to backend
+      if (!meeting.isShift) {
+        addEvents(meeting);
+      }
+      setEvents((prevEvents) => [
+        ...prevEvents,
+        {
+          ...meeting,
+        },
+      ]);
+    }
   const eventStylerGetter = (event: Event) => {
     const backgroundColor = event.isShift ? "orange" : "#007bff";
     return {
@@ -228,14 +323,32 @@ const MyCalendar = ({ importedEvents, onEventsChange }: MyCalendarProps) => {
     if (userData) {
       setUser(userData as VerifiedUser);
     }
-  }, [userData]);
+    user &&
+    (async () => {
+      setUserRole(await getUserRole(user?.sub));
+    })();
+  }, [user, userData]);
 
   /* Filter events based on the showShifts boolean */
   const filteredEvents = useMemo(() => {
     console.log("Show shifts", showShifts); /* Debugging */
     const allEvents = [...importedEvents, ...events];
-    return showShifts ? allEvents.filter((event) => event.isShift) : allEvents;
-  }, [importedEvents, events, showShifts]);
+    return allEvents.filter (event => {
+      
+      const isShiftFilter = showShifts ? event.isShift : true;
+      if (!searchRequest.trim()) {
+        // If the search input is empty, ignore the title filter
+        return isShiftFilter;
+      }
+      const title = event.title.toLowerCase();
+      const search = searchRequest.toLowerCase();
+      const isSearchFilter = title.includes(search);
+      return isShiftFilter && isSearchFilter;
+    }
+      
+    )
+    //return showShifts ? allEvents.filter((event) => event.isShift) : allEvents;
+  }, [importedEvents, events, showShifts,searchRequest]);
 
   useEffect(() => {
     onEventsChange(
@@ -275,6 +388,7 @@ const MyCalendar = ({ importedEvents, onEventsChange }: MyCalendarProps) => {
             title: data.title,
             id: data.id,
             isShift: true,
+            isMeeting: false
           },
         ]);
       });
@@ -312,6 +426,7 @@ const MyCalendar = ({ importedEvents, onEventsChange }: MyCalendarProps) => {
             title: data.title,
             id: data.id,
             isShift: false,
+            isMeeting: false
           },
         ]);
       });
@@ -349,7 +464,7 @@ const MyCalendar = ({ importedEvents, onEventsChange }: MyCalendarProps) => {
   };
 
   const handleSelect = ({ start, end }: { start: Date; end: Date }) => {
-    setSelectedEvent({ start, end, title: "", id: "", isShift: false });
+    setSelectedEvent({ start, end, title: "", id: "", isShift: false, isMeeting: false});
     setDialogOpen(true);
   };
 
@@ -421,7 +536,17 @@ const MyCalendar = ({ importedEvents, onEventsChange }: MyCalendarProps) => {
   };
 
   return (
+    <>
     <div style={{ width: "800px", height: "450px" }}>
+      <div className="flex justify-end items-center mb-4"> 
+        <Input
+          placeholder="Search for events"
+          type="text"
+          value={searchRequest}
+          onChange={(e) => setSearchRequest(e.target.value)}
+        />
+      </div>
+     
       <Calendar
         localizer={localizer}
         events={filteredEvents}
@@ -446,6 +571,15 @@ const MyCalendar = ({ importedEvents, onEventsChange }: MyCalendarProps) => {
         />
       )}
     </div>
+    <div>
+      { userRole !== "Residential Assistant" && 
+        <>
+          <Button onClick={openSorM}>Open Modal</Button>
+          <AssignSorM isOpen={isSorMopen} onSubmit={handleCreateMeetingorShift} onClose={closeSorM} workers={workers}/>
+        </>
+      }
+    </div>
+    </>
   );
 };
 export default MyCalendar;

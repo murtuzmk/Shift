@@ -12,6 +12,8 @@ import { useOnboardContext } from "@/context/justOnboarded";
 import { OnboardConfirmation } from "./onboard-confirmation";
 import { useGetIdentity } from "@refinedev/core";
 import { VerifiedUser } from "@/types";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 interface Event {
   start: Date;
   end: Date;
@@ -106,6 +108,10 @@ export const Dashboard = () => {
     }
   };
 
+  const [layout, setLayout] = useState<string>(
+    localStorage.getItem("layout") || "1"
+  );
+
   useEffect(() => {
     if (userData) {
       setUser(userData as VerifiedUser);
@@ -147,6 +153,12 @@ export const Dashboard = () => {
     doc.save("schedule.pdf");
   };
 
+  const handleLayoutChange = () => {
+    const newLayout = layout == "1" ? "2" : "1";
+    setLayout(newLayout);
+    localStorage.setItem("layout", newLayout);
+  };
+
   return (
     <div className="bg-background text-black dark:text-white flex-1 p-4 flex flex-col gap-4">
       <OnboardConfirmation
@@ -157,8 +169,13 @@ export const Dashboard = () => {
         <h1 className="text-2xl font-bold">Welcome, {user?.name}! 👋</h1>
         <p className="text-base">Role: {userRole}</p>
         <p className="text-base">Welcome back, track your shifts here!</p>
+        <Button onClick={handleLayoutChange}>Change layout</Button>
       </div>
-      <div className="flex-1 rounded-lg grid grid-cols-8 grid-rows-6 gap-4 fill-primary">
+      <div
+        className={cn(
+          "flex-1 rounded-lg grid grid-rows-6 gap-4 fill-primary",
+          layout == "1" ? "mt-5" : "mt-56"
+        )}>
         <EventFilterProvider>
           <div className="bg-background text-black dark:text-white rounded-lg border-dashed border-2 border-gray-300 col-span-6 row-span-4 p-6 flex flex-col gap-3">
             <h1 className="text-xl font-extrabold">General Information</h1>

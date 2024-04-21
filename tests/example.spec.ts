@@ -14,8 +14,8 @@ test('onboarding-acc-creation', async ({ page }) => {
   await page.getByRole('link', { name: 'Sign up' }).click();
   await expect(page.getByText('Already have an account? Log')).toBeVisible();
   await page.getByLabel('Email address*').click();
-  //make sure to change number for each test, current number used is 4
-  await page.getByLabel('Email address*').fill('newaccount4@gmail.com');
+  //make sure to change number for each test, current number used is 8
+  await page.getByLabel('Email address*').fill('newaccount8@gmail.com');
   await page.getByLabel('Password*').click();
   await page.getByLabel('Password*').fill('newaccount@gmail.com');
   await expect(page.getByText('Your password must contain: At least 8 characters At least 3 of the following:')).toBeVisible();
@@ -36,7 +36,7 @@ test('onboarding-acc-creation', async ({ page }) => {
   await page.getByLabel('Password*').fill('Newaccount@gmail.com');
   await page.getByLabel('Password*').press('ArrowRight');
   await page.getByLabel('Password*').press('ArrowRight');
-  await page.getByLabel('Password*').fill('New1account4@gmail.com');
+  await page.getByLabel('Password*').fill('New1account8@gmail.com');
   await expect(page.getByText('Your password must contain: At least 8 characters At least 3 of the following:')).toBeVisible();
   await page.getByRole('button', { name: 'Continue', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Authorize App' })).toBeVisible();
@@ -77,7 +77,7 @@ test('reset-password', async ({ page }) => {
 });
 
 //User story from sprint 1: 4
-test('Logout', async ({ page }) => {
+test('delete', async ({ page }) => {
   await page.goto('http://localhost:5173/');
   await page.getByRole('button', { name: 'Get Started' }).click();
   await page.getByLabel('Email address*').fill('rea2@gmail.com');
@@ -143,7 +143,7 @@ test('add-edit-delete-events', async ({ page }) => {
 });
 
 //User story from sprint 1: 10, 13
-test('test', async ({ page }) => {
+test('clear', async ({ page }) => {
   await page.goto('http://localhost:5173/');
   await page.getByRole('button', { name: 'Get Started' }).click();
   await page.getByLabel('Email address*').fill('ra3@gmail.com');
@@ -191,17 +191,15 @@ test('min-shifts', async ({ page }) => {
   await page.getByLabel('Email address*').fill('rea2@gmail.com');
   await page.getByLabel('Password*').click();
   await page.getByLabel('Password*').fill('rea2@gmail.com');
-  await page.getByRole('button', { name: 'Continue', exact: true }).click();
+  await page.getByLabel('Password*').press('Enter');
   await page.getByRole('link', { name: 'Executive Page' }).click();
-  await expect(page.getByText('Min Days:')).toBeVisible();
-  await page.locator('input[type="text"]').click();
-  await page.locator('input[type="text"]').fill('15');
+  await page.getByRole('textbox').nth(1).click();
+  await page.getByRole('textbox').nth(1).fill('15');
   page.once('dialog', dialog => {
     console.log(`Dialog message: ${dialog.message()}`);
     dialog.dismiss().catch(() => {});
   });
-  await page.locator('.bg-blue-500').first().click();
-  await expect(page.getByText('Min Days:')).toBeVisible();
+  await page.locator('div > .bg-blue-500').first().click();
   await page.getByRole('link', { name: 'Availability' }).click();
   await expect(page.getByText('Need 15 more days')).toBeVisible();
 });
@@ -217,6 +215,37 @@ test('edit-approve-ra-schedule', async ({ page }) => {
   await page.getByRole('link', { name: 'Executive Page' }).click();
   await page.getByRole('button', { name: 'Assign this Schedule' }).click();
   await expect(page.getByRole('button', { name: 'Assign this Schedule' })).toBeVisible();
+});
+
+//User story from sprint 2: 2, 3, 4, 7, 8, 16
+test('employee', async ({ page }) => {
+  await page.goto('http://localhost:5173/');
+  await page.getByRole('button', { name: 'Get Started' }).click();
+  await page.getByLabel('Email address*').click();
+  await page.getByLabel('Email address*').fill('rea2@gmail.com');
+  await page.getByLabel('Password*').click();
+  await page.getByLabel('Password*').fill('rea2@gmail.com');
+  await page.getByLabel('Password*').press('Enter');
+  await page.getByRole('link', { name: 'Employees' }).click();
+  await page.goto('http://localhost:5173/employees');
+  await expect(page.getByRole('row', { name: 'Johnny boy johndoe1@gmail.com Resident Assistant Unassigned Clocked Out Open' }).getByRole('heading')).toBeVisible();
+  await expect(page.getByText('Clocked Out').first()).toBeVisible();
+  await page.getByRole('row', { name: 'Johnny boy johndoe1@gmail.com Resident Assistant Unassigned Clocked Out Open' }).getByRole('button').click();
+  await expect(page.getByRole('menuitem', { name: 'Disable user account' })).toBeVisible();
+  await expect(page.getByRole('menuitem', { name: 'Delete user account' })).toBeVisible();
+  await expect(page.getByRole('menuitem', { name: 'View Shifts' })).toBeVisible();
+  await page.locator('html').click();
+  await page.getByRole('row', { name: 'Johnny boy johndoe1@gmail.com Resident Assistant Unassigned Clocked Out Open' }).getByRole('button').click();
+  await page.getByLabel('Open menu').click();
+  await page.locator('[id="radix-\\:ri\\:"]').click();
+  await expect(page.getByText('Filter by')).toBeVisible();
+  await page.locator('html').click();
+  await page.getByPlaceholder('Filter role...').click();
+  await page.getByPlaceholder('Filter role...').fill('C');
+  await expect(page.getByRole('cell', { name: 'Resident Education Coordinator' })).toBeVisible();
+  await page.getByPlaceholder('Filter role...').click();
+  await page.getByPlaceholder('Filter role...').fill('');
+  await expect(page.getByRole('cell', { name: 'Resident Assistant' }).nth(1)).toBeVisible();
 });
 
 //User story from sprint 2: 5
@@ -345,4 +374,137 @@ test('notifs', async ({ page }) => {
   await page.getByLabel('Notification Preference').selectOption('both');
   await page.getByLabel('Notification Times').selectOption('3 Days');
   await page.getByRole('button', { name: 'Save changes' }).click();
+});
+
+//User story from sprint 3: 1, 2
+test('layout', async ({ page }) => {
+  await page.goto('http://localhost:5173/');
+  await page.getByRole('button', { name: 'Get Started' }).click();
+  await page.getByLabel('Email address*').fill('message@gmail.com');
+  await page.getByLabel('Password*').click();
+  await page.getByLabel('Password*').fill('Message1@gmail.com');
+  await page.getByLabel('Password*').press('Enter');
+  await page.getByRole('button', { name: 'Change layout' }).click();
+  await expect(page.getByText('General InformationTodayBackNextApril')).toBeVisible();
+  await page.getByRole('button', { name: 'Change layout' }).click();
+  await expect(page.getByText('General InformationTodayBackNextApril')).toBeVisible();
+});
+
+//User story from sprint 3: 4
+test('test', async ({ page }) => {
+  await page.goto('http://localhost:5173/');
+  await page.getByRole('button', { name: 'Get Started' }).click();
+  await page.getByLabel('Email address*').fill('message@gmail.com');
+  await page.getByLabel('Password*').click();
+  await page.getByLabel('Password*').fill('Message1@gmail.com');
+  await page.getByLabel('Password*').press('Enter');
+  await page.locator('.rbc-row-segment').first().click();
+  await page.getByPlaceholder('Enter title').click();
+  await page.getByPlaceholder('Enter title').fill('asd');
+  await page.getByRole('button', { name: 'Create' }).click();
+  await page.locator('div:nth-child(3) > .rbc-row-bg > div:nth-child(4)').click();
+  await page.getByPlaceholder('Enter title').click();
+  await page.getByPlaceholder('Enter title').fill('lksafak');
+  await page.getByRole('button', { name: 'Create' }).click();
+  await page.locator('.rbc-row-content > div:nth-child(2)').first().click();
+  await page.getByPlaceholder('Enter title').click();
+  await page.getByPlaceholder('Enter title').fill('ksa');
+  await page.getByRole('button', { name: 'Create' }).click();
+  await page.getByPlaceholder('Search for events').click();
+  await page.getByPlaceholder('Search for events').fill('ks');
+  await expect(page.getByText('ksa')).toBeVisible();
+  await page.getByPlaceholder('Search for events').click();
+  await page.getByPlaceholder('Search for events').fill('');
+  await expect(page.getByText('asd')).toBeVisible();
+  await page.locator('label').first().click();
+  await expect(page.getByText('Example Event')).toBeVisible();
+  await page.locator('label').first().click();
+  await page.getByText('ksa').click();
+  await expect(page.getByText('ksa')).toBeVisible();
+});
+
+//User story from sprint 3: 7, 8, 9, 10, 11, 13, 14
+test('message', async ({ page }) => {
+  await page.goto('http://localhost:5173/');
+  await page.getByRole('button', { name: 'Get Started' }).click();
+  await page.getByLabel('Email address*').fill('message@gmail.com');
+  await page.getByLabel('Password*').click();
+  await page.getByLabel('Password*').fill('Message1@gmail.com');
+  await page.getByLabel('Password*').press('Enter');
+  await page.getByRole('link', { name: 'Messages' }).click();
+  await expect(page.getByText('Welcome!')).toBeVisible();
+  await page.getByPlaceholder('Group Chat').click();
+  await page.getByPlaceholder('Group Chat').fill('Group1');
+  await page.getByRole('button', { name: 'Create Group Chat' }).click();
+  await expect(page.locator('#ce-chat-feed-title-Group1')).toBeVisible();
+  await page.getByText('Say hello!').nth(1).click();
+  await expect(page.getByLabel('paper-clip').locator('svg')).toBeVisible();
+  await page.getByRole('paragraph').click();
+  await page.getByRole('paragraph').click();
+  await page.locator('#toolbar').click();
+  await page.getByRole('paragraph').click();
+  await page.locator('.ql-editor').fill('Hi');
+  await page.locator('.ql-editor').click();
+  await page.getByText('Hi', { exact: true }).dblclick();
+  await page.locator('#toolbar').dblclick();
+  await page.getByLabel('arrow-up').locator('svg').click();
+  await expect(page.getByText('Hi', { exact: true })).toBeVisible();
+  await page.getByText('Select user...').click();
+  await page.getByPlaceholder('Search user...').press('ArrowDown');
+  await page.getByPlaceholder('Search user...').press('Enter');
+  await page.getByRole('button', { name: 'Create DM' }).click();
+  await page.getByRole('button', { name: 'Create DM' }).press('Control+r');
+  await page.getByRole('paragraph').click();
+  await page.locator('.ql-editor').fill('Hi');
+  await page.getByText('Hi').nth(1).click();
+  await page.getByText('Hi').nth(1).click({
+    button: 'right'
+  });
+  await page.getByText('Hi').nth(1).click();
+  await page.getByRole('button', { name: 'Toggle theme' }).click();
+  await page.getByRole('menuitem', { name: 'Light' }).click();
+  await page.locator('#ce-options-drop-down svg').click();
+  await page.getByRole('button', { name: 'delete Delete' }).click();
+  await page.locator('div').filter({ hasText: /^ShiftMessages$/ }).click();
+  await page.locator('body').press('Control+r');
+  await expect(page.locator('#ce-chat-card-title-Group1')).toBeVisible();
+});
+
+//User story from sprint 3: 17, 18
+test('emergency', async ({ page }) => {
+  await page.goto('http://localhost:5173/');
+  await page.getByRole('button', { name: 'Get Started' }).click();
+  await page.getByLabel('Email address*').fill('message@gmail.com');
+  await page.getByLabel('Password*').click();
+  await page.getByLabel('Password*').fill('Message1@gmail.com');
+  await page.getByLabel('Password*').press('Enter');
+  await page.getByPlaceholder('Emergency Chat').click();
+  await page.getByPlaceholder('Emergency Chat').click();
+  await page.getByPlaceholder('Emergency Chat').click();
+  await page.getByPlaceholder('Emergency Chat').fill('lknvlksnd');
+  await page.getByRole('button', { name: 'Send' }).click();
+  await page.getByPlaceholder('Emergency Chat').click();
+  await page.getByPlaceholder('Emergency Chat').fill('sdvsdv');
+  await page.getByRole('button', { name: 'Send' }).click();
+  await page.getByPlaceholder('Emergency Chat').click();
+  await page.getByPlaceholder('Emergency Chat').fill('sdvsdvsd');
+  await page.getByRole('button', { name: 'Send' }).click();
+  await page.getByPlaceholder('Emergency Chat').click();
+  await page.getByPlaceholder('Emergency Chat').fill('sdvsdvsd');
+  await page.getByRole('button', { name: 'Send' }).click();
+  await page.getByPlaceholder('Emergency Chat').click();
+  await page.getByPlaceholder('Emergency Chat').fill('sdvsdvsd');
+  await page.getByRole('button', { name: 'Send' }).click();
+  await page.getByPlaceholder('Emergency Chat').fill('s');
+  await page.getByPlaceholder('Emergency Chat').click();
+  await page.getByPlaceholder('Emergency Chat').fill('sdvsdvsd');
+  await page.locator('form').click();
+  await page.getByRole('button', { name: 'Send' }).click();
+  await page.getByPlaceholder('Emergency Chat').click();
+  await page.getByPlaceholder('Emergency Chat').fill('vsdv');
+  page.once('dialog', dialog => {
+    console.log(`Dialog message: ${dialog.message()}`);
+    dialog.dismiss().catch(() => {});
+  });
+  await page.getByRole('button', { name: 'Send' }).click();
 });

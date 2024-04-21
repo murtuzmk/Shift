@@ -224,7 +224,7 @@ export const Messages = () => {
       </div>
       {user && (
         <ChatEngine
-          height="50vh"
+          height="80vh"
           userName={user.email}
           userSecret={user.email}
           projectID="8a111679-30ee-4979-a116-571fa89b4558"

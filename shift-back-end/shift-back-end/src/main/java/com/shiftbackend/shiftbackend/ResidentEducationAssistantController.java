@@ -456,11 +456,11 @@ public class ResidentEducationAssistantController {
     }
 
     @GetMapping("/{id}/ra/{raId}/view-drop-requests")
-    public ResponseEntity<String> viewRAShiftDropsREA(@PathVariable String id, @PathVariable String raId) {
+    public ResponseEntity<String[]> viewRAShiftDropsREA(@PathVariable String id, @PathVariable String raId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
         ra.saveAccountFile();
-        return new ResponseEntity<String>(ra.getShiftDropRequests(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(ra.getShiftDropRequests(), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/ra/{raId}/deny-drop/{eventId}")

@@ -207,6 +207,17 @@ public class ResidentEducationCoordinator extends ResidentEducationAssistant {
         reaAccounts.remove(reaId);
     }
 
+    public String[] getREAs() {
+        String[] array = new String[reaAccounts.size()];
+
+        for (int i = 0; i < reaAccounts.size(); i++) {
+            array[i] = "{\"reaId\": \"" + reaAccounts.get(i) + "\"}";
+            
+        }
+
+        return array;
+    }
+
     @Override
     public void createWelcomeMessage(String input) {
         String fileName = "Welcome_Message_" + this.getRole() + "_" + this.getId() + ".txt";

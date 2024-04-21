@@ -305,6 +305,13 @@ public class ResidentEducationCoordinatorController {
         return new ResponseEntity<String[]>(rec.getRAs(), HttpStatus.CREATED);
     }
 
+    @GetMapping("/{id}/get-reas")
+    public ResponseEntity<String[]> getREAsInREC(@PathVariable String id) {
+        rec.loadAccountFile(id);
+
+        return new ResponseEntity<String[]>(rec.getREAs(), HttpStatus.CREATED);
+    }
+
     @GetMapping("/{id}/assign-shifts")
     public ResponseEntity<String> assignShiftsREC(@PathVariable String id) {
         rec.loadAccountFile(id);
@@ -511,11 +518,11 @@ public class ResidentEducationCoordinatorController {
     }
 
     @GetMapping("/{id}/ra/{raId}/view-drop-requests")
-    public ResponseEntity<String> viewRAShiftDropsREC(@PathVariable String id, @PathVariable String raId) {
+    public ResponseEntity<String[]> viewRAShiftDropsREA(@PathVariable String id, @PathVariable String raId) {
         ResidentAssistant ra = new ResidentAssistant();
         ra.loadAccountFile(raId);
         ra.saveAccountFile();
-        return new ResponseEntity<String>(ra.getShiftDropRequests(), HttpStatus.OK);
+        return new ResponseEntity<String[]>(ra.getShiftDropRequests(), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/ra/{raId}/deny-drop/{eventId}")

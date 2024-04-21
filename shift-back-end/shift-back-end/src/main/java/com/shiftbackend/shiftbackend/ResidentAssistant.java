@@ -367,20 +367,15 @@ public class ResidentAssistant extends Person{
         return array;
     }
 
-    public String getShiftDropRequests() {
-        StringBuilder buffer = new StringBuilder();
+    public String[] getShiftDropRequests() {
+        String[] array = new String[shiftDropRequests.size()];
 
-        buffer.append("{\"dropRequstIds\": \"");
         for (int i = 0; i < shiftDropRequests.size(); i++) {
-            if (i != 0) {
-                buffer.append("|");
-            }
-            buffer.append(shiftDropRequests.get(i));
+            array[i] = "{\"eventId\": \"" + shiftDropRequests.get(i) + "\"}";
             
         }
-        buffer.append("\"}");
 
-        return buffer.toString();
+        return array;
     }
 
     /*------------------------ TOSTRING ------------------------*/

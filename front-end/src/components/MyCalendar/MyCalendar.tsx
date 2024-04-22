@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, MouseEventHandler, useContext, SetStateAction } from "react";
+import { useEffect, useState, useMemo, MouseEventHandler, useContext, SetStateAction, useCallback } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import { Button, Checkbox, CheckboxGroup, FormControl, FormLabel, FormHelperText, FormErrorMessage, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack } from "@chakra-ui/react";
@@ -319,6 +319,7 @@ const MyCalendar = ({ importedEvents, onEventsChange }: MyCalendarProps) => {
     fetchEvents();
     fetchShifts();
   }, []);
+
   useEffect(() => {
     if (userData) {
       setUser(userData as VerifiedUser);
@@ -350,11 +351,17 @@ const MyCalendar = ({ importedEvents, onEventsChange }: MyCalendarProps) => {
     //return showShifts ? allEvents.filter((event) => event.isShift) : allEvents;
   }, [importedEvents, events, showShifts,searchRequest]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     onEventsChange(
       filteredEvents
     ); /* Update the parent component with the filtered events */
-  }, [filteredEvents, onEventsChange]);
+  //}, [filteredEvents, onEventsChange]); */
+
+ /* const memoizedOnEventsChange = useCallback(onEventsChange, []);
+
+  useEffect(() => {
+    memoizedOnEventsChange(filteredEvents);
+  }, [filteredEvents, memoizedOnEventsChange]); */
 
   const fetchShifts = () => {
     console.log("Fetching shifts from the backend and id is " + id);

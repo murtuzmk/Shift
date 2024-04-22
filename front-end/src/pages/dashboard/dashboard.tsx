@@ -14,6 +14,7 @@ import { useGetIdentity } from "@refinedev/core";
 import { VerifiedUser } from "@/types";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ChakraProvider } from "@chakra-ui/react";
 interface Event {
   start: Date;
   end: Date;
@@ -165,6 +166,7 @@ export const Dashboard = () => {
         open={justOnboarded}
         onOpenChange={setJustOnboarded}
       />
+      <ChakraProvider>
       <div className="flex flex-col">
         <h1 className="text-2xl font-bold">Welcome, {user?.name}! 👋</h1>
         <p className="text-base">Role: {userRole}</p>
@@ -180,7 +182,7 @@ export const Dashboard = () => {
           <div className="bg-background text-black dark:text-white rounded-lg border-dashed border-2 border-gray-300 col-span-6 row-span-4 p-6 flex flex-col gap-3">
             <h1 className="text-xl font-extrabold">General Information</h1>
             <MyCalendar
-              importedEvents={importedEvents}
+              importedEvents={importedEvents.map(event => ({ ...event, isMeeting: false }))}
               onEventsChange={setEvents}
             />
             <div className="flex gap-2">
@@ -223,6 +225,7 @@ export const Dashboard = () => {
           </div>
         </EventFilterProvider>
       </div>
+      </ChakraProvider>
     </div>
   );
 };

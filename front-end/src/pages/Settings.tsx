@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import UserDataContext from "../context/UserDataContext";
-import { useGetIdentity } from "@refinedev/core";
+import { useGetIdentity, useLogout } from "@refinedev/core";
 import { VerifiedUser } from "@/types";
 
 const Settings = () => {
@@ -17,7 +17,8 @@ const Settings = () => {
   const [user, setUser] = useState<VerifiedUser | null>(null);
   const { getUserRole }: any = useContext(UserDataContext);
   const [userRole, setUserRole] = useState("Loading...");
-
+  const { mutate, isLoading } = useLogout();
+  
   useEffect(() => {
     if (userData) {
       setUser(userData as VerifiedUser);
@@ -27,6 +28,13 @@ const Settings = () => {
         setUserRole(await getUserRole(user?.sub));
       })();
   }, [user, userData]);
+
+  const handleConfirmation = async () => {
+    const confirmed = window.confirm("Are you sure you want to delete your account?");
+    if (confirmed) {
+      await mutate();
+    }
+  }
 
   return (
     <div className="flex-1">
@@ -80,9 +88,15 @@ const Settings = () => {
               </Select>
             </FormControl>
           </div>
-          <Button className="!bg-blue-700 hover:!bg-blue-800 focus:ring-4 !font-semibold !text-base !text-white w-fit">
-            Save changes
-          </Button>
+          <div className="flex flex-row">
+            <Button className="!bg-blue-700 hover:!bg-blue-800 focus:ring-4 !font-semibold !text-base !text-white w-fit p-2">
+              Save changes
+            </Button>
+            <Button className="!bg-red-600 hover:!bg-red-800 focus:ring-4 !font-semibold !text-base !text-white w-fit p-2 ml-96"
+                onClick={handleConfirmation}>
+              Delete Account
+            </Button>
+          </div>
         </div>
         <div className="bg-gray-50 rounded-lg border-dashed border-2 border-gray-300 col-span-3 row-span-2">
           Calendar Integrations

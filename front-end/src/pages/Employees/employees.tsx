@@ -45,6 +45,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import UserDataContext from "@/context/UserDataContext";
 import { Avatar } from "@radix-ui/react-avatar";
 import { AvatarImage } from "@/components/ui/avatar";
+import { useDelete } from "@refinedev/core";
 
 export interface EmployeeColumns {
   id: string;
@@ -160,9 +161,14 @@ export const Employees = () => {
     .formatColumn("residentAssistant", "user")
     .formatColumn("status", "status")
     .addActionColumn()
-    .addAction("Disable user account")
-    .addAction("Delete user account")
-    .addAction("View Shifts");
+    // Cannot add actions like this anymore. go to the declaration of addActionColumn
+    // .addAction("Disable user account")
+    // .addAction("Delete user account")
+    // .addAction("View Shifts");
+  const {mutate:deleteUser} = useDelete()
+  // const handleDeleteUser = async () => {
+  //   deleteUser({resource: "users", dataProviderName:"authMan"})
+  // }
   const [data, setData] = useState<EmployeeColumns[]>([]);
   const newEmployeeForm = useForm<z.infer<typeof newEmployeeSchema>>({
     resolver: zodResolver(newEmployeeSchema),

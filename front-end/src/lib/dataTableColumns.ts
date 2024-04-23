@@ -12,11 +12,35 @@ import { Circle, MoreHorizontal } from "lucide-react";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import fetchWrapper from "@/context/fetch-wrapper";
+import { MAN_API_URL } from "@/context/auth-man";
+import { VerifiedUser } from "@/types";
 
 /**
  * The possible formats of a column besides the defaults specified in your interface.
  */
 type ColumnFormat = "currency" | "user" | "status";
+const token = localStorage.getItem("man_auth");
+
+const handleDeleteUser = async(id: any) => {
+  const options = {
+    method: "DELETE",
+    redirect: 'follow',
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await fetchWrapper(
+    `${MAN_API_URL}/users/${id}`,
+    options
+  );
+  const status = response.status;
+  if (status == 204) {
+    window.alert("Deletion successful")
+    window.location.reload();
+  }
+}
+
 
 export class DataTableColumns<Columns, ColumnHeader> {
   /**
@@ -179,7 +203,8 @@ export class DataTableColumns<Columns, ColumnHeader> {
     try {
       let actionColumn: ColumnDef<Columns> = {
         id: "actions",
-        cell: () => {
+        cell: ({row}) => {
+          const data:any = row.original;
           const actionDropdown = React.createElement(
             DropdownMenu,
             null,
@@ -201,9 +226,11 @@ export class DataTableColumns<Columns, ColumnHeader> {
               DropdownMenuContent,
               { align: "end" },
               React.createElement(DropdownMenuLabel, null, "Actions"),
-              this.actions.map((action, key) =>
-                React.cloneElement(action, { key: key })
-              )
+              React.createElement(
+                DropdownMenuItem,
+                {onClick: () => handleDeleteUser(data.id)},
+                "Delete user account"
+              ),
             )
           );
           return actionDropdown;
@@ -224,23 +251,23 @@ export class DataTableColumns<Columns, ColumnHeader> {
    * @param actionHandler - The callback function to be executed when the action is triggered
    * @returns this object
    */
-  addAction(label: string, actionHandler?: () => void) {
-    // Saving current actions
-    let tempActions = this.actions;
-    try {
-      let newAction = React.createElement(
-        DropdownMenuItem,
-        { onClick: actionHandler },
-        label
-      );
-      this.actions.push(newAction);
-    } catch {
-      // Restoring actions
-      this.actions = tempActions;
-      throw new Error(`Could not add ${label} action`);
-    }
-    return this;
-  }
+  // addAction(label: string, actionHandler?: () => void) {
+  //   // Saving current actions
+  //   let tempActions = this.actions;
+  //   try {
+  //     let newAction = React.createElement(
+  //       DropdownMenuItem,
+  //       { onClick: console.log(data) },
+  //       label
+  //     );
+  //     this.actions.push(newAction);
+  //   } catch {
+  //     // Restoring actions
+  //     this.actions = tempActions;
+  //     throw new Error(`Could not add ${label} action`);
+  //   }
+  //   return this;
+  // }
   /**
    * Makes the specified column header sortable, asc or desc.
    * @param header - The header to make sortable.

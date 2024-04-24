@@ -18,7 +18,7 @@ export const LandingLayout: React.FC<PropsWithChildren> = ({ children }) => {
         <div className="mx-auto max-w-[120rem] px-8 flex h-14">
           <LandingNavItems items={marketingConfig.mainNav} />
           <div className="flex items-center space-x-4">
-            
+            <ModeToggle />
             <Button size="sm" onClick={() => loginWithRedirect()}>
               Login
             </Button>
